@@ -1,0 +1,120 @@
+
+import sqlite3 as lite
+import requests
+from bs4 import BeautifulSoup
+import re
+import json
+import DBLib
+
+
+
+
+class Prospect:
+
+
+
+
+    #Will return all prospects from DB sorted by Expert Grade in DESC Order (Best player at top)
+    def getAllProspects():
+
+        prospects = DBLib.DB.getAllProspects()
+
+        return prospects
+
+
+
+
+
+
+    def stringToJson(rawString):
+
+        iFoundStart = rawString.find("\"prospects\"")
+        iFoundEnd = rawString.find("\"draft\"")
+
+
+        jsonString = rawString[iFoundStart+12:iFoundEnd-1]
+
+        #print("data:\n" + jsonString)
+
+
+
+        #print(jsonString)
+        obj = json.loads(jsonString)
+
+
+
+        return obj
+
+
+
+
+
+
+
+
+    def getRawData():
+        url = "http://www.nfl.com/draft/2017/tracker#dt-tabs:dt-by-grade"
+
+
+        page = requests.get(url)
+
+
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        script = soup.find('script', text=re.compile('nfl\.global\.dt\.data'))
+
+        #print(soup)
+
+        m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
+
+
+
+        if(m):
+            return m.group(0)
+        else:
+            return ""
+
+
+
+
+
+
+
+
+    #pass in our JSON Data and pump em into the DB
+    def AddBatch(jsonData):
+
+
+
+            # attributes:
+            # {'pos', 'weight', 'height', 'schoolYear', 'lastName', 'handSize', 'expertGrade', 'pick', 'video',
+            #  'hasAnalysis', 'pickAnalysis', 'college', 'armLength', 'personId','firstName', 'fanPick'
+
+            for dude in jsonData:
+                Id = jsonData[dude]["personId"]
+                lname = jsonData[dude]["lastName"].replace("'","''")                #parse any single quotes out of names.....it will blow up our SQL below
+                fname = jsonData[dude]["firstName"].replace("'","''")               #parse any single quotes out of names.....it will blow up our SQL below
+                pos = jsonData[dude]["pos"]
+                height = jsonData[dude]["height"]
+                if(height != None):
+                    height = height.replace("'","''")                                #parse any single quotes out of names.....it will blow up our SQL below
+
+                weight = jsonData[dude]["weight"]
+                grade = jsonData[dude]["expertGrade"]
+                if(grade==None or grade==""):                                        #if expert grade not provided, just sort to bottom of list.....assume a Zero Grade.
+                    grade=0
+
+                #print(Id,lname,fname,pos,height,weight,grade)
+
+                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade)
+
+
+
+
+
+
+
+
+
+    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade):
+        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade)
