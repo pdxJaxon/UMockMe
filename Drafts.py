@@ -50,15 +50,15 @@ class Draft:
 
         #1 - get all rounds
         rounds = Draft.getAllRoundsByDraft(2017)
-
-
-
+        print("Rounds",rounds)
+        print("Round:",rounds[0])
+        print("round:", rounds[0][1])
         
         #2 - Goto Round 1
         for rnd in rounds:
 
             picks = Picks.Pick.getAllPicksForRound(2017,rnd[1])
-            #print(picks)
+            print("Picks for round {} - {}".format(rnd[1],picks))
 
             #3 goto next pick
             for pck in picks:
@@ -95,7 +95,7 @@ class Draft:
                                     Picks.Pick.UpdatePick(pck[0],pck[1],pck[2], Team, Player)
                                     break
                     break
-            break
+
 
 
         #LOOP
