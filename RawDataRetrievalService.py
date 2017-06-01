@@ -130,6 +130,15 @@ def doTests():
     print(allPicks)
     allPicks = Picks.Pick.getAllPicksForRound(2017,3)
     print(allPicks)
+    allPicks = Picks.Pick.getAllPicksForRound(2017, 4)
+    print(allPicks)
+    allPicks = Picks.Pick.getAllPicksForRound(2017, 5)
+    print(allPicks)
+    allPicks = Picks.Pick.getAllPicksForRound(2017, 6)
+    print(allPicks)
+    allPicks = Picks.Pick.getAllPicksForRound(2017, 7)
+    print(allPicks)
+
 
 #Execute our Tests
 doTests()
