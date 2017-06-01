@@ -6,6 +6,10 @@ import Prospects
 import Teams
 import DBLib
 import Colleges
+import Drafts
+import Rounds
+import Picks
+
 
 
 
@@ -36,9 +40,15 @@ def doTests():
     jsonCollegeData = Colleges.College.stringToJson(rawCollegeData)
 
 
+    #tear down db to recreate from scratch (for testing only)
+    DBLib.DB.TearDownDB()
 
     #Create a New Cleaned Out DB
     DBLib.DB.createDB()
+
+    #static data
+    DBLib.DB.PopulatePicks()
+
 
     #Delete all records in DB if there are any
     #DBLib.DB.truncateDB()
@@ -64,6 +74,25 @@ def doTests():
     colleges = Colleges.College.getAllColleges()
 
 
+    #Drafts
+    drafts = Drafts.Draft.getAllDraftByYear(2017)
+
+    #print(drafts)
+
+
+    #Rounds
+    rounds = Rounds.Round.getAllRoundsForDraft(2017)
+
+    #print(rounds)
+
+    #Picks
+    picks = Picks.Pick.getAllPicksForRound(2017,1)
+    #print(picks)
+
+
+
+
+
     assert rawData != ""                                #Make sure we got raw data back from NFL.com
     assert jsonData != None                             #Make sure JSON object got built
 
@@ -74,15 +103,12 @@ def doTests():
     assert jsonData["2558834"]["firstName"] != ""
     assert prospects != None                            #Make sure our query from DB returned records as expected
 
-
-
-
     '''
     #Dump all DB Records for funsies
     for p in prospects:
         print(p)
 
-
+    
     #dump nfl team info
     for t in teams:
         print(t)
@@ -93,6 +119,17 @@ def doTests():
         print(c)
 
     '''
+
+
+    Drafts.Draft.doDraft()
+
+
+    allPicks = Picks.Pick.getAllPicksForRound(2017,1)
+    print(allPicks)
+    allPicks = Picks.Pick.getAllPicksForRound(2017,2)
+    print(allPicks)
+    allPicks = Picks.Pick.getAllPicksForRound(2017,3)
+    print(allPicks)
 
 #Execute our Tests
 doTests()

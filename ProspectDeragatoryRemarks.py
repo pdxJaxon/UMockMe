@@ -1,6 +1,4 @@
 
-
-
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -8,8 +6,7 @@ import json
 import DBLib
 
 
-class College:
-
+class ProspectDeragatoryRemark:
 
     def getCollegeData():
         #nfl.global.dt.data.colleges			= {

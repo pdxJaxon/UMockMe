@@ -15,21 +15,27 @@ class Team:
 
 
 
-    def getNeedsByTeam(teamName ,teamAbr):
+    def getNeedsByTeam(city,teamAbr,teamName):
+
+        #todo: Cache this crap
 
         needs = ""
 
         timeStamp = datetime.datetime.now().strftime("%f")
 
-        url = "http://www.nfl.com/widget/draft/2017/tracker/teams/{}/profile?year=2017&team={}&random={}".format(teamAbr,teamName,str(timeStamp))
+        #url = "http://www.nfl.com/widget/draft/2017/tracker/teams/{}/profile?year=2017&team={}&random={}".format(teamAbr,teamName,str(timeStamp))
 
-        #print(url)
+        #http://www.nfl.com/widget/draft/2017/tracker/teams/pittsburghsteelers/profile?year=2017&team=PIT&random=1496251240000
+        url = "http://www.nfl.com/widget/draft/2017/tracker/teams/{}{}/profile?year=2017&team={}&random={}".format(city,teamName,teamAbr,str(timeStamp))
+
+
 
         page = requests.get(url)
 
         soup = BeautifulSoup(page.content, 'html.parser')
 
         lstNeeds = soup.find("ul", {"id": "team-needs-positions-list"})
+
 
 
         iCount=1
@@ -54,6 +60,13 @@ class Team:
         # nfl.draft.tracker.data.teams    = {
 
         url = "http://www.nfl.com/draft/2017/tracker#dt-tabs:dt-by-grade"
+
+        #url = http://feeds.nfl.com/feeds-rs/teams/2017.json
+
+
+
+
+
 
         page = requests.get(url)
 
@@ -131,7 +144,7 @@ class Team:
                 nickname = jsonData[team]["nickname"]
                 conference = jsonData[team]["conference"]
                 division = jsonData[team]["division"]
-                needs = Team.getNeedsByTeam(abbr,nickname)
+                needs = Team.getNeedsByTeam(city,abbr,nickname)
 
                 #print(abbr,url,city,nickname,conference,division,needs)
 
@@ -159,3 +172,8 @@ class Team:
         teams = DBLib.DB.getAllTeams()
         return teams
 
+
+
+    def getTeamByAbr(abr):
+        team = DBLib.DB.getTeamByAbr(abr)
+        return team
