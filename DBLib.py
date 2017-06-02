@@ -282,6 +282,26 @@ class DB:
 
 
 
+
+
+    def GetAllPickDetailsForRoundDB(year, round):
+        con = lite.connect('UMockMe.db')
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} ".format(round))
+
+            PickDetails = cur.fetchall()
+
+            return PickDetails
+
+
+
+
+
+
+
     def getTeamByAbr(abr):
         con = lite.connect('UMockMe.db')
 

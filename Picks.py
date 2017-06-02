@@ -19,6 +19,10 @@ class Pick:
 
 
 
+    def getAllPickDetailsForRound(year,round):
+        pickdetails = DBLib.DB.GetAllPickDetailsForRoundDB(year,round)
+        return pickdetails
+
 
     def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player):
         print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player))
