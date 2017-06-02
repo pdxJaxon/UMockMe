@@ -43,6 +43,20 @@ class Draft:
 
 
 
+    def BetterPlayerPassedUp(needs,needPickedFor,prospectPicked,passedUpPlayers):
+        BetterProspect = None
+
+        print("Pick:{}".format(prospectPicked))
+
+        for pup in passedUpPlayers:
+            print("Alternate - {}".format(pup))
+            if(pup[1] >= prospectPicked[6] + .5):
+                BetterProspect = pup
+                break
+
+
+        return BetterProspect
+
 
 
 
@@ -81,27 +95,47 @@ class Draft:
 
                 print("Team:{} Need:{}".format(teamName,n))
                 if(n != ""):
+                    passedUpPlayers = []
                     for p in Draft._prospects:
                         if(p[0]!=0):
                             pPos = p[3]
                             if(pPos=="C" or pPos=="OT" or pPos=="OG"):
                                 pPos="OL"
-                            if(pPos=="DT" or pPos=="NT" or pPos=="DE"):
+                            if(pPos=="DT" or pPos=="NT"):
                                 pPos="DL"
-                            if(pPos=="OLB" or pPos=="ILB"):
+                            if(pPos=="OLB" or pPos=="ILB" or pPos=="DE"):
                                 pPos="LB"
                             if(pPos=="SS" or pPos=="FS"):
                                 pPos="S"
                             if(n==pPos):
+
+
+                                AlternatePick = Drafts.Draft.BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
+
+                                if(not AlternatePick):
+                                    Player = p[0]
+
+
+
+                                    Draft._prospects.remove(p)
+                                    needs.remove(n)
+
+
+                                else:
+                                    #BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
+                                    Player = AlternatePick[0]
+
+                                    for dp in Draft._prospects:
+                                        if(dp[0] == AlternatePick[0]):
+                                            Draft._prospects.remove(dp)
+
                                 Team = abr
-                                Player = p[0]
 
-                                Draft._prospects.remove(p)
-                                needs.remove(n)
+                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player)
 
-                                Picks.Pick.UpdatePick(pck[0],pck[1],pck[2], Team, Player)
                                 break
                             else:
+                                passedUpPlayers.append([p[0],p[6]])
                                 print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
                 else:
