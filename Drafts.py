@@ -50,9 +50,7 @@ class Draft:
 
         #1 - get all rounds
         rounds = Draft.getAllRoundsByDraft(2017)
-        print("Rounds",rounds)
-        print("Round:",rounds[0])
-        print("round:", rounds[0][1])
+
         
         #2 - Goto Round 1
         for rnd in rounds:
@@ -76,25 +74,45 @@ class Draft:
                 #print("Needs-->",needs)
 
 
+                if(len(needs) > rnd[1]-1):
+                    n=needs[rnd[1]-1]
+                else:
+                    n=""
 
-                for n in needs:
-                    print("Team:{} Need:{}".format(teamName,n))
-                    if(n != ""):
-                        for p in Draft._prospects:
-                            if(p[0]!=0):
-                                pPos = p[3]
-                                if(pPos=="C" or pPos=="OT" or pPos=="OG"):
-                                    pPos="OL"
-                                if(n==pPos):
-                                    Team = abr
-                                    Player = p[0]
+                print("Team:{} Need:{}".format(teamName,n))
+                if(n != ""):
+                    for p in Draft._prospects:
+                        if(p[0]!=0):
+                            pPos = p[3]
+                            if(pPos=="C" or pPos=="OT" or pPos=="OG"):
+                                pPos="OL"
+                            if(pPos=="DT" or pPos=="NT" or pPos=="DE"):
+                                pPos="DL"
+                            if(pPos=="OLB" or pPos=="ILB"):
+                                pPos="LB"
+                            if(pPos=="SS" or pPos=="FS"):
+                                pPos="S"
+                            if(n==pPos):
+                                Team = abr
+                                Player = p[0]
 
-                                    Draft._prospects.remove(p)
-                                    needs.remove(n)
+                                Draft._prospects.remove(p)
+                                needs.remove(n)
 
-                                    Picks.Pick.UpdatePick(pck[0],pck[1],pck[2], Team, Player)
-                                    break
-                    break
+                                Picks.Pick.UpdatePick(pck[0],pck[1],pck[2], Team, Player)
+                                break
+                            else:
+                                print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
+
+                else:
+                    Team = abr
+                    Player = Draft._prospects[0][0]
+                    print("Blind Pick Team{} Prospect:{}".format(Team,Player))
+                    Draft._prospects.remove(Draft._prospects[0])
+
+                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player)
+
+
 
 
 
