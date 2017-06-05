@@ -104,6 +104,9 @@ class Prospect:
                 if(grade==None or grade==""):                                        #if expert grade not provided, just sort to bottom of list.....assume a Zero Grade.
                     grade=0
 
+                #todo: Add ProjectedDraftPick
+                #todo: add link to college
+
                 #print(Id,lname,fname,pos,height,weight,grade)
 
                 Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade)
@@ -118,3 +121,11 @@ class Prospect:
 
     def AddProspect(Id,Last,First,Pos,Height,Weight,Grade):
         DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade)
+
+
+
+
+    def GetProspectId(Name, POS, School,pickNum):
+        prospectId = DBLib.DB.GetProspectId(Name,POS,School,pickNum)
+
+        return prospectId

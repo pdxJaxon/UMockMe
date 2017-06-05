@@ -1,5 +1,6 @@
 import sqlite3 as lite
 import sys
+from random import *
 
 
 class DB:
@@ -28,6 +29,9 @@ class DB:
                 cur.execute("DROP TABLE if exists Pick")
                 cur.execute("DROP TABLE if exists DeragatoryRemark")
                 cur.execute("DROP TABLE if exists ProspectDeragatoryRemark")
+
+                cur.execute("DROP TABLE if exists BigBoard")
+                cur.execute("DROP TABLE if exists BigBoardProspect")
 
         except:
             print("")
@@ -76,7 +80,10 @@ class DB:
 
 
                 cur.execute("CREATE TABLE if not exists DeragatoryRemark(RemarkId int, Name Text, PointValue int)")
-                cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId int, ProspectId Int")
+                cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId int, ProspectId Int)")
+
+                cur.execute("CREATE TABLE if not exists BigBoard(BigBoardId int, DraftId int, TeamId Int, sourceId text)")
+                cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId int, ProspectId int, Rank int)")
 
 
         except:
@@ -97,7 +104,7 @@ class DB:
             cur.execute("DELETE FROM Team")
             cur.execute("DELETE FROM College")
             cur.execute("DELETE FROM Meeting")
-            cur.execute("DELETE FROM MeetingType")
+            cur.execute("DELETE FROM TeamPlayerMeeting")
 
             cur.execute("DELETE FROM DeragatoryRemark")
             cur.execute("DELETE FROM ProspectDeragatoryRemark")
@@ -285,17 +292,140 @@ class DB:
 
 
     def GetAllPickDetailsForRoundDB(year, round):
+
+        #Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int)")
+        #Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int)")
+
+
         con = lite.connect('UMockMe.db')
 
         with con:
             cur = con.cursor()
 
-            cur.execute("SELECT * From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} ".format(round))
+            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} ".format(round))
 
             PickDetails = cur.fetchall()
 
-            return PickDetails
+        return PickDetails
 
+
+
+
+
+
+    def GetProspectId(Name, POS, School,pickNum):
+        con = lite.connect('UMockMe.db')
+
+        vals = str.split(Name," ")
+        fname = str(vals[0].replace("'","''"))
+        lname = str(vals[1].replace("'","''"))
+
+        sql = "SELECT ID FROM PROSPECT WHERE LastName='{}' AND FirstName='{}'".format(lname,fname)
+        #print(sql)
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute(sql)
+
+            data = cur.fetchall()
+
+
+
+            if(len(data)>0):
+                retVal=data[0]
+            else:
+                x=randint(-99999999,99999999)
+
+
+                expertGrade=0
+
+                DB.AddProspectDB(x,lname,fname,POS,0,0,expertGrade)
+                retVal=x
+
+
+
+        return retVal
+
+
+
+
+
+
+
+
+
+    def AddBoardProspect(BigBoardId,ProspectId,Rank):
+        sql = "INSERT INTO BigBoardProspect VALUES({},'{}',{})".format(BigBoardId, ProspectId,Rank)
+        #print(sql)
+        DB.ExecuteSQL(sql)
+
+
+
+
+    def AddBigBoard(BoardId,DraftId,TeamId,SourceId):
+        sql = "INSERT INTO BigBoard VALUES({},{},'{}','{}')".format(BoardId,DraftId,TeamId,SourceId)
+
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+
+    def getBigBoard(boardId=1):
+
+        #cur.execute("CREATE TABLE if not exists BigBoard(BigBoardId int, DraftId int, TeamId Int, sourceId text)")
+        #cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId int, ProspectId int, Rank int)")
+
+        con = lite.connect('UMockMe.db')
+
+        with con:
+            cur = con.cursor()
+
+            sql = "SELECT * FROM BigBoardProspect ORDER BY Rank ASC"
+            #print(sql)
+            cur.execute(sql)
+
+            t = cur.fetchall()
+
+        return t
+
+
+
+
+
+
+    def getBigBoardForTeam(teamId):
+
+        con = lite.connect('UMockMe.db')
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM BigBoard WHERE TeamId='{}'".format(teamId))
+
+            t = cur.fetchall()
+
+        return t
+
+
+
+
+
+
+    def getBigBoardForSource(Source=1):
+
+        con = lite.connect('UMockMe.db')
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM BigBoard WHERE SourceId={}".format(Source))
+
+            t = cur.fetchall()
+
+        return t
 
 
 
@@ -315,6 +445,11 @@ class DB:
             return t
 
 
+
+
+
+
+
     def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player):
 
         #Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int)
@@ -322,6 +457,10 @@ class DB:
         sql = "Update Pick SET TeamAbbr = '{}', ProspectId={} WHERE RoundId={} AND RoundPickNum={} AND OverallPickNum={}".format(Team,Player,rnd,PickNum,OverallPickNum)
         #print(sql)
         DB.ExecuteSQL(sql)
+
+
+
+
 
 
 

@@ -25,5 +25,5 @@ class Pick:
 
 
     def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player):
-        print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player))
+        #print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player))
         DBLib.DB.UpdatePick(rnd,PickNum,OverallPickNum,Team,Player)

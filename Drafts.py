@@ -46,10 +46,10 @@ class Draft:
     def BetterPlayerPassedUp(needs,needPickedFor,prospectPicked,passedUpPlayers):
         BetterProspect = None
 
-        print("Pick:{}".format(prospectPicked))
+        #print("Pick:{}".format(prospectPicked))
 
         for pup in passedUpPlayers:
-            print("Alternate - {}".format(pup))
+            #print("Alternate - {}".format(pup))
             if(pup[1] >= prospectPicked[6] + .5):
                 BetterProspect = pup
                 break
@@ -62,6 +62,33 @@ class Draft:
 
     def doDraft():
 
+        ''' 
+        Todo:
+            For Prospects 
+                get their PFF Big Board Ranking (PFF)
+                Get their Injury Status and history
+                Get Deragatory Info
+                Get SPARQ
+                Link Player to College Table
+            For Teams
+                Get Defense Base (4-3 or 3-4)
+                    Update Code to classify DE as OLB or as DL depending on the base picked
+                Get Their Big Boards
+                Get Need Details
+                    Need Score for Each Position 0-100
+                    Count of Players @ Each Position of Need
+            For Team Get Draft Behavior\Tendencies
+                Schools they target
+                Division and Conferences they Target
+                stats targeted at each position
+                Taking Players with Character Issues
+            For Team
+                get list of player Visits
+                
+            Clean up my Tuples so I can use column names\attributes - use JSON
+            
+        '''
+
         #1 - get all rounds
         rounds = Draft.getAllRoundsByDraft(2017)
 
@@ -70,7 +97,7 @@ class Draft:
         for rnd in rounds:
 
             picks = Picks.Pick.getAllPicksForRound(2017,rnd[1])
-            print("Picks for round {} - {}".format(rnd[1],picks))
+            #print("Picks for round {} - {}".format(rnd[1],picks))
 
             #3 goto next pick
             for pck in picks:
@@ -93,7 +120,7 @@ class Draft:
                 else:
                     n=""
 
-                print("Team:{} Need:{}".format(teamName,n))
+                #print("Team:{} Need:{}".format(teamName,n))
                 if(n != ""):
                     passedUpPlayers = []
                     for p in Draft._prospects:
@@ -136,12 +163,12 @@ class Draft:
                                 break
                             else:
                                 passedUpPlayers.append([p[0],p[6]])
-                                print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
+                                #print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
                 else:
                     Team = abr
                     Player = Draft._prospects[0][0]
-                    print("Blind Pick Team{} Prospect:{}".format(Team,Player))
+                    #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
                     Draft._prospects.remove(Draft._prospects[0])
 
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player)

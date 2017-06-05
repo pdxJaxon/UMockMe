@@ -9,6 +9,7 @@ import Colleges
 import Drafts
 import Rounds
 import Picks
+import BigBoard
 
 
 
@@ -19,6 +20,18 @@ import Picks
 
 #Run Unit Tests to Ensure this is all behaving as expected
 def doTests():
+
+
+
+    # tear down db to recreate from scratch (for testing only)
+    DBLib.DB.TearDownDB()
+
+    # Create a New Cleaned Out DB
+    DBLib.DB.createDB()
+
+
+
+
 
     #Go Get Raw Prospect Data From NFL.com
     rawData = Prospects.Prospect.getRawData()
@@ -40,11 +53,8 @@ def doTests():
     jsonCollegeData = Colleges.College.stringToJson(rawCollegeData)
 
 
-    #tear down db to recreate from scratch (for testing only)
-    DBLib.DB.TearDownDB()
 
-    #Create a New Cleaned Out DB
-    DBLib.DB.createDB()
+
 
     #static data
     DBLib.DB.PopulatePicks()
@@ -52,6 +62,12 @@ def doTests():
 
     #Delete all records in DB if there are any
     #DBLib.DB.truncateDB()
+
+    # add teams to DB
+    Colleges.College.AddBatch(jsonCollegeData)
+
+    # Query Teams to make sure they made it into Db
+    colleges = Colleges.College.getAllColleges()
 
 
 
@@ -67,11 +83,7 @@ def doTests():
     #Query Teams to make sure they made it into Db
     teams = Teams.Team.getAllTeams()
 
-    # add teams to DB
-    Colleges.College.AddBatch(jsonCollegeData)
 
-    # Query Teams to make sure they made it into Db
-    colleges = Colleges.College.getAllColleges()
 
 
     #Drafts
@@ -103,6 +115,12 @@ def doTests():
     assert jsonData["2558834"]["firstName"] != ""
     assert prospects != None                            #Make sure our query from DB returned records as expected
 
+    bigBoardData = BigBoard.Board.getRawBigBoardDataForSource()  # Empty Parm = PFF
+    BigBoard.Board.AddBoard(1, 1, None, 'PFF')
+    BigBoard.Board.AddBatch(1,bigBoardData)
+
+    lsBoard = BigBoard.Board.getBigBoard()
+
     '''
     #Dump all DB Records for funsies
     for p in prospects:
@@ -117,6 +135,13 @@ def doTests():
 
     for c in colleges:
         print(c)
+
+    
+    
+
+
+    for bb in lsBoard:
+        print(bb)
 
     '''
 
