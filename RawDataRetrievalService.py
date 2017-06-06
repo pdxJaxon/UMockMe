@@ -119,7 +119,10 @@ def doTests():
     BigBoard.Board.AddBoard(1, 1, None, 'PFF')
     BigBoard.Board.AddBatch(1,bigBoardData)
 
-    lsBoard = BigBoard.Board.getBigBoard()
+    WalterBoard = BigBoard.Board.getRawBigBoardDataForSource(1)
+    BigBoard.Board.AddBoard(2,1,None,'WalterFootball')
+    BigBoard.Board.AddBatch(2,WalterBoard)
+
 
     '''
     #Dump all DB Records for funsies
@@ -145,6 +148,7 @@ def doTests():
 
     '''
 
+    Prospects.Prospect.CalculateUmockMeGrades()
 
     Drafts.Draft.doDraft()
 

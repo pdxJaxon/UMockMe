@@ -109,18 +109,31 @@ class Prospect:
 
                 #print(Id,lname,fname,pos,height,weight,grade)
 
-                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade)
+                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0)
+
+
+    def CalculateUmockMeGrades():
+        '''
+        This SHOULD Differ for each team, but we can ceate a baseline for the UMockMeGrade
+        expertGrade * 5
+        PFF Grade * 3
+        WalterFootball Grade
+        Deragatory
+        Sparq
+        MeetingScore
+        NeedScore
+        
+         
+        '''
+        return 0
 
 
 
 
 
 
-
-
-
-    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade):
-        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade)
+    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde):
+        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde)
 
 
 

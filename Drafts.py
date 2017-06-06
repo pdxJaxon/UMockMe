@@ -65,25 +65,29 @@ class Draft:
         ''' 
         Todo:
             For Prospects 
-                get their PFF Big Board Ranking (PFF)
+                get their PFF Big Board Ranking (PFF)   - DONE
+                get thier Walter Football Big Board Ranking
                 Get their Injury Status and history
                 Get Deragatory Info
                 Get SPARQ
                 Link Player to College Table
+                Calculate UMockeMe Grade
             For Teams
                 Get Defense Base (4-3 or 3-4)
                     Update Code to classify DE as OLB or as DL depending on the base picked
-                Get Their Big Boards
+                Get Their team specific Big Boards
                 Get Need Details
                     Need Score for Each Position 0-100
                     Count of Players @ Each Position of Need
-            For Team Get Draft Behavior\Tendencies
-                Schools they target
-                Division and Conferences they Target
-                stats targeted at each position
-                Taking Players with Character Issues
-            For Team
+                Get Draft Behavior\Tendencies
+                    Schools they target
+                    Division and Conferences they Target
+                    stats targeted at each position
+                    Taking Players with Character Issues
+                    Trading up and Trading Down
                 get list of player Visits
+            For Draft
+                Build in Trade Considerations\Transactions
                 
             Clean up my Tuples so I can use column names\attributes - use JSON
             

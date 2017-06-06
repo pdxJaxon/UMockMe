@@ -94,9 +94,71 @@ class Board:
                 cols = row.find_all('td')
                 cols = [ele.text.strip() for ele in cols]
                 lsBoard.append([ele for ele in cols if ele])
+        elif(Source==1):
+            url = "http://walterfootball.com/nfldraftbigboard"
 
+            page = requests.get(url)
 
-        #print(lsBoard)
+            soup = BeautifulSoup(page.content, 'html.parser')
+
+            # print(soup)
+
+            iCount=1
+
+            rows = soup.find_all('div',{"class":"divPlayerRanking"})
+
+            for row in rows:
+
+                divs = row.find_all('div', {"class": "cellDiv", "style": "width:93%;border-bottom:solid thin silver; padding-bottom:3px;"})
+
+                for d in divs:
+                    # print(d)
+                    p = d.find('b')
+
+                    elms = p.text.strip()
+
+                    lsElms=elms.split(",")
+
+                    PickNum=iCount
+                    Name=lsElms[0]
+                    l = len(lsElms[1])
+                    startPos = lsElms[1].rfind(" ", 0, l) +1
+
+                    POS = lsElms[1][startPos:l]
+
+                    l=len(lsElms[2])-1
+                    School=lsElms[2].strip()
+                    School = lsElms[2][1:l]
+
+                    lsBoard.append([PickNum,Name, POS,0,School])
+                    iCount+=1
+
+            for row in rows:
+
+                divs = row.find_all('div',{"class":"cellDiv","style":"width:93%; border-bottom:solid thin silver;"})
+
+                for d in divs:
+                    #print(d)
+                    p = d.find('b')
+
+                    elms = p.text.strip()
+
+                    lsElms = elms.split(",")
+
+                    PickNum=iCount
+                    Name = lsElms[0]
+                    l=len(lsElms[1])
+                    startPos = lsElms[1].rfind(" ",0,l)+1
+
+                    POS = lsElms[1][startPos:l]
+
+                    l = len(lsElms[2]) - 1
+                    School = lsElms[2].strip()
+                    School = lsElms[2][1:l]
+
+                    lsBoard.append([PickNum,Name,POS,0,School])
+
+            #print(lsBoard)
 
 
         return lsBoard
