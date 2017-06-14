@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>UMockMe.com - 2017 Draft</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-<div id="draftResult">
-    <table>
-        <th>
-            <td>Pick #</td>
-            <td>Team</td>
-            <td>Player</td>
-            <td>Position</td>
-            <td>School</td>
-        </th>
+
+<div id="draftResult" class="w3-container">
+    <h2>UMock Me Draft Results...</h2>
+    <table id="picks" class="w3-table w3-bordered w3-striped">
+        <tr class="w3-teal">
+            <th>Pick #</th>
+            <th>Team</th>
+            <th>Player</th>
+            <th>Position</th>
+            <th>School</th>
+        </tr>
         {%for p in picks %}
         <tr>
             <td>{{p.picknum}}</td>
