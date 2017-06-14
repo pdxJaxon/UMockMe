@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UMockMe.com - 2017 Draft</title>
+</head>
+<body>
+<div id="draftResult">
+    <table>
+        <th>
+            <td>Pick #</td>
+            <td>Team</td>
+            <td>Player</td>
+            <td>Position</td>
+            <td>School</td>
+        </th>
+        {%for p in picks %}
+        <tr>
+            <td>{{p.picknum}}</td>
+            <td>{{p.team}}</td>
+            <td>{{p.player}}</td>
+            <td>{{p.position}}</td>
+            <td>{{p.school}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
