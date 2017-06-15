@@ -160,7 +160,7 @@ class DB:
     def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade,College):
 
         sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}')".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College)
-        print(sql)
+        #print(sql)
         DB.ExecuteSQL(sql)
 
 

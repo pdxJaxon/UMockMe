@@ -113,7 +113,7 @@ class Prospect:
                 #todo: Add ProjectedDraftPick
                 #todo: add link to college
 
-                print(Id,lname,fname,pos,height,weight,grade,collegeName)
+                #print(Id,lname,fname,pos,height,weight,grade,collegeName)
 
                 Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,collegeName)
 
