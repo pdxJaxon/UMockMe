@@ -50,7 +50,7 @@ class DB:
 
                 cur = con.cursor()
 
-                cur.execute("CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float)")
+                cur.execute("CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
                 cur.execute("CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text, Needs Text)")
                 cur.execute("CREATE TABLE if not exists College(Id Int, Name Text, Conference Text)")
 
@@ -157,10 +157,10 @@ class DB:
 
 
 
-    def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade):
+    def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade,College):
 
-        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{})".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade)
-
+        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}')".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College)
+        print(sql)
         DB.ExecuteSQL(sql)
 
 
@@ -302,11 +302,29 @@ class DB:
         with con:
             cur = con.cursor()
 
-            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} ".format(round))
+            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade, x.school From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} ".format(round))
 
             PickDetails = cur.fetchall()
 
         return PickDetails
+
+
+
+
+    def GetCollegeById(id=-1):
+        con = lite.connect('UMockMe.db')
+        sql = "SELECT * FROM College WHERE id={}".format(id)
+
+        with con:
+            cur = con.cursor()
+            cur.execute(sql)
+
+            data = cur.fetchall()
+
+        return data
+
+
+
 
 
 
@@ -339,8 +357,8 @@ class DB:
 
 
                 expertGrade=0
-
-                DB.AddProspectDB(x,lname,fname,POS,0,0,expertGrade,0)
+                print(School)
+                DB.AddProspectDB(x,lname,fname,POS,0,0,expertGrade,0,School.replace("'","''"))
                 retVal=x
 
 

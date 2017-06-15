@@ -63,6 +63,18 @@ class College:
             College.AddCollege(id,name,conference)
 
 
+    def getCollegeById(id=-1):
+        college = DBLib.DB.GetCollegeById(id)
+
+        if(college):
+            return college
+        else:
+            return [{-1,"Unknown",""}]
+
+
+
+
+
 
 
     def AddCollege(id,name, conference):

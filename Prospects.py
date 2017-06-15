@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import json
 import DBLib
+import Colleges
 
 
 
@@ -90,7 +91,10 @@ class Prospect:
             # {'pos', 'weight', 'height', 'schoolYear', 'lastName', 'handSize', 'expertGrade', 'pick', 'video',
             #  'hasAnalysis', 'pickAnalysis', 'college', 'armLength', 'personId','firstName', 'fanPick'
 
+
+
             for dude in jsonData:
+                print(dude)
                 Id = jsonData[dude]["personId"]
                 lname = jsonData[dude]["lastName"].replace("'","''")                #parse any single quotes out of names.....it will blow up our SQL below
                 fname = jsonData[dude]["firstName"].replace("'","''")               #parse any single quotes out of names.....it will blow up our SQL below
@@ -103,13 +107,15 @@ class Prospect:
                 grade = jsonData[dude]["expertGrade"]
                 if(grade==None or grade==""):                                        #if expert grade not provided, just sort to bottom of list.....assume a Zero Grade.
                     grade=0
-
+                collegeId = jsonData[dude]["college"]
+                college = Colleges.College.getCollegeById(collegeId)
+                collegeName = college[0][1].replace("'","''")
                 #todo: Add ProjectedDraftPick
                 #todo: add link to college
 
-                #print(Id,lname,fname,pos,height,weight,grade)
+                print(Id,lname,fname,pos,height,weight,grade,collegeName)
 
-                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0)
+                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,collegeName)
 
 
     def CalculateUmockMeGrades():
@@ -132,8 +138,8 @@ class Prospect:
 
 
 
-    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde):
-        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde)
+    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college):
+        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college)
 
 
 

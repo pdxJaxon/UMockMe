@@ -37,6 +37,8 @@ def initSite():
     rawData = Prospects.Prospect.getRawData()
     jsonData = Prospects.Prospect.stringToJson(rawData)
 
+    #print(jsonData)
+
     # Go Get Raw Team Data
     rawTeamData = Teams.Team.getRawTeamData()
     jsonTeamData = Teams.Team.stringToJson(rawTeamData)
@@ -109,6 +111,9 @@ def hello():
 
 
 
+@app.route("/ComingSoon")
+def ComingSoon():
+    return render_template('ComingSoon.html')
 
 
 
