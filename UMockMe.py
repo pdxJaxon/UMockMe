@@ -138,6 +138,12 @@ def QuickDraft():
 
 
     picks = Picks.Pick.getAllPickDetailsForRound(2017, 1)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7)
 
 
     return render_template('QuickDraft.html',picks=picks)

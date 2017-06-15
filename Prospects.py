@@ -94,7 +94,6 @@ class Prospect:
 
 
             for dude in jsonData:
-                print(dude)
                 Id = jsonData[dude]["personId"]
                 lname = jsonData[dude]["lastName"].replace("'","''")                #parse any single quotes out of names.....it will blow up our SQL below
                 fname = jsonData[dude]["firstName"].replace("'","''")               #parse any single quotes out of names.....it will blow up our SQL below
@@ -111,7 +110,7 @@ class Prospect:
                 college = Colleges.College.getCollegeById(collegeId)
                 collegeName = college[0][1].replace("'","''")
                 #todo: Add ProjectedDraftPick
-                #todo: add link to college
+
 
                 #print(Id,lname,fname,pos,height,weight,grade,collegeName)
 

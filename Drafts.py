@@ -159,6 +159,7 @@ class Draft:
                                     for dp in Draft._prospects:
                                         if(dp[0] == AlternatePick[0]):
                                             Draft._prospects.remove(dp)
+                                            needs.remove(n)
 
                                 Team = abr
 
