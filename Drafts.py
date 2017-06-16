@@ -50,7 +50,11 @@ class Draft:
 
         for pup in passedUpPlayers:
             #print("Alternate - {}".format(pup))
-            if(pup[1] >= prospectPicked[6] + .5):
+            if(pup[1] >= prospectPicked[6] + .75):
+                BetterProspect = pup
+                break
+            #Check to See if in Needs List
+            if(pup[2] in needs and pup[1] >= prospectPicked[6] + .25):
                 BetterProspect = pup
                 break
 
@@ -167,7 +171,7 @@ class Draft:
 
                                 break
                             else:
-                                passedUpPlayers.append([p[0],p[6]])
+                                passedUpPlayers.append([p[0],p[6],pPos])
                                 #print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
                 else:
