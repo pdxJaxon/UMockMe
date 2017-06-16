@@ -54,7 +54,7 @@ class Draft:
 
         for pup in passedUpPlayers:
             #print("Alternate - {}".format(pup))
-            if(pup[1] >= prospectPicked[6] + 2.00):
+            if(pup[1] >= prospectPicked[6] + 1.50):
                 if(pup[2] in needs and rn>=5):
                     BetterProspect = pup
                     break
@@ -62,7 +62,7 @@ class Draft:
                     if(rn>=20):
                         BetterProspect = pup
                         break
-            elif(pup[1] >= prospectPicked[6] + 1.75):
+            elif(pup[1] >= prospectPicked[6] + 1.25):
                 if (pup[2] in needs and rn >= 20):
                     BetterProspect = pup
                     break
@@ -70,7 +70,7 @@ class Draft:
                     if (rn >= 35):
                         BetterProspect = pup
                         break
-            elif(pup[1] >= prospectPicked[6] + 1.50):
+            elif(pup[1] >= prospectPicked[6] + 1.00):
                 if (pup[2] in needs and rn >= 30):
                     BetterProspect = pup
                     break
@@ -78,7 +78,7 @@ class Draft:
                     if (rn >= 50):
                         BetterProspect = pup
                         break
-            elif(pup[1] >= prospectPicked[6] + 1.00):
+            elif(pup[1] >= prospectPicked[6] + .80):
                 if (pup[2] in needs and rn >= 50):
                     BetterProspect = pup
                     break
@@ -86,7 +86,7 @@ class Draft:
                     if (rn >= 75):
                         BetterProspect = pup
                         break
-            elif(pup[1] >= prospectPicked[6] + .75):
+            elif(pup[1] >= prospectPicked[6] + .65):
                 if (pup[2] in needs and rn >= 70):
                     BetterProspect = pup
                     break
