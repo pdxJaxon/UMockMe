@@ -157,6 +157,18 @@ class Draft:
 
 
 
+    def removeTeamNeedFromCache(TeamAbbr,NeedPosition):
+        for i in Draft._allTeamNeeds:
+            if(i[0]==TeamAbbr and (NeedPosition in i[1])):
+                oldNeeds = i[1]
+                StartPos=str(oldNeeds).find(NeedPosition)
+                LenPos = len(NeedPosition)
+
+                newNeeds=str(oldNeeds).replace(NeedPosition,"")
+                newNeeds=newNeeds.replace("::",":")
+
+                i[1]=newNeeds
+                break
 
 
 
@@ -240,7 +252,7 @@ class Draft:
                     passedUpPlayers = []
                     for p in Draft._prospects:
                         if(p[0]!=0):
-                            pPos = p[3]
+                            pPos = p[3]     #Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
                             if(pPos=="C" or pPos=="OT" or pPos=="OG"):
                                 pPos="OL"
                             if(pPos=="DT" or pPos=="NT"):
@@ -258,11 +270,12 @@ class Draft:
 
 
                                 if(not AlternatePick):
-                                    if(PickLikelihood>=10):
+                                    if(PickLikelihood>=10): #90% chance that we pick this dude......
                                         Player = p[0]
 
                                         Draft._prospects.remove(p)
-                                        needs.remove(n)
+                                        #needs.remove(n)
+                                        Draft.removeTeamNeedFromCache(abr, n)
                                     else:
                                         passedUpPlayers.append([p[0],p[6],pPos])
 
@@ -276,9 +289,11 @@ class Draft:
                                             Draft._prospects.remove(dp)
 
                                             #find position in needs list that matches dp[pos]
-                                            for i in needs:
-                                                if(i[0] ==dp[3]):
-                                                    needs.remove(i)
+                                            # for i in needs:
+                                            #     if(i[0] ==dp[3]):
+                                            #         needs.remove(i)
+
+                                            Draft.removeTeamNeedFromCache(abr, dp[3])
 
                                 Team = abr
 
@@ -286,16 +301,18 @@ class Draft:
 
                                 break
                             else:
+                                #This player was a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
                                 passedUpPlayers.append([p[0],p[6],pPos])
                                 #print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
-                else:
+                else: #No Needs left for Team, so pick next best player available......GAJ
                     Team = abr
                     Player = Draft._prospects[0][0]
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
                     Draft._prospects.remove(Draft._prospects[0])
 
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player)
+                    Draft.removeTeamNeedFromCache(abr,Draft._prospects[0][3])
 
 
 
