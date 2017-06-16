@@ -9,6 +9,7 @@ import Teams
 import Prospects
 import Rounds
 import Picks
+from random import *
 
 
 
@@ -16,6 +17,8 @@ class Draft:
 
 
     _prospects = Prospects.Prospect.getAllProspects()
+    _allTeamNeeds = []
+
 
     #Draft(DraftID int, Year int)")
     def AddDraft(id,Year):
@@ -47,19 +50,113 @@ class Draft:
         BetterProspect = None
 
         #print("Pick:{}".format(prospectPicked))
+        rn=randint(1,100)
 
         for pup in passedUpPlayers:
             #print("Alternate - {}".format(pup))
-            if(pup[1] >= prospectPicked[6] + .75):
-                BetterProspect = pup
-                break
-            #Check to See if in Needs List
-            if(pup[2] in needs and pup[1] >= prospectPicked[6] + .25):
-                BetterProspect = pup
-                break
-
+            if(pup[1] >= prospectPicked[6] + 2.00):
+                if(pup[2] in needs and rn>=5):
+                    BetterProspect = pup
+                    break
+                else:
+                    if(rn>=20):
+                        BetterProspect = pup
+                        break
+            elif(pup[1] >= prospectPicked[6] + 1.75):
+                if (pup[2] in needs and rn >= 20):
+                    BetterProspect = pup
+                    break
+                else:
+                    if (rn >= 35):
+                        BetterProspect = pup
+                        break
+            elif(pup[1] >= prospectPicked[6] + 1.50):
+                if (pup[2] in needs and rn >= 30):
+                    BetterProspect = pup
+                    break
+                else:
+                    if (rn >= 50):
+                        BetterProspect = pup
+                        break
+            elif(pup[1] >= prospectPicked[6] + 1.00):
+                if (pup[2] in needs and rn >= 50):
+                    BetterProspect = pup
+                    break
+                else:
+                    if (rn >= 75):
+                        BetterProspect = pup
+                        break
+            elif(pup[1] >= prospectPicked[6] + .75):
+                if (pup[2] in needs and rn >= 70):
+                    BetterProspect = pup
+                    break
+                else:
+                    if (rn >= 80):
+                        BetterProspect = pup
+                        break
+            elif (pup[1] >= prospectPicked[6] + .50):
+                if (pup[2] in needs and rn >= 80):
+                    BetterProspect = pup
+                    break
+                else:
+                    if (rn >= 90):
+                        BetterProspect = pup
+                        break
+            elif (pup[1] >= prospectPicked[6]):
+                if (pup[2] in needs and rn >= 90):
+                    BetterProspect = pup
+                    break
+                else:
+                    if (rn >= 95):
+                        BetterProspect = pup
+                        break
 
         return BetterProspect
+
+
+
+    def getTeamNeeds(teamAbbr):
+
+        needs=[]
+
+        if(Draft._allTeamNeeds):
+
+            teamFound=False
+
+            for t in Draft._allTeamNeeds:
+                if(t[0]==teamAbbr):
+                    teamFound=True
+                    needs=t[1]
+
+
+            if(teamFound==False):
+                needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
+                Draft._allTeamNeeds.append([teamAbbr, needs])
+
+
+
+        else:
+            needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
+            Draft._allTeamNeeds.append([teamAbbr,needs])
+
+        return needs.split(':')
+
+
+
+    def cacheTeamNeeds():
+
+        theTeams = Teams.Team.getAllTeams()
+        for t in theTeams:
+            city = t[2]
+            abr = t[0]
+            teamName = t[3]
+
+            needs = Teams.Team.getNeedsByTeam(city,abr,teamName)
+
+            Draft._allTeamNeeds.append([abr,needs])
+
+
+
 
 
 
@@ -97,6 +194,10 @@ class Draft:
             
         '''
 
+        Draft.cacheTeamNeeds()
+
+
+
         #1 - get all rounds
         rounds = Draft.getAllRoundsByDraft(2017)
 
@@ -106,6 +207,8 @@ class Draft:
 
             picks = Picks.Pick.getAllPicksForRound(2017,rnd[1])
             #print("Picks for round {} - {}".format(rnd[1],picks))
+
+
 
             #3 goto next pick
             for pck in picks:
@@ -119,7 +222,11 @@ class Draft:
                 abr = t[0][0]
                 teamName = t[0][3]
 
-                needs = Teams.Team.getNeedsByTeam(city,abr,teamName).split(":")
+
+
+                needs = Draft.getTeamNeeds(abr)
+
+
                 #print("Needs-->",needs)
 
 
@@ -147,13 +254,17 @@ class Draft:
 
                                 AlternatePick = Drafts.Draft.BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
 
+                                PickLikelihood = randint(1,100)
+
+
                                 if(not AlternatePick):
-                                    Player = p[0]
+                                    if(PickLikelihood>=10):
+                                        Player = p[0]
 
-
-
-                                    Draft._prospects.remove(p)
-                                    needs.remove(n)
+                                        Draft._prospects.remove(p)
+                                        needs.remove(n)
+                                    else:
+                                        passedUpPlayers.append([p[0],p[6],pPos])
 
 
                                 else:
@@ -163,7 +274,11 @@ class Draft:
                                     for dp in Draft._prospects:
                                         if(dp[0] == AlternatePick[0]):
                                             Draft._prospects.remove(dp)
-                                            needs.remove(n)
+
+                                            #find position in needs list that matches dp[pos]
+                                            for i in needs:
+                                                if(i[0] ==dp[3]):
+                                                    needs.remove(i)
 
                                 Team = abr
 

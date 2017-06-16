@@ -14,6 +14,13 @@ class Team:
 
 
 
+    def getStoredNeedsByTeam(teamAbbr):
+        needs = DBLib.DB.getTeamNeeds(teamAbbr)
+        return needs
+
+
+
+
 
     def getNeedsByTeam(city,teamAbr,teamName):
 

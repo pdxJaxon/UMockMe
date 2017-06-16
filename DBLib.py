@@ -239,6 +239,21 @@ class DB:
 
 
 
+    def getTeamNeeds(teamAbbr):
+        con = lite.connect('UMockMe.db')
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT Needs FROM Team WHERE Abbr='{}'".format(teamAbbr))
+
+            needs = cur.fetchall()
+
+            return needs
+
+
+
+
+
 
     def getDraftByYear(Year):
         con = lite.connect('UMockMe.db')
