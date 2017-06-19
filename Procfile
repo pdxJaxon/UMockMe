@@ -1,3 +1,3 @@
 #web: python UMockMe.py ${PORT}
-web: gunicorn umockme:app
+web: gunicorn UMockMe:app
 heroku ps:scale web=1
