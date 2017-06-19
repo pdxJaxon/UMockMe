@@ -7,6 +7,7 @@ import Drafts
 import Rounds
 import Picks
 import BigBoard
+import os
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -154,5 +155,6 @@ def QuickDraft():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    port=int(os.environ.get('Port',5000))
+    app.run(host='0.0.0.0',port=port)
 
