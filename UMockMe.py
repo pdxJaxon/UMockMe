@@ -7,21 +7,26 @@ import Drafts
 import Rounds
 import Picks
 import BigBoard
-import os
+import uuid
+
+
+
 
 import logging
 from logging.handlers import RotatingFileHandler
 
 
-from flask import Flask
+from flask import Flask, session
 from flask import render_template
 
 app = Flask(__name__)
+app.secret_key = "I Like Turtles"
+app.config['SESSION_TYPE'] = 'filesystem'
+
+
 
 app.logger.setLevel(logging.INFO)
 app.logger.disabled=False
-
-
 
 
 @app.before_first_request
@@ -48,8 +53,7 @@ def initSite():
     rawCollegeData = Colleges.College.getCollegeData()
     jsonCollegeData = Colleges.College.stringToJson(rawCollegeData)
 
-    # static data
-    DBLib.DB.PopulatePicks()
+
 
     app.logger.info("HERE 2")
 
@@ -84,7 +88,7 @@ def initSite():
 
 
     # Picks
-    picks = Picks.Pick.getAllPicksForRound(2017, 1)
+    #picks = Picks.Pick.getAllPicksForRound(2017, 1)
 
     app.logger.info("HERE 4")
 
@@ -135,16 +139,22 @@ def QuickDraft():
     SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade
     '''
 
+    try:
+        sessionid = session['sessionid']
+    except KeyError:
+        session['sessionid'] = uuid.uuid1()
+        sessionid = session['sessionid']
+
     Drafts.Draft.doDraft()
 
 
-    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7)
+    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1,sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2,sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3,sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4,sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5,sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6,sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7,sessionid)
 
 
     return render_template('QuickDraft.html',picks=picks)
@@ -155,6 +165,7 @@ def QuickDraft():
 
 
 if __name__ == "__main__":
-    port=int(os.environ.get('Port',5000))
-    app.run(host='0.0.0.0',port=port)
+
+    app.run(host='0.0.0.0')
+
 

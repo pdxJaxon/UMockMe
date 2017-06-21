@@ -10,7 +10,9 @@ import Prospects
 import Rounds
 import Picks
 from random import *
+import uuid
 
+from flask import Flask, session
 
 
 class Draft:
@@ -175,6 +177,12 @@ class Draft:
 
     def doDraft():
 
+        try:
+            sessionid=session['sessionid']
+        except KeyError:
+            session['sessionid'] = uuid.uuid1()
+            sessionid=session['sessionid']
+
         ''' 
         Todo:
             For Prospects 
@@ -213,11 +221,13 @@ class Draft:
         #1 - get all rounds
         rounds = Draft.getAllRoundsByDraft(2017)
 
+        # static data
+        DBLib.DB.PopulatePicks(sessionid)
         
         #2 - Goto Round 1
         for rnd in rounds:
 
-            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1])
+            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1],sessionid)
             #print("Picks for round {} - {}".format(rnd[1],picks))
 
 
@@ -297,7 +307,7 @@ class Draft:
 
                                 Team = abr
 
-                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player)
+                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,sessionid)
 
                                 break
                             else:
@@ -311,7 +321,7 @@ class Draft:
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
                     Draft._prospects.remove(Draft._prospects[0])
 
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player)
+                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,sessionid)
                     Draft.removeTeamNeedFromCache(abr,Draft._prospects[0][3])
 
 

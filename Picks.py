@@ -13,17 +13,17 @@ class Pick:
 
 
     # Will return all Teams from DB
-    def getAllPicksForRound(year,round):
-        picks = DBLib.DB.GetAllPicksForRoundDB(year,round)
+    def getAllPicksForRound(year,round,sessionid):
+        picks = DBLib.DB.GetAllPicksForRoundDB(year,round,sessionid)
         return picks
 
 
 
-    def getAllPickDetailsForRound(year,round):
-        pickdetails = DBLib.DB.GetAllPickDetailsForRoundDB(year,round)
+    def getAllPickDetailsForRound(year,round,sessionid):
+        pickdetails = DBLib.DB.GetAllPickDetailsForRoundDB(year,round,sessionid)
         return pickdetails
 
 
-    def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player):
-        #print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player))
-        DBLib.DB.UpdatePick(rnd,PickNum,OverallPickNum,Team,Player)
+    def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player,sessionid):
+        #print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player,sessionid))
+        DBLib.DB.UpdatePick(rnd,PickNum,OverallPickNum,Team,Player,sessionid)
