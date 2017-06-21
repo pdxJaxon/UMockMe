@@ -32,40 +32,45 @@ app.logger.disabled=False
 @app.before_first_request
 def initSite():
 
-    app.logger.info("HERE")
+
     # tear down db to recreate from scratch (for testing only)
-    DBLib.DB.TearDownDB()
+    #DBLib.DB.TearDownDB()
 
     # Create a New Cleaned Out DB
-    DBLib.DB.createDB()
+    #DBLib.DB.createDB()
 
     # Go Get Raw Prospect Data From NFL.com
     rawData = Prospects.Prospect.getRawData()
     jsonData = Prospects.Prospect.stringToJson(rawData)
 
+    app.logger.warn("Prospects Retrievec")
+    print("Prospects Retrieved")
     #print(jsonData)
 
     # Go Get Raw Team Data
     rawTeamData = Teams.Team.getRawTeamData()
     jsonTeamData = Teams.Team.stringToJson(rawTeamData)
 
+    app.logger.warn("Teams Retrievec")
+    print("Teams Retrieved")
     # Get College Data
     rawCollegeData = Colleges.College.getCollegeData()
     jsonCollegeData = Colleges.College.stringToJson(rawCollegeData)
 
-
-
-    app.logger.info("HERE 2")
+    app.logger.warn("Colleges Retrievec")
+    print("Colleges Retrieved")
 
 
     # add teams to DB
-    Colleges.College.AddBatch(jsonCollegeData)
+    if(jsonCollegeData):
+        Colleges.College.AddBatch(jsonCollegeData)
 
     # Query Teams to make sure they made it into Db
     colleges = Colleges.College.getAllColleges()
 
     # Pump all of our JSON records into the DB
-    Prospects.Prospect.AddBatch(jsonData)
+    if(jsonData):
+        Prospects.Prospect.AddBatch(jsonData)
 
     app.logger.info("HERE 3")
 
@@ -73,7 +78,10 @@ def initSite():
     prospects = Prospects.Prospect.getAllProspects()
 
     # add teams to DB
-    Teams.Team.AddBatch(jsonTeamData)
+    if(jsonTeamData):
+        Teams.Team.AddBatch(jsonTeamData)
+
+    print("DB Updated")
 
     # Query Teams to make sure they made it into Db
     teams = Teams.Team.getAllTeams()
@@ -85,7 +93,7 @@ def initSite():
     # Rounds
     rounds = Rounds.Round.getAllRoundsForDraft(2017)
 
-
+    print("Draft Rounds Retrieved")
 
     # Picks
     #picks = Picks.Pick.getAllPicksForRound(2017, 1)

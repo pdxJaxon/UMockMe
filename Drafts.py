@@ -322,7 +322,7 @@ class Draft:
                     Draft._prospects.remove(Draft._prospects[0])
 
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,sessionid)
-                    Draft.removeTeamNeedFromCache(abr,Draft._prospects[0][3])
+                   
 
 
 
