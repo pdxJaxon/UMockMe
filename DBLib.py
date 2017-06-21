@@ -497,6 +497,18 @@ class DB:
 
 
 
+
+    def DeletePicksForSession(sessionid):
+        sql="DELETE FROM PICK WHERE SessionId='{}'".format(sessionid)
+
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+
+
     def PopulatePicks(sessionid):
         con = lite.connect('UMockMe.db')
 

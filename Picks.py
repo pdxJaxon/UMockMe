@@ -24,6 +24,12 @@ class Pick:
         return pickdetails
 
 
+
+    def DeletePicksForSession(session):
+        DBLib.DB.DeletePicksForSession(session)
+
+
+
     def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player,sessionid):
         #print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player,sessionid))
         DBLib.DB.UpdatePick(rnd,PickNum,OverallPickNum,Team,Player,sessionid)

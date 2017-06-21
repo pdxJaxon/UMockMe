@@ -156,6 +156,7 @@ def QuickDraft():
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 6,sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 7,sessionid)
 
+    Picks.Pick.DeletePicksForSession(sessionid)
 
     return render_template('QuickDraft.html',picks=picks)
 
