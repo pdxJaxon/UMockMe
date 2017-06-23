@@ -1,6 +1,7 @@
 import sqlite3 as lite
 import sys
 from random import *
+from datetime import datetime, timedelta
 
 
 class DB:
@@ -74,7 +75,7 @@ class DB:
                 cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
 
 
-                cur.execute("CREATE TABLE if not exists Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int, SessionId Text)")
+                cur.execute("CREATE TABLE if not exists Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int, SessionId Text, CreateDate Text)")
 
 
 
@@ -508,6 +509,19 @@ class DB:
 
 
 
+    def DeleteStalePicks():
+        StaleDate = str(datetime.now() - datetime.timedelta(days=1))
+        sql="DELETE FROM PICK WHERE CreateData <'{}'".format(StaleDate)
+
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+
+
+
 
     def PopulatePicks(sessionid):
         con = lite.connect('UMockMe.db')
@@ -515,7 +529,8 @@ class DB:
         with con:
             cur = con.cursor()
 
-            cur.execute("DELETE FROM PICK WHERE sessionid='{}'".format(sessionid))
+            cur.execute("DELETE FROM PICK WHERE SessionId='{}'".format(sessionid))
+            cur.execute("DELETE FROM PICK")
 
 
             # 1 - 32 picks
