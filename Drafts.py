@@ -23,6 +23,8 @@ class Draft:
     def __init__(self,sessionId):
         self._sessionId = sessionId
         self._prospects = Prospects.Prospect.getAllProspects()
+        for p in self._prospects:
+            print(p)
         self._allTeamNeeds = []
 
     def __del__(self):
@@ -266,7 +268,7 @@ class Draft:
                 city = t[0][2]
                 abr = t[0][0]
                 teamName = t[0][3]
-
+                Team = abr
 
 
                 needs = self.getTeamNeeds(abr)
@@ -305,7 +307,7 @@ class Draft:
                                 if(not AlternatePick):
                                     if(PickLikelihood>=10): #90% chance that we pick this dude......
                                         Player = p[0]
-
+                                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
                                         self.removeProspectFromCache(Player)
                                         #needs.remove(n)
                                         self.removeTeamNeedFromCache(abr, n)
@@ -319,6 +321,7 @@ class Draft:
 
                                     for dp in self._prospects:
                                         if(dp[0] == AlternatePick[0]):
+                                            Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
                                             self.removeProspectFromCache(dp[0])
 
                                             #find position in needs list that matches dp[pos]
@@ -328,9 +331,9 @@ class Draft:
 
                                             self.removeTeamNeedFromCache(abr, dp[3])
 
-                                Team = abr
 
-                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,self._sessionId)
+
+
 
                                 break
                             else:
@@ -341,10 +344,13 @@ class Draft:
                 else: #No Needs left for Team, so pick next best player available......GAJ
                     Team = abr
                     Player = self._prospects[0][0]
+
+                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
+
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
                     self.removeProspectFromCache(Player)
 
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,self._sessionId)
+
 
 
 
