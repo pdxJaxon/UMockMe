@@ -18,8 +18,18 @@ from flask import Flask, session
 class Draft:
 
 
-    _prospects = Prospects.Prospect.getAllProspects()
-    _allTeamNeeds = []
+
+
+    def __init__(self,sessionId):
+        self._sessionId = sessionId
+        self._prospects = Prospects.Prospect.getAllProspects()
+        self._allTeamNeeds = []
+
+    def __del__(self):
+        self._prospects=""
+        self._allTeamNeeds=""
+
+
 
 
     #Draft(DraftID int, Year int)")
@@ -117,15 +127,16 @@ class Draft:
 
 
 
-    def getTeamNeeds(teamAbbr):
+    def getTeamNeeds(self,teamAbbr):
 
         needs=[]
 
-        if(Draft._allTeamNeeds):
+
+        if(self._allTeamNeeds):
 
             teamFound=False
 
-            for t in Draft._allTeamNeeds:
+            for t in self._allTeamNeeds:
                 if(t[0]==teamAbbr):
                     teamFound=True
                     needs=t[1]
@@ -133,19 +144,23 @@ class Draft:
 
             if(teamFound==False):
                 needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
-                Draft._allTeamNeeds.append([teamAbbr, needs])
+                self._allTeamNeeds.append([teamAbbr, needs])
 
 
 
         else:
             needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
-            Draft._allTeamNeeds.append([teamAbbr,needs])
+            self._allTeamNeeds=[]
+            self._allTeamNeeds.append([teamAbbr,needs])
 
         return needs.split(':')
 
 
 
-    def cacheTeamNeeds():
+    def cacheTeamNeeds(self):
+
+        #We need to account for position translations for OL, DL, etc.
+        self._allTeamNeeds=[]
 
         theTeams = Teams.Team.getAllTeams()
         for t in theTeams:
@@ -153,14 +168,17 @@ class Draft:
             abr = t[0]
             teamName = t[3]
 
-            needs = Teams.Team.getNeedsByTeam(city,abr,teamName)
+            needs = t[6]
 
-            Draft._allTeamNeeds.append([abr,needs])
+            self._allTeamNeeds.append([abr,needs])
 
 
 
-    def removeTeamNeedFromCache(TeamAbbr,NeedPosition):
-        for i in Draft._allTeamNeeds:
+    def removeTeamNeedFromCache(self,TeamAbbr,NeedPosition):
+
+        #Need to account for pos translations
+
+        for i in self._allTeamNeeds:
             if(i[0]==TeamAbbr and (NeedPosition in i[1])):
                 oldNeeds = i[1]
                 StartPos=str(oldNeeds).find(NeedPosition)
@@ -174,14 +192,19 @@ class Draft:
 
 
 
+    def removeProspectFromCache(self,ProspectId):
+        for p in self._prospects:
+            if(p[0]==ProspectId):
+                self._prospects.remove(p)
+                break
 
-    def doDraft():
 
-        try:
-            sessionid=session['sessionid']
-        except KeyError:
-            session['sessionid'] = uuid.uuid1()
-            sessionid=session['sessionid']
+
+
+
+
+    def doDraft(self):
+
 
         ''' 
         Todo:
@@ -214,7 +237,7 @@ class Draft:
             
         '''
 
-        Draft.cacheTeamNeeds()
+        self.cacheTeamNeeds()
 
 
 
@@ -222,12 +245,12 @@ class Draft:
         rounds = Draft.getAllRoundsByDraft(2017)
 
         # static data
-        DBLib.DB.PopulatePicks(sessionid)
+        DBLib.DB.PopulatePicks(self._sessionId)   #this is only gonna work for current  year......
         
         #2 - Goto Round 1
         for rnd in rounds:
 
-            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1],sessionid)
+            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1],self._sessionId)
             #print("Picks for round {} - {}".format(rnd[1],picks))
 
 
@@ -246,7 +269,7 @@ class Draft:
 
 
 
-                needs = Draft.getTeamNeeds(abr)
+                needs = self.getTeamNeeds(abr)
 
 
                 #print("Needs-->",needs)
@@ -260,7 +283,7 @@ class Draft:
                 #print("Team:{} Need:{}".format(teamName,n))
                 if(n != ""):
                     passedUpPlayers = []
-                    for p in Draft._prospects:
+                    for p in self._prospects:
                         if(p[0]!=0):
                             pPos = p[3]     #Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
                             if(pPos=="C" or pPos=="OT" or pPos=="OG"):
@@ -283,9 +306,9 @@ class Draft:
                                     if(PickLikelihood>=10): #90% chance that we pick this dude......
                                         Player = p[0]
 
-                                        Draft._prospects.remove(p)
+                                        self.removeProspectFromCache(Player)
                                         #needs.remove(n)
-                                        Draft.removeTeamNeedFromCache(abr, n)
+                                        self.removeTeamNeedFromCache(abr, n)
                                     else:
                                         passedUpPlayers.append([p[0],p[6],pPos])
 
@@ -294,20 +317,20 @@ class Draft:
                                     #BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
                                     Player = AlternatePick[0]
 
-                                    for dp in Draft._prospects:
+                                    for dp in self._prospects:
                                         if(dp[0] == AlternatePick[0]):
-                                            Draft._prospects.remove(dp)
+                                            self.removeProspectFromCache(dp[0])
 
                                             #find position in needs list that matches dp[pos]
                                             # for i in needs:
                                             #     if(i[0] ==dp[3]):
                                             #         needs.remove(i)
 
-                                            Draft.removeTeamNeedFromCache(abr, dp[3])
+                                            self.removeTeamNeedFromCache(abr, dp[3])
 
                                 Team = abr
 
-                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,sessionid)
+                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,self._sessionId)
 
                                 break
                             else:
@@ -317,19 +340,19 @@ class Draft:
 
                 else: #No Needs left for Team, so pick next best player available......GAJ
                     Team = abr
-                    Player = Draft._prospects[0][0]
+                    Player = self._prospects[0][0]
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
-                    Draft._prospects.remove(Draft._prospects[0])
+                    self.removeProspectFromCache(Player)
 
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,sessionid)
-                   
+                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player,self._sessionId)
+
 
 
 
 
 
         #LOOP
-        return True
+
 
 
 
