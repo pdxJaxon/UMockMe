@@ -23,8 +23,7 @@ class Draft:
     def __init__(self,sessionId):
         self._sessionId = sessionId
         self._prospects = Prospects.Prospect.getAllProspects()
-        for p in self._prospects:
-            print(p)
+       
         self._allTeamNeeds = []
 
     def __del__(self):
