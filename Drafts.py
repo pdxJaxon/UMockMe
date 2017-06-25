@@ -23,7 +23,7 @@ class Draft:
     def __init__(self,sessionId):
         self._sessionId = sessionId
         self._prospects = Prospects.Prospect.getAllProspects()
-       
+
         self._allTeamNeeds = []
 
     def __del__(self):
@@ -128,6 +128,9 @@ class Draft:
 
 
 
+
+
+
     def getTeamNeeds(self,teamAbbr):
 
         needs=[]
@@ -158,6 +161,12 @@ class Draft:
 
 
 
+
+
+
+
+
+
     def cacheTeamNeeds(self):
 
         #We need to account for position translations for OL, DL, etc.
@@ -172,6 +181,12 @@ class Draft:
             needs = t[6]
 
             self._allTeamNeeds.append([abr,needs])
+
+
+
+
+
+
 
 
 
@@ -190,6 +205,12 @@ class Draft:
 
                 i[1]=newNeeds
                 break
+
+
+
+
+
+
 
 
 
