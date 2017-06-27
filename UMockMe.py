@@ -34,8 +34,31 @@ app.logger.disabled=False
 def initSite():
     return True
 
+@app.route("/EditProspects")
+def EditProspects():
+    return render_template('EditProspects.html')
 
 
+
+
+
+
+@app.route("/EditTeams")
+def EditTeams():
+    tms = Teams.Team.getAllTeams()
+
+    return render_template('EditTeams.html',teams=tms)
+
+
+
+
+
+
+
+
+@app.route("/CustomDraft")
+def CustomDraft():
+    return render_template('CustomDraft.html')
 
 
 

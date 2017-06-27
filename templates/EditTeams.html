@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UMockMe.com - Edit Team Needs</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+<div id="EditTeams" class="w3-container">
+    <h2>UMockMe.com - Edit Team Needs...</h2>
+    <form name="frm" id="frm">
+    <select size="1">
+        {%for t in teams %}
+        <option value="{{t[0]}}">{{t[2] + " " + t[3]}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" />
+    </form>
+</div>
+</body>
+</html>
