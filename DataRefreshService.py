@@ -17,11 +17,15 @@ class DataDude:
         # tear down db to recreate from scratch (for testing only)
         DBLib.DB.TearDownDB()
 
+        print("DB Torn Down")
+
         # Create a New Cleaned Out DB
         DBLib.DB.createDB()
 
+        print("DB CREATED FROM SCRATCH")
 
 
+        return True
 
 
 
@@ -52,18 +56,24 @@ class DataDude:
         if (jsonCollegeData):
             Colleges.College.AddBatch(jsonCollegeData)
 
-            # Pump all of our JSON records into the DB
-            if (jsonData):
-                Prospects.Prospect.AddBatch(jsonData)
+        print("Colleges Updated")
+
+        # Pump all of our JSON records into the DB
+        if (jsonData):
+            Prospects.Prospect.AddBatch(jsonData)
 
 
-
+        print("Prospects Updated")
 
             # add teams to DB
         if (jsonTeamData):
             Teams.Team.AddBatch(jsonTeamData)
 
-        print("DB Updated")
+        print("NFL Teams Updated")
+
+        print("DB Refresh Complete")
+
+
 
         bigBoardData = BigBoard.Board.getRawBigBoardDataForSource()  # Empty Parm = PFF
         BigBoard.Board.AddBoard(1, 1, None, 'PFF')

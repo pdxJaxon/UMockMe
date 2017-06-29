@@ -26,6 +26,10 @@ class Draft:
 
         self._allTeamNeeds = []
 
+
+
+
+
     def __del__(self):
         self._prospects=""
         self._allTeamNeeds=""
@@ -141,23 +145,25 @@ class Draft:
             teamFound=False
 
             for t in self._allTeamNeeds:
-                if(t[0]==teamAbbr):
+                if(t[0][0]==teamAbbr):
                     teamFound=True
-                    needs=t[1]
-
+                    needs=t
+                    print("NEEDS From Get() {}".format(needs))
 
             if(teamFound==False):
                 needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
-                self._allTeamNeeds.append([teamAbbr, needs])
+                for n in needs:
+                    self._allTeamNeeds.append(n)
 
 
 
         else:
             needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
             self._allTeamNeeds=[]
-            self._allTeamNeeds.append([teamAbbr,needs])
+            for n in needs:
+                self._allTeamNeeds.append(n)
 
-        return needs.split(':')
+        return needs
 
 
 
@@ -178,9 +184,20 @@ class Draft:
             abr = t[0]
             teamName = t[3]
 
-            needs = t[6]
+            #[('CHI', 'CB', 90, 1), ('CHI', 'OL', 85, 1), ('CHI', 'TE', 80, 1), ('CHI', 'LB', 75, 1),('CHI', 'S', 70, 1), ('CHI', 'QB', 65, 1)]
+            needs = Teams.Team.getTeamNeeds(abr)
 
-            self._allTeamNeeds.append([abr,needs])
+            for n in needs:
+                if (n[1] == "C" or n[1] == "OT" or n[1] == "OG"):
+                    n[1] = "OL"
+                if (n[1] == "DT" or n[1] == "NT"):
+                    n[1] = "DL"
+                if (n[1] == "OLB" or n[1] == "ILB" or n[1] == "DE"):
+                    n[1] = "LB"
+                if (n[1] == "SS" or n[1] == "FS"):
+                    n[1] = "S"
+
+            self._allTeamNeeds.append(needs)
 
 
 
@@ -192,18 +209,28 @@ class Draft:
 
     def removeTeamNeedFromCache(self,TeamAbbr,NeedPosition):
 
+
         #Need to account for pos translations
+        newNeeds = []
 
         for i in self._allTeamNeeds:
-            if(i[0]==TeamAbbr and (NeedPosition in i[1])):
-                oldNeeds = i[1]
-                StartPos=str(oldNeeds).find(NeedPosition)
-                LenPos = len(NeedPosition)
+            if(i[0][0]==TeamAbbr):
 
-                newNeeds=str(oldNeeds).replace(NeedPosition,"")
-                newNeeds=newNeeds.replace("::",":")
+                # [('CLE', 'QB', 90, 1), ('CLE', 'DL', 85, 1), ('CLE', 'LB', 80, 1), ('CLE', 'CB', 75, 1), ('CLE', 'S', 70, 1)]
+                print("Team {} start need {}".format(TeamAbbr,i))
+                print("PickedPos {}".format(NeedPosition))
+                #print("Is this json - {}".format(i[0]))
+                for n in i:
 
-                i[1]=newNeeds
+                    if(NeedPosition not in n):
+                        #build a new needs list - MINUS The need they just fulfilled
+                        newNeeds.append(n)
+
+
+                i=newNeeds
+
+
+                print("New Team Needs {}".format(i))
                 break
 
 
@@ -228,36 +255,6 @@ class Draft:
     def doDraft(self):
 
 
-        ''' 
-        Todo:
-            For Prospects 
-                get their PFF Big Board Ranking (PFF)   - DONE
-                get thier Walter Football Big Board Ranking
-                Get their Injury Status and history
-                Get Deragatory Info
-                Get SPARQ
-                Link Player to College Table
-                Calculate UMockeMe Grade
-            For Teams
-                Get Defense Base (4-3 or 3-4)
-                    Update Code to classify DE as OLB or as DL depending on the base picked
-                Get Their team specific Big Boards
-                Get Need Details
-                    Need Score for Each Position 0-100
-                    Count of Players @ Each Position of Need
-                Get Draft Behavior\Tendencies
-                    Schools they target
-                    Division and Conferences they Target
-                    stats targeted at each position
-                    Taking Players with Character Issues
-                    Trading up and Trading Down
-                get list of player Visits
-            For Draft
-                Build in Trade Considerations\Transactions
-                
-            Clean up my Tuples so I can use column names\attributes - use JSON
-            
-        '''
 
         self.cacheTeamNeeds()
 
@@ -294,16 +291,16 @@ class Draft:
                 needs = self.getTeamNeeds(abr)
 
 
-                #print("Needs-->",needs)
+                #print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
 
                 if(len(needs) > rnd[1]-1):
-                    n=needs[rnd[1]-1]
+                    needsList=needs[rnd[1]-1]
                 else:
-                    n=""
+                    needsList=[]
 
                 #print("Team:{} Need:{}".format(teamName,n))
-                if(n != ""):
+                if(needsList):
                     passedUpPlayers = []
                     for p in self._prospects:
                         if(p[0]!=0):
@@ -316,31 +313,39 @@ class Draft:
                                 pPos="LB"
                             if(pPos=="SS" or pPos=="FS"):
                                 pPos="S"
-                            if(n==pPos):
 
 
-                                AlternatePick = Drafts.Draft.BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
+
+                            if(pPos in needsList):
+
+                                #Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
+                                AlternatePicks = Drafts.Draft.BetterPlayerPassedUp(needsList,pPos,p,passedUpPlayers)
 
                                 PickLikelihood = randint(1,100)
 
 
-                                if(not AlternatePick):
+                                if(not AlternatePicks):
+                                    #There were no higher ranked players....so this pick is basically a slam dunk
                                     if(PickLikelihood>=10): #90% chance that we pick this dude......
                                         Player = p[0]
                                         Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
+                                        #print("Pick Normal - {}".format(pck))
                                         self.removeProspectFromCache(Player)
                                         #needs.remove(n)
-                                        self.removeTeamNeedFromCache(abr, n)
+                                        self.removeTeamNeedFromCache(abr, pPos)
                                     else:
+                                        #OK, we did the weird thing and passed up our slam dunk player
                                         passedUpPlayers.append([p[0],p[6],pPos])
+                                        #print("A MISS ON PICK # {}".format(pck))
 
 
                                 else:
                                     #BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
-                                    Player = AlternatePick[0]
+                                    Player = AlternatePicks[0]
 
                                     for dp in self._prospects:
-                                        if(dp[0] == AlternatePick[0]):
+                                        if(dp[0] == AlternatePicks[0]):
+
                                             Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
                                             self.removeProspectFromCache(dp[0])
 
@@ -349,22 +354,19 @@ class Draft:
                                             #     if(i[0] ==dp[3]):
                                             #         needs.remove(i)
 
-                                            self.removeTeamNeedFromCache(abr, dp[3])
-
-
-
-
+                                            self.removeTeamNeedFromCache(abr, pPos)
 
                                 break
+
                             else:
-                                #This player was a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
+                                #This player was not a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
                                 passedUpPlayers.append([p[0],p[6],pPos])
                                 #print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
                 else: #No Needs left for Team, so pick next best player available......GAJ
                     Team = abr
                     Player = self._prospects[0][0]
-
+                    #print("Pick no need {}".format(pck))
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
 
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))

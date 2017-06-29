@@ -15,7 +15,7 @@ class Team:
 
 
     def getStoredNeedsByTeam(teamAbbr):
-        needs = DBLib.DB.getTeamNeeds(teamAbbr)
+        needs = DBLib.DB.getAllNeedsForTeam(teamAbbr)
         return needs
 
 
@@ -155,7 +155,15 @@ class Team:
 
                 #print(abbr,url,city,nickname,conference,division,needs)
 
-                Team.AddTeam(abbr,url,city,nickname,conference,division,needs)
+                Team.AddTeam(abbr,url,city,nickname,conference,division)
+
+                arNeed = needs.split(":")
+
+                theScore=90
+                for n in arNeed:
+                    Team.AddTeamNeed(abbr,n,theScore,1)
+                    #the needs usually come in priority order so we make the first one higher priority, etc.
+                    theScore-=5
 
 
 
@@ -164,11 +172,22 @@ class Team:
 
 
 
+    def AddTeamNeed(abbr,need,score,count):
+        DBLib.DB.AddTeamNeedDB(abbr,need,score,count)
 
-    def AddTeam(abbr,url,city,nickname,conference,division,needs):
-        DBLib.DB.AddTeamDB(abbr,url,city,nickname,conference,division,needs)
 
 
+
+
+    def AddTeam(abbr,url,city,nickname,conference,division):
+        DBLib.DB.AddTeamDB(abbr,url,city,nickname,conference,division)
+
+
+
+
+    def getTeamNeeds(abbr):
+        needs = DBLib.DB.getAllNeedsForTeam(abbr)
+        return needs
 
 
 

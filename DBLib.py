@@ -18,6 +18,7 @@ class DB:
 
                 cur.execute("DROP TABLE if exists Prospect")
                 cur.execute("DROP TABLE if exists Team")
+                cur.execute("DROP TABLE if exists TeamNeed")
                 cur.execute("DROP TABLE if exists College")
 
                 cur.execute("DROP TABLE if exists Draft")
@@ -52,7 +53,8 @@ class DB:
                 cur = con.cursor()
 
                 cur.execute("CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
-                cur.execute("CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text, Needs Text)")
+                cur.execute("CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text)")
+                cur.execute("CREATE TABLE if not exists TeamNeed(Abbr Text, Need Text, NeedScore int, NeedCount int)")
                 cur.execute("CREATE TABLE if not exists College(Id Int, Name Text, Conference Text)")
 
 
@@ -103,6 +105,7 @@ class DB:
             cur = con.cursor()
             cur.execute("DELETE FROM Prospect")
             cur.execute("DELETE FROM Team")
+            cur.execute("DELETE FROM TeamNeed")
             cur.execute("DELETE FROM College")
             cur.execute("DELETE FROM Meeting")
             cur.execute("DELETE FROM TeamPlayerMeeting")
@@ -145,13 +148,16 @@ class DB:
 
 
 
-    def AddTeamDB(abbr,url,city,nickname,conference,division,needs):
-        sql = "INSERT INTO Team VALUES('{}','{}','{}','{}','{}','{}','{}')".format(abbr,url,city,nickname,conference,division,needs)
+    def AddTeamDB(abbr,url,city,nickname,conference,division):
+        sql = "INSERT INTO Team VALUES('{}','{}','{}','{}','{}','{}')".format(abbr,url,city,nickname,conference,division)
         #print(sql)
         DB.ExecuteSQL(sql)
 
 
 
+    def AddTeamNeedDB(abbr,need,needScore,needCount):
+        sql = "INSERT INTO TeamNeed VALUES('{}','{}',{},{})".format(abbr, need, needScore, needCount)
+        DB.ExecuteSQL(sql)
 
 
 
@@ -181,6 +187,27 @@ class DB:
             teams = cur.fetchall()
 
             return teams
+
+
+
+
+
+
+
+    def getAllNeedsForTeam(abbr):
+        con = lite.connect('UMockMe.db')
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM TeamNeed WHERE Abbr='{}'".format(abbr))
+
+            teamNeeds = cur.fetchall()
+
+            return teamNeeds
+
+
+
+
 
 
 
@@ -240,16 +267,7 @@ class DB:
 
 
 
-    def getTeamNeeds(teamAbbr):
-        con = lite.connect('UMockMe.db')
 
-        with con:
-            cur = con.cursor()
-            cur.execute("SELECT Needs FROM Team WHERE Abbr='{}'".format(teamAbbr))
-
-            needs = cur.fetchall()
-
-            return needs
 
 
 
@@ -500,7 +518,7 @@ class DB:
 
 
     def DeletePicksForSession(sessionid):
-        sql="DELETE FROM PICK WHERE SessionId='{}'".format(sessionid,theTime)
+        sql="DELETE FROM PICK WHERE SessionId='{}'".format(sessionid)
 
         DB.ExecuteSQL(sql)
 
