@@ -148,7 +148,7 @@ class Draft:
                 if(t[0][0]==teamAbbr):
                     teamFound=True
                     needs=t
-                    print("NEEDS From Get() {}".format(needs))
+                    #print("NEEDS From Get() {}".format(needs))
 
             if(teamFound==False):
                 needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
@@ -207,30 +207,28 @@ class Draft:
 
 
 
-    def removeTeamNeedFromCache(self,TeamAbbr,NeedPosition):
+    def MarkNeedAsSelected(self,TeamAbbr,NeedPosition):
 
 
-        #Need to account for pos translations
-        newNeeds = []
+        newPosition = []
 
         for i in self._allTeamNeeds:
             if(i[0][0]==TeamAbbr):
 
                 # [('CLE', 'QB', 90, 1), ('CLE', 'DL', 85, 1), ('CLE', 'LB', 80, 1), ('CLE', 'CB', 75, 1), ('CLE', 'S', 70, 1)]
-                print("Team {} start need {}".format(TeamAbbr,i))
-                print("PickedPos {}".format(NeedPosition))
                 #print("Is this json - {}".format(i[0]))
                 for n in i:
+                    if(n[1]==NeedPosition):
+                        team=n[0]
+                        pos=n[1]
+                        score=5
+                        count=1
+                        newPosition.append([team,pos,score,count])
 
-                    if(NeedPosition not in n):
-                        #build a new needs list - MINUS The need they just fulfilled
-                        newNeeds.append(n)
+                        i.remove(n)
+                        i.append(newPosition)
 
-
-                i=newNeeds
-
-
-                print("New Team Needs {}".format(i))
+                    break
                 break
 
 
@@ -332,7 +330,7 @@ class Draft:
                                         #print("Pick Normal - {}".format(pck))
                                         self.removeProspectFromCache(Player)
                                         #needs.remove(n)
-                                        self.removeTeamNeedFromCache(abr, pPos)
+                                        self.MarkNeedAsSelected(abr, pPos)
                                     else:
                                         #OK, we did the weird thing and passed up our slam dunk player
                                         passedUpPlayers.append([p[0],p[6],pPos])
@@ -354,7 +352,7 @@ class Draft:
                                             #     if(i[0] ==dp[3]):
                                             #         needs.remove(i)
 
-                                            self.removeTeamNeedFromCache(abr, pPos)
+                                            self.MarkNeedAsSelected(abr, pPos)
 
                                 break
 
@@ -366,11 +364,13 @@ class Draft:
                 else: #No Needs left for Team, so pick next best player available......GAJ
                     Team = abr
                     Player = self._prospects[0][0]
+                    position = self._prospects[0][1]
                     #print("Pick no need {}".format(pck))
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
 
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
                     self.removeProspectFromCache(Player)
+                    self.MarkNeedAsSelected(abr,position)
 
 
 
