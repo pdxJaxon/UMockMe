@@ -56,6 +56,43 @@ class Draft:
 
 
 
+    def isHighestNeed(pos,needs):
+        isHighestNeed=False
+
+        highest=0
+        picked=0
+
+        for n in needs:
+            if(n[1]==pos):
+                picked=n[2]
+
+            if(n[2]>highest):
+                highest=n[2]
+
+
+        if(picked>=highest):
+            isHighestNeed=True
+
+
+        return isHighestNeed
+
+
+
+
+
+    def isHighNeed(self,pos,needs):
+        HighNeed = False
+        for n in needs:
+            if(pos==needs[1]):
+                if(needs[2]>=75):
+                    HighNeed=True
+                else:
+                    HighNeed=False
+
+        return HighNeed
+
+
+
 
     def getAllRoundsByDraft(Year):
         rounds = DBLib.DB.getAllRoundsByDraft(Year)
@@ -66,8 +103,6 @@ class Draft:
     def BetterPlayerPassedUp(needs,needPickedFor,prospectPicked,passedUpPlayers):
         BetterProspect = None
 
-        print("needs:",needs)
-
 
         #print("Pick:{}".format(prospectPicked))
         rn=randint(1,100)
@@ -76,362 +111,87 @@ class Draft:
         needPriority=50
 
         for n in needs:
-            print("N",n)
             if(n[2]==needPickedFor):
                 needPriority=n[3]
 
+
+
+        #lets look at the players we passed up in the ordered list of the "Best Available" and make sure we dont want one of them.
+
         for pup in passedUpPlayers:
-            #print("Alternate - {}".format(pup))
-            if(needPriority>=90):
-                if (pup[1] >= prospectPicked[6] + 2.50):
-                    if (pup[2] in needs and rn >= 5):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 20):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 2.25):
-                    if (pup[2] in needs and rn >= 20):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 35):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 2.00):
-                    if (pup[2] in needs and rn >= 30):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 50):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.80):
-                    if (pup[2] in needs and rn >= 50):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 75):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.65):
-                    if (pup[2] in needs and rn >= 70):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 80):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.50):
-                    if (pup[2] in needs and rn >= 80):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 90):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6]):
-                    if (pup[2] in needs and rn >= 90):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 95):
-                            BetterProspect = pup
-                            break
-
-            elif(needPriority>=80):
-                if (pup[1] >= prospectPicked[6] + 2.00):
-                    if (pup[2] in needs and rn >= 5):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 20):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.75):
-                    if (pup[2] in needs and rn >= 20):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 35):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.50):
-                    if (pup[2] in needs and rn >= 30):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 50):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.30):
-                    if (pup[2] in needs and rn >= 50):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 75):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.15):
-                    if (pup[2] in needs and rn >= 70):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 80):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.00):
-                    if (pup[2] in needs and rn >= 80):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 90):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6]):
-                    if (pup[2] in needs and rn >= 90):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 95):
-                            BetterProspect = pup
-                            break
-
-            elif(needPriority>=70):
-                if (pup[1] >= prospectPicked[6] + 1.50):
-                    if (pup[2] in needs and rn >= 5):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 20):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.75):
-                    if (pup[2] in needs and rn >= 20):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 35):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.50):
-                    if (pup[2] in needs and rn >= 30):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 50):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.25):
-                    if (pup[2] in needs and rn >= 50):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 75):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.00):
-                    if (pup[2] in needs and rn >= 70):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 80):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .85):
-                    if (pup[2] in needs and rn >= 80):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 90):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6]):
-                    if (pup[2] in needs and rn >= 90):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 95):
-                            BetterProspect = pup
-                            break
-
-            elif(needPriority>=60):
+            #this is the priority of the need we just selected a person for....should be a SLAM DUNK Pick unless we passed up someone REALLY GOOD
+            if(needPriority>=75):
+                #how much stronger is alternate on "NFL.COM Expert Grade:
                 if (pup[1] >= prospectPicked[6] + 1.00):
-                    if (pup[2] in needs and rn >= 5):
+                    #if in needslist then 90% we take a look
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 10):
                         BetterProspect = pup
                         break
                     else:
-                        if (rn >= 20):
+                        if (rn >= 60):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6] + .75):
-                    if (pup[2] in needs and rn >= 20):
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 20):
                         BetterProspect = pup
                         break
                     else:
-                        if (rn >= 35):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .60):
-                    if (pup[2] in needs and rn >= 30):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 50):
+                        if (rn >= 60):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6] + .50):
-                    if (pup[2] in needs and rn >= 50):
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 30):
                         BetterProspect = pup
                         break
                     else:
-                        if (rn >= 75):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .35):
-                    if (pup[2] in needs and rn >= 70):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 80):
+                        if (rn >= 60):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6] + .25):
-                    if (pup[2] in needs and rn >= 80):
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 70):
                         BetterProspect = pup
                         break
                     else:
-                        if (rn >= 90):
+                        if (rn >= 75):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6]):
-                    if (pup[2] in needs and rn >= 90):
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 90):
                         BetterProspect = pup
                         break
                     else:
                         if (rn >= 95):
                             BetterProspect = pup
                             break
-
+            #The Selected Player fulfills a Need that is greater than Average.....Pretty good pick
             elif(needPriority>=50):
-                if (pup[1] >= prospectPicked[6] + 1.50):
-                    if (pup[2] in needs and rn >= 5):
+                # how much stronger is alternate on "NFL.COM Expert Grade:
+                if (pup[1] >= prospectPicked[6] + .5):
+                    if (Draft.isHighNeed(pup[2], needs) and rn >= 25):
                         BetterProspect = pup
                         break
                     else:
-                        if (rn >= 20):
+                        if (rn >= 60):
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6] + 1.25):
-                    if (pup[2] in needs and rn >= 20):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 35):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + 1.00):
-                    if (pup[2] in needs and rn >= 30):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 50):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .80):
-                    if (pup[2] in needs and rn >= 50):
+                elif (pup[1] >= prospectPicked[6] + .25):
+                    if (Draft.isHighNeed(pup[2], needs) and rn >= 50):
                         BetterProspect = pup
                         break
                     else:
                         if (rn >= 75):
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6] + .65):
-                    if (pup[2] in needs and rn >= 70):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 80):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .50):
-                    if (pup[2] in needs and rn >= 80):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 90):
-                            BetterProspect = pup
-                            break
                 elif (pup[1] >= prospectPicked[6]):
-                    if (pup[2] in needs and rn >= 90):
+                    if (Draft.isHighNeed(pup[2], needs) and rn >= 80):
                         BetterProspect = pup
                         break
                     else:
                         if (rn >= 95):
                             BetterProspect = pup
                             break
-
-            elif(needPriority>=30):
-                if (pup[1] >= prospectPicked[6] + .75):
-                    if (pup[2] in needs and rn >= 5):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 20):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .5):
-                    if (pup[2] in needs and rn >= 20):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 35):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .4):
-                    if (pup[2] in needs and rn >= 30):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 50):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .30):
-                    if (pup[2] in needs and rn >= 50):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 75):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .20):
-                    if (pup[2] in needs and rn >= 70):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 80):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .10):
-                    if (pup[2] in needs and rn >= 80):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 90):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6]):
-                    if (pup[2] in needs and rn >= 90):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 95):
-                            BetterProspect = pup
-                            break
-
             else:
-                if (pup[2] in needs and rn >= 90):
+                if (Draft.isHighNeed(pup[2],needs) and rn >= 90):
                     BetterProspect = pup
                     break
                 else:
@@ -520,7 +280,7 @@ class Draft:
 
     def MarkNeedAsSelected(self,TeamAbbr,NeedPosition):
 
-
+        posAdded=False
         newPosition = []
 
         for i in self._allTeamNeeds:
@@ -536,12 +296,17 @@ class Draft:
                         count=1
                         newNeed=(team,pos,score,count)
 
-
+                        posAdded=True
                         i.remove(n)
                         i.append(newNeed)
+                        break
 
-                    break
+                if(not posAdded):
+                    newNeed=(i[0][0],NeedPosition,5,1)
+                    i.append(newNeed)
+
                 break
+
 
 
 
@@ -597,19 +362,17 @@ class Draft:
                 teamName = t[0][3]
                 Team = abr
 
+                pickMade=False
 
                 needs = self.getTeamNeeds(abr)
 
 
                 #print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
+                needsList = needs
 
-                if(len(needs) > rnd[1]-1):
-                    needsList=needs[rnd[1]-1]
-                else:
-                    needsList=[]
+                print("Step 1 ",needsList)
 
-                #print("Team:{} Need:{}".format(teamName,n))
                 if(needsList):
                     passedUpPlayers = []
                     for p in self._prospects:
@@ -629,14 +392,15 @@ class Draft:
 
 
 
-                            if(pPos in needsList):
+                            if(Draft.isHighestNeed(pPos,needs)):
 
                                 #Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
-                                AlternatePicks = Drafts.Draft.BetterPlayerPassedUp(needs,pPos,p,passedUpPlayers)
+                                #AlternatePicks = Drafts.Draft.BetterPlayerPassedUp(needs,pPos,p,passedUpPlayers)
+                                AlternatePicks=False
 
                                 PickLikelihood = randint(1,100)
 
-
+                                print("Step 2 ",needsList)
                                 if(not AlternatePicks):
                                     #There were no higher ranked players....so this pick is basically a slam dunk
                                     if(PickLikelihood>=10): #90% chance that we pick this dude......
@@ -646,11 +410,12 @@ class Draft:
                                         self.removeProspectFromCache(Player)
                                         #needs.remove(n)
                                         self.MarkNeedAsSelected(abr, pPos)
+                                        pickMade=True
+                                        break
                                     else:
                                         #OK, we did the weird thing and passed up our slam dunk player
                                         passedUpPlayers.append([p[0],p[6],pPos])
                                         #print("A MISS ON PICK # {}".format(pck))
-
 
                                 else:
                                     #BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
@@ -658,7 +423,7 @@ class Draft:
 
                                     for dp in self._prospects:
                                         if(dp[0] == AlternatePicks[0]):
-
+                                            pickMade=True
                                             Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
                                             self.removeProspectFromCache(dp[0])
 
@@ -668,8 +433,9 @@ class Draft:
                                             #         needs.remove(i)
 
                                             self.MarkNeedAsSelected(abr, pPos)
+                                            break
 
-                                break
+                                    break
 
                             else:
                                 #This player was not a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
@@ -679,14 +445,17 @@ class Draft:
                 else: #No Needs left for Team, so pick next best player available......GAJ
                     Team = abr
                     Player = self._prospects[0][0]
-                    position = self._prospects[0][1]
+                    position = self._prospects[0][3]
+
+                    #print(self._prospects[0])
+
                     #print("Pick no need {}".format(pck))
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
-
+                    pickMade=True
                     #print("Blind Pick Team{} Prospect:{}".format(Team,Player))
                     self.removeProspectFromCache(Player)
-                    self.MarkNeedAsSelected(abr,position)
-
+                    self.MarkNeedAsSelected(Team,position)
+                    break
 
 
 
