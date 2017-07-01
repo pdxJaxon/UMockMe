@@ -109,10 +109,12 @@ class Draft:
 
         #try to find needPriority in NeedsList else just default to "Average" Priority value
         needPriority=50
+        #print("Need:",needs)
+
 
         for n in needs:
-            if(n[2]==needPickedFor):
-                needPriority=n[3]
+            if(n[1]==needPickedFor):
+                needPriority=n[2]
 
 
 
@@ -122,45 +124,46 @@ class Draft:
             #this is the priority of the need we just selected a person for....should be a SLAM DUNK Pick unless we passed up someone REALLY GOOD
             if(needPriority>=75):
                 #how much stronger is alternate on "NFL.COM Expert Grade:
-                if (pup[1] >= prospectPicked[6] + 1.00):
+                #print("picked {} \nalt {}".format(prospectPicked,pup))
+                if(pup[1] >= prospectPicked[6] + 1.00):
+                    #Player too good to pass up.....80% chance they take him
+                    if(rn>=10):
+                        BetterProspect = pup
+                        break
+                elif (pup[1] >= prospectPicked[6] + .75):
                     #if in needslist then 90% we take a look
                     if (Draft.isHighNeed(pup[2],needs) and rn >= 10):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 60):
-                            BetterProspect = pup
-                            break
-                elif (pup[1] >= prospectPicked[6] + .75):
-                    if (Draft.isHighNeed(pup[2],needs) and rn >= 20):
-                        BetterProspect = pup
-                        break
-                    else:
-                        if (rn >= 60):
+                    elif (rn >= 60):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6] + .50):
-                    if (Draft.isHighNeed(pup[2],needs) and rn >= 30):
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 20):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 60):
+                    elif (rn >= 60):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6] + .25):
+                    if (Draft.isHighNeed(pup[2],needs) and rn >= 30):
+                        BetterProspect = pup
+                        break
+                    elif (rn >= 60):
+                            BetterProspect = pup
+                            break
+                elif (pup[1] >= prospectPicked[6] + .10):
                     if (Draft.isHighNeed(pup[2],needs) and rn >= 70):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 75):
+                    elif (rn >= 75):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6]):
                     if (Draft.isHighNeed(pup[2],needs) and rn >= 90):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 95):
+                    elif (rn >= 95):
                             BetterProspect = pup
                             break
             #The Selected Player fulfills a Need that is greater than Average.....Pretty good pick
@@ -170,32 +173,28 @@ class Draft:
                     if (Draft.isHighNeed(pup[2], needs) and rn >= 25):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 60):
+                    elif (rn >= 60):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6] + .25):
                     if (Draft.isHighNeed(pup[2], needs) and rn >= 50):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 75):
+                    elif (rn >= 75):
                             BetterProspect = pup
                             break
                 elif (pup[1] >= prospectPicked[6]):
                     if (Draft.isHighNeed(pup[2], needs) and rn >= 80):
                         BetterProspect = pup
                         break
-                    else:
-                        if (rn >= 95):
+                    elif (rn >= 95):
                             BetterProspect = pup
                             break
             else:
                 if (Draft.isHighNeed(pup[2],needs) and rn >= 90):
                     BetterProspect = pup
                     break
-                else:
-                    if (rn >= 95):
+                elif (rn >= 95):
                         BetterProspect = pup
                         break
 
@@ -399,7 +398,7 @@ class Draft:
 
                                 PickLikelihood = randint(1,100)
 
-                                print("Step 2 ",needsList)
+
                                 if(not AlternatePicks):
                                     #There were no higher ranked players....so this pick is basically a slam dunk
                                     if(PickLikelihood>=10): #90% chance that we pick this dude......
