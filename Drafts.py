@@ -80,7 +80,7 @@ class Draft:
 
 
 
-    def isHighNeed(self,pos,needs):
+    def isHighNeed(pos,needs):
         HighNeed = False
         for n in needs:
             if(pos==needs[1]):
@@ -371,7 +371,6 @@ class Draft:
 
                 needsList = needs
 
-                print("Step 1 ",needsList)
 
                 if(needsList):
                     passedUpPlayers = []
@@ -395,8 +394,8 @@ class Draft:
                             if(Draft.isHighestNeed(pPos,needs)):
 
                                 #Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
-                                #AlternatePicks = Drafts.Draft.BetterPlayerPassedUp(needs,pPos,p,passedUpPlayers)
-                                AlternatePicks=False
+                                AlternatePicks = Drafts.Draft.BetterPlayerPassedUp(needs,pPos,p,passedUpPlayers)
+
 
                                 PickLikelihood = randint(1,100)
 
