@@ -63,16 +63,21 @@ def CustomDraft():
 
 
 
-@app.route("/DBRefresh")
+@app.route("/DBRefresh1")
 def refresh():
     DataRefreshService.DataDude.RebuildDB()
+
+
+
+    return ("Database Rebuilt")
+
+
+@app.route("/DBRefresh2")
+def refresh():
     DataRefreshService.DataDude.RefreshStaticData()
 
 
-    return ("Database Refreshed")
-
-
-
+    return ("Database Data Refreshed")
 
 
 
