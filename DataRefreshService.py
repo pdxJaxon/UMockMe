@@ -12,20 +12,29 @@ import uuid
 class DataDude:
 
 
-    def RebuildDB():
+    def NukeDB():
 
         # tear down db to recreate from scratch (for testing only)
         DBLib.DB.TearDownDB()
 
         print("DB Torn Down")
 
+        return True
+
+
+
+
+
+
+    def BuildDB():
         # Create a New Cleaned Out DB
         DBLib.DB.createDB()
 
         print("DB CREATED FROM SCRATCH")
 
-
         return True
+
+
 
 
 
@@ -72,17 +81,6 @@ class DataDude:
         print("NFL Teams Updated")
 
         print("DB Refresh Complete")
-
-
-
-        #bigBoardData = BigBoard.Board.getRawBigBoardDataForSource()  # Empty Parm = PFF
-        #BigBoard.Board.AddBoard(1, 1, None, 'PFF')
-        #BigBoard.Board.AddBatch(1, bigBoardData)
-
-        #WalterBoard = BigBoard.Board.getRawBigBoardDataForSource(1)
-        #BigBoard.Board.AddBoard(2, 1, None, 'WalterFootball')
-        #BigBoard.Board.AddBatch(2, WalterBoard)
-
 
 
 
