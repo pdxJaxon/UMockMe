@@ -69,7 +69,7 @@ def refresh0():
 
 
 
-    return ("Database Rebuilt")
+    return ("Database Scrubbed - <a href='/'>Return to Home Page</a>")
 
 
 @app.route("/DBRefresh1")
@@ -78,7 +78,7 @@ def refresh1():
 
 
 
-    return ("Database Rebuilt")
+    return ("Database Rebuilt - <a href='/'>Return to Home Page</a>")
 
 
 @app.route("/DBRefresh2")
@@ -86,7 +86,7 @@ def refresh2():
     DataRefreshService.DataDude.RefreshStaticData()
 
 
-    return ("Database Data Refreshed")
+    return ("Database Populated - <a href='/'>Return to Home Page</a>")
 
 
 
