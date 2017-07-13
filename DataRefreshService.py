@@ -75,13 +75,13 @@ class DataDude:
 
 
 
-        bigBoardData = BigBoard.Board.getRawBigBoardDataForSource()  # Empty Parm = PFF
-        BigBoard.Board.AddBoard(1, 1, None, 'PFF')
-        BigBoard.Board.AddBatch(1, bigBoardData)
+        #bigBoardData = BigBoard.Board.getRawBigBoardDataForSource()  # Empty Parm = PFF
+        #BigBoard.Board.AddBoard(1, 1, None, 'PFF')
+        #BigBoard.Board.AddBatch(1, bigBoardData)
 
-        WalterBoard = BigBoard.Board.getRawBigBoardDataForSource(1)
-        BigBoard.Board.AddBoard(2, 1, None, 'WalterFootball')
-        BigBoard.Board.AddBatch(2, WalterBoard)
+        #WalterBoard = BigBoard.Board.getRawBigBoardDataForSource(1)
+        #BigBoard.Board.AddBoard(2, 1, None, 'WalterFootball')
+        #BigBoard.Board.AddBatch(2, WalterBoard)
 
 
 

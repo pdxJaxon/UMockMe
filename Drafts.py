@@ -224,9 +224,6 @@ class Draft:
                 needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
                 for n in needs:
                     self._allTeamNeeds.append(n)
-
-
-
         else:
             needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
             self._allTeamNeeds=[]
@@ -285,6 +282,9 @@ class Draft:
         for i in self._allTeamNeeds:
             if(i[0][0]==TeamAbbr):
 
+                if(TeamAbbr=="PIT"):
+                    print("Start",i)
+
                 # [('CLE', 'QB', 90, 1), ('CLE', 'DL', 85, 1), ('CLE', 'LB', 80, 1), ('CLE', 'CB', 75, 1), ('CLE', 'S', 70, 1)]
                 #print("Is this json - {}".format(i[0]))
                 for n in i:
@@ -304,6 +304,8 @@ class Draft:
                     newNeed=(i[0][0],NeedPosition,5,1)
                     i.append(newNeed)
 
+                if(TeamAbbr=="PIT"):
+                    print("stop",i)
                 break
 
 
@@ -454,38 +456,3 @@ class Draft:
                     self.removeProspectFromCache(Player)
                     self.MarkNeedAsSelected(Team,position)
                     break
-
-
-
-
-
-
-
-        #LOOP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

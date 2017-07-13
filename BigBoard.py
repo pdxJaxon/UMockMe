@@ -82,7 +82,7 @@ class Board:
 
             soup = BeautifulSoup(page.content, 'html.parser')
 
-            #print(soup)
+            print(soup)
 
             Board = soup.find("table", {"id": "tablepress-1220"})
             body = Board.find('tbody')
