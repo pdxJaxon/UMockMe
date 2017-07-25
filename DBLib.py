@@ -1,4 +1,8 @@
-import sqlite3 as lite
+import sqlite3 as lite2
+import psycopg2 as lite
+import urllib.parse as urlparse
+
+import os
 import sys
 from random import *
 from datetime import datetime, timedelta
@@ -6,10 +10,35 @@ from datetime import datetime, timedelta
 
 class DB:
 
+    def getConnection():
+
+
+
+        if ("DATABASE_URL" in os.environ):
+            urlparse.uses_netloc.append("postgres")
+            url = urlparse.urlparse(os.environ["DATABASE_URL"])
+
+            con = lite.connect(
+                database=url.path[1:],
+                user=url.username,
+                password=url.password,
+                host=url.hostname,
+                port=url.port
+            )
+        else:
+            con = lite2.connect("UMockMe.db")
+
+
+        return con
+
+
+
 
 
     def TearDownDB():
-        con = lite.connect('UMockMe.db')
+
+        con = DB.getConnection()
+
 
         try:
             with con:
@@ -43,7 +72,7 @@ class DB:
 
     #Build our database if its not already created
     def createDB():
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
 
 
@@ -100,7 +129,7 @@ class DB:
 
     #Whack the DB records to start clean with each test run
     def truncateDB():
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
         with con:
             cur = con.cursor()
             cur.execute("DELETE FROM Prospect")
@@ -117,8 +146,7 @@ class DB:
 
 
     def ExecuteSQL(sql):
-        con = lite.connect('UMockMe.db')
-
+        con = DB.getConnection()
         with con:
             cur = con.cursor()
             cur.execute(sql)
@@ -178,7 +206,7 @@ class DB:
 
 
     def getAllTeams():
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -195,7 +223,7 @@ class DB:
 
 
     def getAllNeedsForTeam(abbr):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -214,7 +242,7 @@ class DB:
 
 
     def getAllColleges():
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -229,7 +257,7 @@ class DB:
 
     #Will return all prospects from DB sorted by Expert Grade in DESC Order (Best player at top)
     def getAllProspects():
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -275,7 +303,7 @@ class DB:
 
 
     def getDraftByYear(Year):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -291,7 +319,7 @@ class DB:
 
 
     def getAllRoundsByDraft(Year):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -309,7 +337,7 @@ class DB:
 
 
     def GetAllPicksForRoundDB(year,round,sessionid):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -331,7 +359,7 @@ class DB:
         #Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int)")
 
 
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -346,7 +374,7 @@ class DB:
 
 
     def GetCollegeById(id=-1):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
         sql = "SELECT * FROM College WHERE id={}".format(id)
 
         with con:
@@ -366,7 +394,7 @@ class DB:
 
 
     def GetProspectId(Name, POS, School,pickNum):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         vals = str.split(Name," ")
         fname = str(vals[0].replace("'","''"))
@@ -430,7 +458,7 @@ class DB:
         #cur.execute("CREATE TABLE if not exists BigBoard(BigBoardId int, DraftId int, TeamId Int, sourceId text)")
         #cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId int, ProspectId int, Rank int)")
 
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -450,7 +478,7 @@ class DB:
 
     def getBigBoardForTeam(teamId):
 
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -468,7 +496,7 @@ class DB:
 
     def getBigBoardForSource(Source=1):
 
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -485,7 +513,7 @@ class DB:
 
 
     def getTeamByAbr(abr):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
@@ -542,7 +570,7 @@ class DB:
 
 
     def PopulatePicks(sessionid):
-        con = lite.connect('UMockMe.db')
+        con = DB.getConnection()
 
         with con:
             cur = con.cursor()
