@@ -82,10 +82,13 @@ class DB:
                 cur = con.cursor()
 
                 if ("DATABASE_URL" in os.environ):
-                    print("1a")
+                    print("1a1")
                     cur.execute("CREATE TABLE if not exists Prospect(Id integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school varchar(50))")
+                    print("1a2")
                     cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50))")
+                    print("1a3")
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
+                    print("1a4")
                     cur.execute("CREATE TABLE if not exists College(Id integer, Name varchar(50), Conference varchar(50))")
 
 
