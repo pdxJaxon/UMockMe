@@ -417,7 +417,7 @@ class DB:
         with con:
             cur = con.cursor()
 
-            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade, x.school From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} and p.SessionId='{}' ".format(round,sessionid))
+            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade, x.school From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} and p.SessionId='{}' ORDER BY p.OverallPickNum ".format(round,sessionid))
 
             PickDetails = cur.fetchall()
 
