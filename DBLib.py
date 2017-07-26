@@ -80,7 +80,7 @@ class DB:
             with con:
 
                 cur = con.cursor()
-
+                print("1")
                 cur.execute("CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
                 cur.execute("CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text)")
                 cur.execute("CREATE TABLE if not exists TeamNeed(Abbr Text, Need Text, NeedScore int, NeedCount int)")
@@ -91,10 +91,12 @@ class DB:
                 cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
                 cur.execute("CREATE TABLE if not exists Draft(DraftID int, Year int)")
 
+                print("2")
 
                 #populate static data for 2017 - we dont import draft info yet as this version is just an MVP
                 cur.execute("INSERT INTO DRAFT VALUES(1,2017)")
 
+                print("3")
 
                 cur.execute("CREATE TABLE if not exists Round(DraftID int,RoundId int,Round int)")
                 cur.execute("INSERT INTO ROUND VALUES(1,1,1)")
@@ -105,18 +107,19 @@ class DB:
                 cur.execute("INSERT INTO ROUND VALUES(1,6,6)")
                 cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
 
+                print("4")
 
                 cur.execute("CREATE TABLE if not exists Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int, SessionId Text, CreateDate Text)")
-
+                print("5")
 
 
 
                 cur.execute("CREATE TABLE if not exists DeragatoryRemark(RemarkId int, Name Text, PointValue int)")
                 cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId int, ProspectId Int)")
-
+                print("6")
                 cur.execute("CREATE TABLE if not exists BigBoard(BigBoardId int, DraftId int, TeamId Int, sourceId text)")
                 cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId int, ProspectId int, Rank int)")
-
+                print("7")
 
         except:
             print("Error - db already exists")          #This error just means the DB already exists......no biggy
