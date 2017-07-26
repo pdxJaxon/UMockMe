@@ -90,10 +90,12 @@ class DB:
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
                     print("1a4")
                     cur.execute("CREATE TABLE if not exists College(Id integer, Name varchar(50), Conference varchar(50))")
-
+                    print("1a5")
 
                     cur.execute("CREATE TABLE if not exists Meeting(MeetingId integer, MeetingName varchar(50), PointValue integer)")
-                    cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
+                    print("1a6")
+                    cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID integer,TeamId integer,ProspectId integer)")
+                    print("1a7")
                     cur.execute("CREATE TABLE if not exists Draft(DraftID integer, Year integer)")
 
                     print("2a")
