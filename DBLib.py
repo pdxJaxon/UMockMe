@@ -82,8 +82,8 @@ class DB:
                 cur = con.cursor()
 
                 if ("DATABASE_URL" in os.environ):
-                    print("1")
-                    cur.execute("CREATE TABLE if not exists Prospect(Id integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school varchar(50))")
+                    print("1a")
+                    cur.execute("CREATE TABLE if not exists Prospect(Id integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school varchar(50))")
                     cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50))")
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
                     cur.execute("CREATE TABLE if not exists College(Id integer, Name varchar(50), Conference varchar(50))")
@@ -93,12 +93,12 @@ class DB:
                     cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
                     cur.execute("CREATE TABLE if not exists Draft(DraftID integer, Year integer)")
 
-                    print("2")
+                    print("2a")
 
                     #populate static data for 2017 - we dont import draft info yet as this version is just an MVP
                     cur.execute("INSERT INTO DRAFT VALUES(1,2017)")
 
-                    print("3")
+                    print("3a")
 
                     cur.execute("CREATE TABLE if not exists Round(DraftID integer,RoundId integer,Round integer)")
                     cur.execute("INSERT INTO ROUND VALUES(1,1,1)")
@@ -109,21 +109,21 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(1,6,6)")
                     cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
 
-                    print("4")
+                    print("4a")
 
                     cur.execute("CREATE TABLE if not exists Pick(RoundId integer, RoundPickNum integer, OverallPickNum integer, TeamAbbr varchar(50), ProspectId integer, SessionId varchar(50), CreateDate varchar(50))")
-                    print("5")
+                    print("5a")
 
 
 
                     cur.execute("CREATE TABLE if not exists DeragatoryRemark(RemarkId integer, Name varchar(50), PointValue integer)")
                     cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId integer, ProspectId integer)")
-                    print("6")
+                    print("6a")
                     cur.execute("CREATE TABLE if not exists BigBoard(BigBoardId integer, DraftId integer, TeamId integer, sourceId varchar(50))")
                     cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId integer, ProspectId integer, Rank integer)")
-                    print("7")
+                    print("7a")
                 else:
-                    print("1")
+                    print("1b")
                     cur.execute(
                         "CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
                     cur.execute(
@@ -136,12 +136,12 @@ class DB:
                     cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
                     cur.execute("CREATE TABLE if not exists Draft(DraftID int, Year int)")
 
-                    print("2")
+                    print("2b")
 
                     # populate static data for 2017 - we dont import draft info yet as this version is just an MVP
                     cur.execute("INSERT INTO DRAFT VALUES(1,2017)")
 
-                    print("3")
+                    print("3b")
 
                     cur.execute("CREATE TABLE if not exists Round(DraftID int,RoundId int,Round int)")
                     cur.execute("INSERT INTO ROUND VALUES(1,1,1)")
@@ -152,19 +152,19 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(1,6,6)")
                     cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
 
-                    print("4")
+                    print("4b")
 
                     cur.execute(
                         "CREATE TABLE if not exists Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int, SessionId Text, CreateDate Text)")
-                    print("5")
+                    print("5b")
 
                     cur.execute("CREATE TABLE if not exists DeragatoryRemark(RemarkId int, Name Text, PointValue int)")
                     cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId int, ProspectId Int)")
-                    print("6")
+                    print("6b")
                     cur.execute(
                         "CREATE TABLE if not exists BigBoard(BigBoardId int, DraftId int, TeamId Int, sourceId text)")
                     cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId int, ProspectId int, Rank int)")
-                    print("7")
+                    print("7b")
 
         except:
             print("Error - db already exists")          #This error just means the DB already exists......no biggy
