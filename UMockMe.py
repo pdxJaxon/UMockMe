@@ -9,7 +9,8 @@ import Picks
 import BigBoard
 import uuid
 import DataRefreshService
-
+import forms
+import Users
 
 
 
@@ -17,8 +18,11 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-from flask import Flask, session
+from flask import Flask, session, request,flash
 from flask import render_template
+
+
+
 
 app = Flask(__name__)
 app.secret_key = "I Like Turtles"
@@ -37,6 +41,33 @@ def initSite():
 @app.route("/EditProspects")
 def EditProspects():
     return render_template('EditProspects.html')
+
+
+
+@app.route("/NewAccount", methods= ['GET','POST'])
+def NewAccount():
+    frm = forms.NewAccount()
+
+    if request.method == 'POST':
+        if frm.validate() == False:
+            flash("Please Validate Data Entry")
+            return render_template('NewAccount.html', form = frm)
+        else:
+
+            email=frm.email.data
+            fname=frm.Fname.data
+            lname=frm.Lname.data
+            userName=frm.userName.data
+            Password=frm.Password.data
+            abbr=frm.FavoriteTeam.data
+
+
+            u = Users.User.AddUser(email,fname,lname,userName,Password,abbr)
+
+            return render_template('index.html',usr=u)
+    else:
+        return render_template('NewAccount.html', form=frm)
+
 
 
 

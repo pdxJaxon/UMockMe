@@ -8,6 +8,8 @@ from random import *
 from datetime import datetime, timedelta
 
 
+
+
 class DB:
 
     def getConnection():
@@ -44,7 +46,8 @@ class DB:
             with con:
                 cur = con.cursor()
 
-
+                cur.execute("DROP TABLE if exists User")
+                cur.execute("DROP TABLE if exists UserTeamNeed")
                 cur.execute("DROP TABLE if exists Prospect")
                 cur.execute("DROP TABLE if exists Team")
                 cur.execute("DROP TABLE if exists TeamNeed")
@@ -89,6 +92,8 @@ class DB:
                     print("1a3")
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
                     print("1a4")
+                    cur.execute("CREATE TABLE if not exists User(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50))")
+                    cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
                     cur.execute("CREATE TABLE if not exists College(Id integer, Name varchar(50), Conference varchar(50))")
                     print("1a5")
 
@@ -136,6 +141,10 @@ class DB:
                     cur.execute(
                         "CREATE TABLE if not exists TeamNeed(Abbr Text, Need Text, NeedScore int, NeedCount int)")
                     cur.execute("CREATE TABLE if not exists College(Id Int, Name Text, Conference Text)")
+
+
+                    cur.execute("CREATE TABLE if not exists User(email text, UserName text, Password text, FavoriteTeam text, fName text, lname text)")
+                    cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail text, TeamAbbr text, pos text, needScore int, needCount int)")
 
                     cur.execute("CREATE TABLE if not exists Meeting(MeetingId Int, MeetingName Text, PointValue int)")
                     cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
@@ -564,6 +573,37 @@ class DB:
 
 
 
+    def getUser(email):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM User WHERE email='{}'".format(email))
+
+            u=cur.fetchall()
+
+            return u
+
+
+
+
+
+    def getFavoriteTeamNeedsByUser(email,abbr):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM UserTeamNeeds WHERE userEmail='{}' and TeamAbbr='{}'".format(email,abbr))
+
+            n=cur.fetchall()
+
+            return n
+
+
+
+
 
     def getTeamByAbr(abr):
         con = DB.getConnection()
@@ -936,3 +976,39 @@ class DB:
 
 
 
+    def getUserByEmail(email):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM User WHERE Email='{}'".format(email))
+
+            u = cur.fetchall()
+
+            print(u[0])
+
+            return u
+
+
+
+
+
+
+    def AddUser(email,userName,Password,FavoriteTeam,Fname,Lname):
+        sql = "INSERT INTO User VALUES('{}','{}','{}','{}','{}','{}')".format(email,userName,Password,FavoriteTeam,Fname,Lname)
+        # print(sql)
+
+        #Todo: Will need to check for EMAIL Uniqueness
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+    def UpdateUser(email,userName,Password,FavoriteTeam,Fname,Lname):
+        sql = "UPDATE User SET(userName='{}',Password='{}',FavoriteTeam='{}',Fname='{}',LName='{}' WHERE Email='{}')".format(userName,Password,FavoriteTeam,Fname,Lname,email)
+        # print(sql)
+
+        #Todo: Will need to check for EMAIL Uniqueness
+        DB.ExecuteSQL(sql)

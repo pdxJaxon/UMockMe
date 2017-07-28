@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>uMockMe - New Account</title>
+</head>
+<body>
+    <h2 style = "text-align: center;">New Account</h2>
+
+      {% for message in form.errors %}
+         <div>{{ message }}</div>
+      {% endfor %}
+        <form action = "/NewAccount" method = "post">
+         <fieldset>
+            <legend>New Account</legend>
+            {{ form.hidden_tag() }}
+
+            <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+               {{ form.email.label }}<br>
+               {{ form.email }}
+               <br>
+               {{ form.Fname.label }}<br>
+               {{ form.Fname }}
+               <br>
+                {{ form.Lname.label }}<br>
+               {{ form.Lname }}
+               <br/>
+
+               {{ form.userName.label }}<br>
+               {{ form.userName }}
+               <br>
+
+               {{ form.Password.label }}<br>
+               {{ form.Password }}
+                <br/>
+                {{ form.FavoriteTeam.label }}<br>
+               {{ form.FavoriteTeam }}
+               <br>
+               {{ form.submit }}
+            </div>
+
+         </fieldset>
+      </form>
+</body>
+</html>
