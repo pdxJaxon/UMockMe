@@ -2,35 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>UMockMe.com - Custom Draft</title>
+    <title>UMockMe.com - 2017 Draft</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 </head>
 <body>
 
-<div id="customDraft" class="w3-container">
-    <h2>UMockMe.com - Custom Draft...</h2>
-    <table id="tblpicks" class="w3-table w3-bordered w3-striped">
-        <tr class="w3-teal">
-            <th>Round #</th>
-            <th>Pick #</th>
-            <th>Overall Pick #</th>
-            <th>Team</th>
-            <th>Player</th>
-            <th>Position</th>
-            <th>School</th>
-        </tr>
-        {%for p in picks %}
-        <tr>
-            <td>{{p[0]}}</td>
-            <td>{{p[1]}}</td>
-            <td>{{p[2]}}</td>
-            <td>{{p[3]}}</td>
-            <td>{{p[5] + ' ' + p[6]}}</td>
-            <td>{{p[7]}}</td>
-            <td>{{p[9]}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<div id="draftResult" class="w3-container" ng-app="UMM" ng-controller="ummController">
+    <h2>UMockMe.com - Draft Results...</h2>
+    <div class="w3-container w3-row">
+        <div id="divAvailable" class="w3-container w3-half">
+            <h4>LIST Available Players here in a select grid....</h4>
+            <br/>
+            <button ng-click="getData()">Get Next Pick</button>
+            <br/>
+            <span id="rawData" ng-bind="draftData"></span>
+        </div>
+        <div id="divPicks" class="w3-container w3-half">
+
+            <table id="tblpicks" class="w3-table w3-bordered w3-striped">
+                <tr class="w3-teal">
+                    <th>Round #</th>
+                    <th>Pick #</th>
+                    <th>Overall Pick #</th>
+                    <th>Team</th>
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>School</th>
+                </tr>
+
+            </table>
+        </div>
+    </div>
 </div>
+<script>
+    var app = angular.module('UMM',[]);
+    app.controller('ummController',function($scope,$http){
+        $scope.getData=function(){
+        $http({
+            method:'POST',
+            url: '/getDraftData',
+        }).then(function(response){
+        $scope.draftData = response.data;
+        alert(response.data);
+        console.log("data",$scope.draftData);
+        }, function(err){
+            console.log(err);
+        });
+        }
+    });
+
+
+</script>
 </body>
 </html>

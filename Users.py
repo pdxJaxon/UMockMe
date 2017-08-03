@@ -11,6 +11,15 @@ import Teams
 class User:
 
 
+    def ValidateLogin(email,password):
+        usr=DBLib.DB.getUserByEmailAndPassword(email,password)
+        return usr
+
+
+
+
+
+
 
     def AddUser(email,fname,lname,userName,Password,TeamAbbr):
 

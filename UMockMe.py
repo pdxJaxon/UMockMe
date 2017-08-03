@@ -13,13 +13,15 @@ import forms
 import Users
 
 
+import json
 
 import logging
 from logging.handlers import RotatingFileHandler
 
 
-from flask import Flask, session, request,flash
+from flask import Flask, session, request,flash,redirect, url_for
 from flask import render_template
+from flask.json import jsonify
 
 
 
@@ -48,6 +50,14 @@ def EditProspects():
 def NewAccount():
     frm = forms.NewAccount()
 
+    teams = Teams.Team.getAllTeams()
+
+    frm.FavoriteTeam.choices = [(row[0],row[2]) for row in teams]
+
+    frm.FavoriteTeam.choices.sort()
+
+    frm.FavoriteTeam.choices.insert(0,["0","please choose team"])
+
     if request.method == 'POST':
         if frm.validate() == False:
             flash("Please Validate Data Entry")
@@ -64,7 +74,7 @@ def NewAccount():
 
             u = Users.User.AddUser(email,fname,lname,userName,Password,abbr)
 
-            return render_template('index.html',usr=u)
+            return render_template('index.html',form=frm,usr=u)
     else:
         return render_template('NewAccount.html', form=frm)
 
@@ -85,11 +95,68 @@ def EditTeams():
 
 
 
+@app.route("/getDraftData", methods= ['GET','POST'])
+def getDraftData():
+    try:
+        sessionid = session['sessionid']
+    except KeyError:
+        session['sessionid'] = uuid.uuid1()
+        sessionid = session['sessionid']
+
+    myDraft = Drafts.Draft(sessionid)
+
+    myDraft.doDraft()
+
+    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
+
+
+    return (jsonify(picks))
+
+
+
+
+
+
 
 
 @app.route("/CustomDraft")
 def CustomDraft():
-    return render_template('CustomDraft.html')
+
+    try:
+        sessionid = session['sessionid']
+    except KeyError:
+        session['sessionid'] = uuid.uuid1()
+        sessionid = session['sessionid']
+
+    myDraft = Drafts.Draft(sessionid)
+
+    myDraft.doDraft()
+
+    '''
+    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
+    '''
+    picks=[]
+
+
+    return render_template('CustomDraft.html',picks=picks)
+
+
+
+
+
+
 
 
 
@@ -121,10 +188,41 @@ def refresh2():
 
 
 
+@app.route("/Login",  methods= ['GET','POST'])
+def Login():
+    frm = forms.Login()
 
-@app.route("/")
+
+    if request.method == 'POST':
+        if frm.validate() == False:
+            flash("Please Validate Data Entry")
+            return render_template('index.html', form=frm)
+        else:
+
+            email = frm.email.data
+            Password = frm.Password.data
+
+            user = Users.User.ValidateLogin(email,Password)
+            if(user):
+                print("gotcha logged in")
+                #return render_template('CustomDraft.html',usr=user)
+                return redirect(url_for('CustomDraft'))
+            else:
+                print("sorry...")
+                return render_template('index.html',form=frm)
+    else:
+        return render_template('index.html', form=frm)
+
+
+
+
+
+
+
+@app.route("/", methods= ['GET','POST'])
 def hello():
-    return render_template('index.html')
+    frm = forms.Login()
+    return render_template('index.html',form=frm)
 
 
 

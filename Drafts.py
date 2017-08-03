@@ -310,9 +310,31 @@ class Draft:
 
 
 
+    def getNextPick():
+        return True
 
 
 
+    def MakePick():
+        return True
+
+
+
+    def getPickedPlayers():
+        return True
+
+    def getPickedPlayers(pos):
+        return True
+
+    def getPickedPlayers(TeamAbbr):
+        return True
+
+
+    def getPlayersAvailable():
+        return True
+
+    def getPlayersAvailable(pos):
+        return True
 
 
 

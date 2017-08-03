@@ -994,6 +994,27 @@ class DB:
 
 
 
+    def getUserByEmailAndPassword(email,pwd):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT * FROM User WHERE Email='{}' AND Password='{}'".format(email,pwd))
+
+            u = cur.fetchall()
+
+            if(u):
+                print(u[0])
+
+            return u
+
+
+
+
+
+
+
 
     def AddUser(email,userName,Password,FavoriteTeam,Fname,Lname):
         sql = "INSERT INTO User VALUES('{}','{}','{}','{}','{}','{}')".format(email,userName,Password,FavoriteTeam,Fname,Lname)
