@@ -18,6 +18,7 @@
             <br/>
             <button ng-click="getData()">Get Next Pick</button>
             <br/>
+            <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
             <span id="rawData" ng-bind="draftData"></span>
         </div>
         <div id="divPicks" class="w3-container w3-half">
@@ -51,17 +52,24 @@
     var app = angular.module('UMM',[]);
     app.controller('ummController',function($scope,$http){
         $scope.draftData = ""
+        $scope.showMsg=false;
         $scope.getData=function(){
+
+        $scope.showMsg=true;
+
         $http({
             method:'POST',
             url: '/getDraftData',
         }).then(function(response){
         $scope.draftData = response.data;
+        $scope.showMsg=false;
         console.log("data",$scope.draftData);
         }, function(err){
             console.log(err);
         });
         }
+
+
     });
 
 
