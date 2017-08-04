@@ -9,14 +9,31 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-<header class="w3-container w3-teal ">
-    <h1>Welcome to UMockMe.com......{%if usr%}{{usr[0][1]}}{%endif%}</h1>
-</header>
+
 <div>
+    <header class="w3-container w3-teal ">
+    <h1>Welcome to UMockMe.com......{%if usr%}{{usr[0][1]}}{%endif%}</h1>
+    </header>
     <div class="w3-row">
-        <div class="w3-container w3-twothird">&nbsp</div>
+        <div class="w3-container w3-third" id=""menu">
+             <ul class="w3-striped">
+            <li><a href="/QuickDraft">QuickDraft - no account needed</a></li>
+            <li><a href="/ComingSoon">Features Coming Soon</a></li>
+            <div class="w3-container w3-hide">
+                 <p></p>
+            <p>To rebuild the database with fresh data, click the links below IN ORDER one at a time. </p>
+            <li><a href="/DBRefresh0">1) This Blows Away the DB incase you want to rebuild from scratch and repopulate data</a></li>
+            <li><a href="/DBRefresh1">2) This Rebuilds the DB Schema</a></li>
+            <li><a href="/DBRefresh2">3) This Repopulates the DB with static data used for mocking</a></li>
+            </div>
+
+        </ul>
+        </div>
+        <div class="w3-container w3-third">
+
+        </div>
         <div id="login" class="w3-container w3-third">
-            Login:<br/>
+            <h2>Custom Draft - (FREE Account Required)</h2>
             <form action = "/Login" method = "post">
          <fieldset>
             <legend>Login</legend>
@@ -34,26 +51,14 @@
 
          </fieldset>
       </form>
-            <br/>
-            Or:<br/>
+            <h3>OR:</h3>
+            <h4>
             <a href="/NewAccount">Create New Account (FREE)</a>
+            </h4>
         </div>
     </div>
     <div id="menu" class="w3-container">
-        <ul class="w3-striped">
-            <li><a href="/QuickDraft">QuickDraft Proceed as a Guest. No Account Needed.</a></li>
-            <!--
-            <li><a href="/CustomDraft">Custom Draft</a></li>
-            <li><a href="/EditProspects">Edit Prospect Data</a></li>
-            <li><a href="/EditTeams">Edit Team Needs</a></li>
-            -->
-            <li><a href="/ComingSoon">Features Coming Soon To UMockMe.com</a></li>
-            <p></p>
-            <p>To rebuild the database with fresh data, click the links below IN ORDER one at a time. </p>
-            <li><a href="/DBRefresh0">1) This Blows Away the DB incase you want to rebuild from scratch and repopulate data</a></li>
-            <li><a href="/DBRefresh1">2) This Rebuilds the DB Schema</a></li>
-            <li><a href="/DBRefresh2">3) This Repopulates the DB with static data used for mocking</a></li>
-        </ul>
+
     </div>
 </div>
 </body>
