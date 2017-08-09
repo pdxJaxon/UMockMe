@@ -26,7 +26,7 @@ from flask.json import jsonify
 
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder="static")
 app.secret_key = "I Like Turtles"
 app.config['SESSION_TYPE'] = 'filesystem'
 
@@ -74,7 +74,7 @@ def NewAccount():
 
             u = Users.User.AddUser(email,fname,lname,userName,Password,abbr)
 
-            return render_template('index.html',form=frm,usr=u)
+            return render_template('index.html',form=frm,usr=u[0])
     else:
         return render_template('NewAccount.html', form=frm)
 
@@ -103,8 +103,14 @@ def getDraftData():
         session['sessionid'] = uuid.uuid1()
         sessionid = session['sessionid']
 
+
     myDraft = Drafts.Draft(sessionid)
 
+
+    picks = myDraft.getNextPick(sessionid)
+
+
+    '''
     myDraft.doDraft()
 
     picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
@@ -114,7 +120,9 @@ def getDraftData():
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
+    '''
 
+    print(picks)
 
     return (jsonify(picks))
 
@@ -137,7 +145,7 @@ def CustomDraft():
     myDraft = Drafts.Draft(sessionid)
 
     myDraft.doDraft()
-
+    usr = request.args.get('usr')
     '''
     picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
@@ -150,7 +158,7 @@ def CustomDraft():
     picks=[]
 
 
-    return render_template('CustomDraft.html',picks=picks)
+    return render_template('CustomDraft.html',picks=picks,roundNumber=1,pickNumber=1,usr=usr)
 
 
 
@@ -170,6 +178,10 @@ def refresh0():
     return ("Database Scrubbed - <a href='/'>Return to Home Page</a>")
 
 
+
+
+
+
 @app.route("/DBRefresh1")
 def refresh1():
     DataRefreshService.DataDude.BuildDB()
@@ -179,12 +191,23 @@ def refresh1():
     return ("Database Rebuilt - <a href='/'>Return to Home Page</a>")
 
 
+
+
+
+
+
 @app.route("/DBRefresh2")
 def refresh2():
     DataRefreshService.DataDude.RefreshStaticData()
 
 
     return ("Database Populated - <a href='/'>Return to Home Page</a>")
+
+
+
+
+
+
 
 
 
@@ -206,7 +229,7 @@ def Login():
             if(user):
                 print("gotcha logged in")
                 #return render_template('CustomDraft.html',usr=user)
-                return redirect(url_for('CustomDraft'))
+                return redirect(url_for('CustomDraft',usr=user[0][1]))
             else:
                 print("sorry...")
                 return render_template('index.html',form=frm)
@@ -220,9 +243,11 @@ def Login():
 
 
 @app.route("/", methods= ['GET','POST'])
-def hello():
+def index():
     frm = forms.Login()
-    return render_template('index.html',form=frm)
+    usr = request.args.get('usr')
+    print("User=",usr)
+    return render_template('index.html',form=frm, usr=usr)
 
 
 

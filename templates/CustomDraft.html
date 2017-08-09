@@ -9,9 +9,9 @@
 <body>
 
 <div id="draftResult" class="w3-container" ng-app="UMM" ng-controller="ummController">
-     <h3><a href="/">Home</a></h3>
+     <h3><a href="{{url_for('index',usr=usr)}}">Home</a></h3>
     <br/>
-    <h2>UMockMe.com - Draft Results...</h2>
+    <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
     <div class="w3-container w3-row">
         <div id="divAvailable" class="w3-container w3-half">
             <h4>LIST Available Players here in a select grid....</h4>
@@ -53,6 +53,9 @@
     app.controller('ummController',function($scope,$http){
         $scope.draftData = ""
         $scope.showMsg=false;
+        $scope.roundNumber={{roundNumber}}
+        $scope.pickNumber={{pickNumber}}
+
         $scope.getData=function(){
 
         $scope.showMsg=true;
@@ -60,6 +63,8 @@
         $http({
             method:'POST',
             url: '/getDraftData',
+            headers:{'Content-Type':undefined},
+            data: {roundNumber:$scope.roundNumber, pickNumber:$scope.pickNumber}
         }).then(function(response){
         $scope.draftData = response.data;
         $scope.showMsg=false;

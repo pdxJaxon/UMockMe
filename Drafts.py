@@ -310,8 +310,25 @@ class Draft:
 
 
 
-    def getNextPick():
-        return True
+    def getNextPick(self,sessionId):
+
+        self._allTeamNeeds = []
+
+
+        if(len(self._allTeamNeeds)==0):
+            self.cacheTeamNeeds()
+
+        # 1 - get all rounds
+        rounds = Draft.getAllRoundsByDraft(2017)
+
+        # static data
+        DBLib.DB.PopulatePicks(sessionId)  # this is only gonna work for current  year......
+
+
+        p=DBLib.DB.getNextPickForUser(sessionId)
+
+
+        return p
 
 
 
