@@ -110,6 +110,8 @@ def getDraftData():
     picks = myDraft.getNextPick(sessionid)
 
 
+
+
     '''
     myDraft.doDraft()
 
