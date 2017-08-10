@@ -657,6 +657,22 @@ class DB:
 
 
 
+    def getAllPicksForUser(sessionId):
+        con = DB.getConnection()
+        with con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM PICK WHERE ProspectId is not null AND SessionId='{}' ORDER BY OverallPickNum ASC".format(
+                    sessionId))
+
+            p = cur.fetchall()
+
+            return p
+
+
+
+
+
 
 
 
@@ -670,6 +686,39 @@ class DB:
 
             return p
 
+
+
+
+
+
+    def getLastPlayerPicked(sessionId):
+        con = DB.getConnection()
+        with con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM PICK WHERE ProspectId is not null AND SessionId='{}' ORDER BY OverallPickNum DESC LIMIT 1".format(
+                    sessionId))
+
+            p = cur.fetchall()
+            print("Picky:",p)
+
+            return p
+
+
+
+
+
+
+    def getPicksForUser(sessionId):
+        con = DB.getConnection()
+        with con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT * FROM PICK WHERE SessionId='{}'".format(sessionId))
+
+            p = cur.fetchall()
+
+            return p
 
 
 

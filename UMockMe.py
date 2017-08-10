@@ -103,13 +103,11 @@ def getDraftData():
         session['sessionid'] = uuid.uuid1()
         sessionid = session['sessionid']
 
-
+    print("session:",sessionid)
     myDraft = Drafts.Draft(sessionid)
 
 
     picks = myDraft.getNextPick(sessionid)
-
-
 
 
     '''
@@ -146,8 +144,10 @@ def CustomDraft():
 
     myDraft = Drafts.Draft(sessionid)
 
-    myDraft.doDraft()
+
     usr = request.args.get('usr')
+
+    myDraft.ClearAllPicksForUser(sessionid)
     '''
     picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
@@ -231,7 +231,7 @@ def Login():
             if(user):
                 print("gotcha logged in")
                 #return render_template('CustomDraft.html',usr=user)
-                return redirect(url_for('CustomDraft',usr=user[0][1]))
+                return redirect(url_for('index',usr=user[0][1]))
             else:
                 print("sorry...")
                 return render_template('index.html',form=frm)
@@ -285,6 +285,8 @@ def QuickDraft():
         session['sessionid'] = uuid.uuid1()
         sessionid = session['sessionid']
 
+    usr = request.args.get('usr')
+
     myDraft = Drafts.Draft(sessionid)
 
     myDraft.doDraft()
@@ -298,7 +300,7 @@ def QuickDraft():
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 7,sessionid)
 
 
-    return render_template('QuickDraft.html',picks=picks)
+    return render_template('QuickDraft.html',picks=picks,usr=usr)
 
 
 

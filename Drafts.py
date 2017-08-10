@@ -25,6 +25,7 @@ class Draft:
         self._prospects = Prospects.Prospect.getAllProspects()
 
         self._allTeamNeeds = []
+        self._rounds = []
 
 
 
@@ -310,24 +311,47 @@ class Draft:
 
 
 
-    def getNextPick(self,sessionId):
 
-        self._allTeamNeeds = []
+
+    def picksPopulated(self,sessionid):
+        p=DBLib.DB.getPicksForUser(sessionid)
+        if(len(p)>0):
+            return True
+        else:
+            return False
+
+
+    def ClearAllPicksForUser(self,sessionId):
+        DBLib.DB.DeletePicksForSession(sessionId)
+
+
+
+    def getNextPick(self,sessionId):
 
 
         if(len(self._allTeamNeeds)==0):
             self.cacheTeamNeeds()
 
         # 1 - get all rounds
-        rounds = Draft.getAllRoundsByDraft(2017)
+        if(len(self._rounds)==0):
+
+            rounds = Draft.getAllRoundsByDraft(2017)
+            self._rounds = rounds
+
 
         # static data
-        DBLib.DB.PopulatePicks(sessionId)  # this is only gonna work for current  year......
+        if(not self.picksPopulated(sessionId)):
+            DBLib.DB.PopulatePicks(sessionId)  # this is only gonna work for current  year......
 
 
         p=DBLib.DB.getNextPickForUser(sessionId)
 
-        self.MakePick(p)
+        if(len(p)>0):
+            self.MakePick(p[0])
+
+            p=DBLib.DB.getAllPicksForUser(sessionId)
+        else:
+            p=None
 
         return p
 
