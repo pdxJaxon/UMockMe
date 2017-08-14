@@ -95,12 +95,14 @@ class Prospect:
 
             for dude in jsonData:
                 Id = jsonData[dude]["personId"]
-                lname = jsonData[dude]["lastName"].replace("'","''")                #parse any single quotes out of names.....it will blow up our SQL below
-                fname = jsonData[dude]["firstName"].replace("'","''")               #parse any single quotes out of names.....it will blow up our SQL below
+                lname = jsonData[dude]["lastName"].replace("'","")                #parse any single quotes out of names.....it will blow up our SQL below
+                fname = jsonData[dude]["firstName"].replace("'","")               #parse any single quotes out of names.....it will blow up our SQL below
                 pos = jsonData[dude]["pos"]
                 height = jsonData[dude]["height"]
+
                 if(height != None):
-                    height = height.replace("'","''")                                #parse any single quotes out of names.....it will blow up our SQL below
+                    height = height.replace("'"," ")                                #parse any single quotes out of names.....it will blow up our SQL below
+                    height = height.replace('"','')
 
                 weight = jsonData[dude]["weight"]
                 grade = jsonData[dude]["expertGrade"]
@@ -108,7 +110,7 @@ class Prospect:
                     grade=0
                 collegeId = jsonData[dude]["college"]
                 college = Colleges.College.getCollegeById(collegeId)
-                collegeName = college[0][1].replace("'","''")
+                collegeName = college[0][1].replace("'","")
                 #todo: Add ProjectedDraftPick
 
 

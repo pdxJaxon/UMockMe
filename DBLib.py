@@ -6,6 +6,7 @@ import os
 import sys
 from random import *
 from datetime import datetime, timedelta
+import json
 
 
 
@@ -66,6 +67,8 @@ class DB:
 
                 cur.execute("DROP TABLE if exists BigBoard")
                 cur.execute("DROP TABLE if exists BigBoardProspect")
+                cur.execute("DROP TABLE if exists UserSession")
+                cur.execute("DROP TABLE if exists SessionProspect")
 
         except:
             print("")
@@ -96,6 +99,9 @@ class DB:
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
                     cur.execute("CREATE TABLE if not exists College(Id integer, Name varchar(50), Conference varchar(50))")
                     print("1a5")
+
+                    cur.execute("CREATE TABLE if not exists UserSession(SessionId varchar,UserEmail varchar(75),TheKey varchar(50), TheValue varchar, theDate timestamp)")
+                    cur.execute("CREATE TABLE if not exists SessionProspect(SessionId varchar,ProspectId integer)")
 
                     cur.execute("CREATE TABLE if not exists Meeting(MeetingId integer, MeetingName varchar(50), PointValue integer)")
                     print("1a6")
@@ -134,19 +140,22 @@ class DB:
                     print("7a")
                 else:
                     print("1b")
-                    cur.execute(
-                        "CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
-                    cur.execute(
-                        "CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text)")
-                    cur.execute(
-                        "CREATE TABLE if not exists TeamNeed(Abbr Text, Need Text, NeedScore int, NeedCount int)")
+                    cur.execute("CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
+                    cur.execute("CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text)")
+                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr Text, Need Text, NeedScore int, NeedCount int)")
                     cur.execute("CREATE TABLE if not exists College(Id Int, Name Text, Conference Text)")
-
+                    print("1b1")
 
                     cur.execute("CREATE TABLE if not exists UMMUser(email text, UserName text, Password text, FavoriteTeam text, fName text, lname text)")
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail text, TeamAbbr text, pos text, needScore int, needCount int)")
 
+                    print("1b2")
+
+                    cur.execute("CREATE TABLE if not exists UserSession(SessionId text,UserEmail text,TheKey text, TheValue text, theDate varchar)")
                     cur.execute("CREATE TABLE if not exists Meeting(MeetingId Int, MeetingName Text, PointValue int)")
+                    cur.execute("CREATE TABLE if not exists SessionProspect(SessionId text,ProspectId int)")
+                    print("1b3")
+
                     cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
                     cur.execute("CREATE TABLE if not exists Draft(DraftID int, Year int)")
 
@@ -215,11 +224,22 @@ class DB:
 
 
 
+    def xescape(Value):
+        return Value.replace("'","''")
+
+
+    def xunescape(Value):
+        return Value.replace("''","'")
 
 
 
 
 
+    def AddSessionData(sessionId,userEmail,Key,Value):
+        theTime = datetime.now()
+        Value = json.dumps(Value)
+        sql="INSERT INTO UserSession Values('{}' ,'{}' ,'{}' , '{}','{}')".format(sessionId,userEmail,Key,Value,theTime)
+        DB.ExecuteSQL(sql)
 
 
 
@@ -263,6 +283,17 @@ class DB:
 
 
 
+    def AddProspectForSessionDB(sessionId,id):
+        sql = "INSERT INTO SessionProspect VALUES('{}',{})".format(sessionId,id)
+        # print(sql)
+        DB.ExecuteSQL(sql)
+
+
+
+    def DeleteProspectForSessionDB(sessionId,ProspectId):
+        sql = "DELETE FROM SessionProspect WHERE SessionId='{}' AND ProspectId={}".format(sessionId,ProspectId)
+        DB.ExecuteSQL(sql)
+
 
 
 
@@ -299,7 +330,16 @@ class DB:
 
 
 
+    def getSessionValue(sessionId,Key):
+        con = DB.getConnection()
 
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT TheValue FROM UserSession WHERE SessionId='{}' AND TheKey='{}'".format(sessionId,Key))
+
+            value = cur.fetchall()
+
+            return value
 
 
 
@@ -328,6 +368,25 @@ class DB:
             prospects = cur.fetchall()
 
             return prospects
+
+
+
+
+
+    def getAllProspectsForSession(sessionId):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM Prospect Order By Expertgrade desc")
+
+            prospects = cur.fetchall()
+
+            return prospects
+
+
+
+
 
 
 
@@ -662,8 +721,7 @@ class DB:
         with con:
             cur = con.cursor()
             cur.execute(
-                "SELECT * FROM PICK WHERE ProspectId is not null AND SessionId='{}' ORDER BY OverallPickNum ASC".format(
-                    sessionId))
+                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.Id, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p INNER JOIN Prospect AS t on t.id = p.ProspectId WHERE p.ProspectId is not null AND p.SessionId='{}' ORDER BY p.OverallPickNum ASC".format(sessionId))
 
             p = cur.fetchall()
 

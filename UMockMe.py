@@ -110,18 +110,6 @@ def getDraftData():
     picks = myDraft.getNextPick(sessionid)
 
 
-    '''
-    myDraft.doDraft()
-
-    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
-    '''
-
     print(picks)
 
     return (jsonify(picks))
@@ -147,7 +135,7 @@ def CustomDraft():
 
     usr = request.args.get('usr')
 
-    myDraft.ClearAllPicksForUser(sessionid)
+
     '''
     picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
@@ -157,10 +145,10 @@ def CustomDraft():
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
     '''
-    picks=[]
 
 
-    return render_template('CustomDraft.html',picks=picks,roundNumber=1,pickNumber=1,usr=usr)
+
+    return render_template('CustomDraft.html',usr=usr)
 
 
 
@@ -289,7 +277,7 @@ def QuickDraft():
 
     myDraft = Drafts.Draft(sessionid)
 
-    myDraft.doDraft()
+    myDraft.doDraft(sessionid)
 
     picks = Picks.Pick.getAllPickDetailsForRound(2017, 1,sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 2,sessionid)

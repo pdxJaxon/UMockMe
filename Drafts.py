@@ -11,6 +11,7 @@ import Rounds
 import Picks
 from random import *
 import uuid
+import ast
 
 from flask import Flask, session
 
@@ -20,20 +21,18 @@ class Draft:
 
 
 
-    def __init__(self,sessionId):
+    def __init__(self,sessionId,userId=0):
+
         self._sessionId = sessionId
-        self._prospects = Prospects.Prospect.getAllProspects()
-
-        self._allTeamNeeds = []
-        self._rounds = []
-
+        self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+        self._allTeamNeeds=[]
+        self._rounds=[]
 
 
 
 
     def __del__(self):
-        self._prospects=""
-        self._allTeamNeeds=""
+        pass
 
 
 
@@ -346,16 +345,16 @@ class Draft:
 
         p=DBLib.DB.getNextPickForUser(sessionId)
 
+
+
         if(len(p)>0):
-            self.MakePick(p[0])
+            self.MakePick(p[0],sessionId)
 
-            p=DBLib.DB.getAllPicksForUser(sessionId)
+            pu=DBLib.DB.getAllPicksForUser(sessionId)
         else:
-            p=None
+            pu=None
 
-        return p
-
-
+        return pu
 
 
 
@@ -364,7 +363,9 @@ class Draft:
 
 
 
-    def MakePick(self,pck):
+
+
+    def MakePick(self,pck,sessionId):
 
         print("The pck:",pck)
         # Get Needs For Team
@@ -379,15 +380,29 @@ class Draft:
 
         needs = self.getTeamNeeds(abr)
 
-        # print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
+        print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
-        needsList = needs
 
-        if (needsList):
+
+        if(len(self._prospects)==0):
+            rs = DBLib.DB.getAllProspects()
+
+            for r in rs:
+                DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
+
+            self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+
+
+        if (needs):
             passedUpPlayers = []
+
+
+
             for p in self._prospects:
+
                 if (p[0] != 0):
                     pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
+                    print("pos",pPos)
 
                     # Normalize the Positions
                     if (pPos == "C" or pPos == "OT" or pPos == "OG"):
@@ -410,7 +425,7 @@ class Draft:
                             # There were no higher ranked players....so this pick is basically a slam dunk
                             if (PickLikelihood >= 10):  # 90% chance that we pick this dude......
                                 Player = p[0]
-                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
+                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
                                 # print("Pick Normal - {}".format(pck))
                                 self.removeProspectFromCache(Player)
                                 # needs.remove(n)
@@ -429,8 +444,8 @@ class Draft:
                             for dp in self._prospects:
                                 if (dp[0] == AlternatePicks[0]):
                                     pickMade = True
-                                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
-                                    self.removeProspectFromCache(dp[0])
+                                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
+                                    self.removeProspectFromCache(sessionId,dp[0])
 
                                     # find position in needs list that matches dp[pos]
                                     # for i in needs:
@@ -455,7 +470,7 @@ class Draft:
             # print(self._prospects[0])
 
             # print("Pick no need {}".format(pck))
-            Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, self._sessionId)
+            Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
             pickMade = True
             # print("Blind Pick Team{} Prospect:{}".format(Team,Player))
             self.removeProspectFromCache(Player)
@@ -474,37 +489,39 @@ class Draft:
 
 
 
-    def getPickedPlayers():
+    def getPickedPlayers(self):
         return True
 
-    def getPickedPlayers(pos):
+    def getPickedPlayersByPos(self,pos):
         return True
 
-    def getPickedPlayers(TeamAbbr):
-        return True
-
-
-    def getPlayersAvailable():
-        return True
-
-    def getPlayersAvailable(pos):
+    def getPickedPlayersByTeam(self,TeamAbbr):
         return True
 
 
+    def getPlayersAvailable(self):
+        return True
 
-
-    def removeProspectFromCache(self,ProspectId):
-        for p in self._prospects:
-            if(p[0]==ProspectId):
-                self._prospects.remove(p)
-                break
-
+    def getPlayersAvailableByPos(self,pos):
+        return True
 
 
 
 
+    def removeProspectFromCache(self,sessionId,ProspectId):
+        print("Player to remove",ProspectId)
 
-    def doDraft(self):
+        DBLib.DB.DeleteProspectForSessionDB(sessionId,ProspectId)
+
+        self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+        session['prospects'] = self._prospects
+
+
+
+
+
+
+    def doDraft(self,sessionId):
 
 
 
@@ -516,12 +533,12 @@ class Draft:
         rounds = Draft.getAllRoundsByDraft(2017)
 
         # static data
-        DBLib.DB.PopulatePicks(self._sessionId)   #this is only gonna work for current  year......
+        DBLib.DB.PopulatePicks(sessionId)   #this is only gonna work for current  year......
         
         #2 - Goto Round 1
         for rnd in rounds:
 
-            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1],self._sessionId)
+            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1],sessionId)
             #print("Picks for round {} - {}".format(rnd[1],picks))
 
 
@@ -530,4 +547,4 @@ class Draft:
             for pck in picks:
                 #print("Pick:",pck)
 
-                self.MakePick(pck)
+                self.MakePick(pck,sessionId)
