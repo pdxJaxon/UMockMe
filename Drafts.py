@@ -203,6 +203,11 @@ class Draft:
 
 
 
+    def getTeamNeedsForSession(sessionId,teamAbbr):
+        needs = DBLib.DB.getAllNeedsForSessionTeam(sessionId,teamAbbr)
+        return needs
+
+
 
 
     def getTeamNeeds(self,teamAbbr):
@@ -240,7 +245,7 @@ class Draft:
 
 
 
-    def cacheTeamNeeds(self):
+    def cacheTeamNeeds(self,sessionId):
 
         #We need to account for position translations for OL, DL, etc.
         self._allTeamNeeds=[]
@@ -264,7 +269,9 @@ class Draft:
                 if (n[1] == "SS" or n[1] == "FS"):
                     n[1] = "S"
 
-            self._allTeamNeeds.append(needs)
+                DBLib.DB.AddTeamNeedForSessionDB(sessionId,n[0],n[1],n[2],n[3])
+
+            self._allTeamNeeds = needs
 
 
 
@@ -274,7 +281,7 @@ class Draft:
 
 
 
-    def MarkNeedAsSelected(self,TeamAbbr,NeedPosition):
+    def MarkNeedAsSelected(self,TeamAbbr,NeedPosition,sessionId):
 
         posAdded=False
         newPosition = []
@@ -298,11 +305,13 @@ class Draft:
                         posAdded=True
                         i.remove(n)
                         i.append(newNeed)
+                        DBLib.DB.UpdateTeamNeedForSessionDB(sessionId,team,pos,score,count)
                         break
 
                 if(not posAdded):
                     newNeed=(i[0][0],NeedPosition,5,1)
                     i.append(newNeed)
+                    DBLib.DB.AddTeamNeedForSessionDB(sessionId,i[0][0],NeedPosition,5,1)
 
                 if(TeamAbbr=="PIT"):
                     print("stop",i)
@@ -329,7 +338,7 @@ class Draft:
 
 
         if(len(self._allTeamNeeds)==0):
-            self.cacheTeamNeeds()
+            self.cacheTeamNeeds(sessionId)
 
         # 1 - get all rounds
         if(len(self._rounds)==0):
@@ -427,9 +436,9 @@ class Draft:
                                 Player = p[0]
                                 Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
                                 # print("Pick Normal - {}".format(pck))
-                                self.removeProspectFromCache(Player)
+                                self.removeProspectFromCache(sessionId,Player)
                                 # needs.remove(n)
-                                self.MarkNeedAsSelected(abr, pPos)
+                                self.MarkNeedAsSelected(abr, pPos,sessionId)
                                 pickMade = True
                                 break
                             else:
@@ -452,7 +461,7 @@ class Draft:
                                     #     if(i[0] ==dp[3]):
                                     #         needs.remove(i)
 
-                                    self.MarkNeedAsSelected(abr, pPos)
+                                    self.MarkNeedAsSelected(abr, pPos,sessionId)
                                     break
 
                             break
@@ -473,8 +482,8 @@ class Draft:
             Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
             pickMade = True
             # print("Blind Pick Team{} Prospect:{}".format(Team,Player))
-            self.removeProspectFromCache(Player)
-            self.MarkNeedAsSelected(Team, position)
+            self.removeProspectFromCache(sessionId,Player)
+            self.MarkNeedAsSelected(Team, position,sessionId)
 
 
         return True
