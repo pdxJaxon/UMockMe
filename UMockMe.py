@@ -110,8 +110,6 @@ def getDraftData():
     picks = myDraft.getNextPick(sessionid)
 
 
-    print(picks)
-
     return (jsonify(picks))
 
 
@@ -132,6 +130,10 @@ def CustomDraft():
 
     myDraft = Drafts.Draft(sessionid)
 
+    #When user first navigates to this page, they should have no picks yet
+    myDraft.ClearAllPicksForUser(sessionid)
+
+    DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
 
     usr = request.args.get('usr')
 

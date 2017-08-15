@@ -392,7 +392,6 @@ class Draft:
         print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
 
-
         if(len(self._prospects)==0):
             rs = DBLib.DB.getAllProspects()
 

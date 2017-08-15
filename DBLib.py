@@ -69,6 +69,7 @@ class DB:
                 cur.execute("DROP TABLE if exists BigBoardProspect")
                 cur.execute("DROP TABLE if exists UserSession")
                 cur.execute("DROP TABLE if exists SessionProspect")
+                cur.execute("DROP TABLE if exists SessionTeamNeed")
 
         except:
             print("")
@@ -102,6 +103,7 @@ class DB:
 
                     cur.execute("CREATE TABLE if not exists UserSession(SessionId varchar,UserEmail varchar(75),TheKey varchar(50), TheValue varchar, theDate timestamp)")
                     cur.execute("CREATE TABLE if not exists SessionProspect(SessionId varchar,ProspectId integer)")
+                    cur.execute("CREATE TABLE if not exists SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
 
                     cur.execute("CREATE TABLE if not exists Meeting(MeetingId integer, MeetingName varchar(50), PointValue integer)")
                     print("1a6")
@@ -154,6 +156,7 @@ class DB:
                     cur.execute("CREATE TABLE if not exists UserSession(SessionId text,UserEmail text,TheKey text, TheValue text, theDate varchar)")
                     cur.execute("CREATE TABLE if not exists Meeting(MeetingId Int, MeetingName Text, PointValue int)")
                     cur.execute("CREATE TABLE if not exists SessionProspect(SessionId text,ProspectId int)")
+                    cur.execute("CREATE TABLE if not exists SessionTeamNeed(SessionId text,Abbr text, Need text, NeedScore int, NeedCount int)")
                     print("1b3")
 
                     cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
@@ -298,6 +301,55 @@ class DB:
 
 
 
+
+
+    def AddTeamNeedForSessionDB(sessionId,team,pos,needScore,needCount):
+        sql = "INSERT INTO SessionTeamNeed VALUES('{}','{}','{}',{},{})".format(sessionId, team,pos,needScore,needCount)
+        # print(sql)
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+
+    def UpdateTeamNeedForSessionDB(sessionId,team,pos,needScore,needCount):
+        sql = "UPDATE SessionTeamNeed SET needScore={}, needCount={} WHERE sessionId='{}' AND team='{}' AND pos='{}'".format(needScore,needCount,sessionId,team,pos)
+        # print(sql)
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+    def DeleteTeamNeedsForSessionDB(sessionId):
+        sql = "DELETE FROM SessionTeamNeed WHERE sessionId='{}'".format(sessionId)
+
+        # print(sql)
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+
+
+    def getAllNeedsForSessionTeam(sessionId,abbr):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM SessionTeamNeed WHERE team='{}' AND sessionId='{}'".format(abbr,sessionId))
+
+            teamNeeds = cur.fetchall()
+
+            return teamNeeds
+
+
+
+
+
+
     def getAllTeams():
         con = DB.getConnection()
 
@@ -378,7 +430,7 @@ class DB:
 
         with con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM Prospect Order By Expertgrade desc")
+            cur.execute("SELECT p.* FROM SessionProspect as s INNER JOIN Prospect as p on p.Id = s.ProspectId WHERE s.SessionId='{}' Order By Expertgrade desc".format(sessionId))
 
             prospects = cur.fetchall()
 
