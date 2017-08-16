@@ -20,6 +20,6 @@ class NewAccount(Form):
 
 class Login(Form):
     email = StringField("Email Address", [validators.Required("Please enter your email address."),
-                                          validators.Email("Please enter your email address.")])
+                                          validators.Email("Please enter a valid email address.")])
     Password = PasswordField("Password", [validators.Required("Please enter your password.")])
     submit = SubmitField("Login")
