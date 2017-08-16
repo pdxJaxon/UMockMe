@@ -230,10 +230,10 @@ def Login():
             if(user):
                 print("gotcha logged in")
                 #return render_template('CustomDraft.html',usr=user)
-                return redirect(url_for('index',usr=user[0][1]))
+                return redirect(url_for('index',login=1,usr=user[0][1]))
             else:
                 print("sorry...")
-                return render_template('index.html',form=frm)
+                return render_template('index.html',form=frm,login=0)
     else:
         return render_template('index.html', form=frm)
 

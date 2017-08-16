@@ -298,6 +298,10 @@ class DB:
         DB.ExecuteSQL(sql)
 
 
+    def DeleteAllProspectsForSessionDB(sessionId):
+        sql = "DELETE FROM SessionProspect WHERE SessionId='{}'".format(sessionId)
+        DB.ExecuteSQL(sql)
+
 
 
 

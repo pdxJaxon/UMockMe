@@ -398,7 +398,7 @@ class Draft:
             for r in rs:
                 DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
 
-            self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+                self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
 
 
         if (needs):
@@ -533,8 +533,7 @@ class Draft:
 
 
 
-        self.cacheTeamNeeds()
-
+        self.cacheTeamNeeds(sessionId)
 
 
         #1 - get all rounds
