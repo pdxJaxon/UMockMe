@@ -36,13 +36,20 @@ app.logger.setLevel(logging.INFO)
 app.logger.disabled=False
 
 
+
+
+
 @app.before_first_request
 def initSite():
     return True
 
+
+
+
 @app.route("/EditProspects")
 def EditProspects():
     return render_template('EditProspects.html')
+
 
 
 
@@ -74,7 +81,7 @@ def NewAccount():
 
             u = Users.User.AddUser(email,fname,lname,userName,Password,abbr)
 
-            return render_template('index.html',form=frm,usr=u[0])
+            return render_template('index.html',form=frm,usr=u[0][0])
     else:
         return render_template('NewAccount.html', form=frm)
 
@@ -121,6 +128,8 @@ def getDraftData():
 
 @app.route("/CustomDraft")
 def CustomDraft():
+
+    session.clear()
 
     try:
         sessionid = session['sessionid']
@@ -259,15 +268,7 @@ def ComingSoon():
 @app.route("/QuickDraft")
 def QuickDraft():
 
-    '''
-    picks = [
-        {"picknum": 1, "team": "CLE", "player": "Myles Garrett", "position": "DE", "school": "Texas A&M"},
-        {"picknum": 2, "team": "MIA", "player": "Bob Griese", "position": "QB", "school": "BYU"},
-        {"picknum": 3, "team": "PIT", "player": "Lynn Swann", "position": "WR", "school": "Alabama"}
-    ]
-    
-    SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade
-    '''
+    session.clear()
 
     try:
         sessionid = session['sessionid']
@@ -275,9 +276,25 @@ def QuickDraft():
         session['sessionid'] = uuid.uuid1()
         sessionid = session['sessionid']
 
+
+
+
+
+
+
+
+
+
     usr = request.args.get('usr')
 
     myDraft = Drafts.Draft(sessionid)
+
+
+    # When user first navigates to this page, they should have no picks yet
+    myDraft.ClearAllPicksForUser(sessionid)
+
+    DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
+    DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
 
     myDraft.doDraft(sessionid)
 
