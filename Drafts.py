@@ -12,6 +12,7 @@ import Picks
 from random import *
 import uuid
 import ast
+import time,datetime
 
 from flask import Flask, session
 
@@ -101,6 +102,10 @@ class Draft:
 
 
     def BetterPlayerPassedUp(self,needs,needPickedFor,prospectPicked,passedUpPlayers):
+
+        startTime = time.time()
+
+
         BetterProspect = None
 
 
@@ -197,6 +202,10 @@ class Draft:
                 elif (rn >= 95):
                         BetterProspect = pup
                         break
+
+        endtime = time.time()
+
+        print("BetterProspect Time Elapsed:",str(endtime-startTime))
 
         return BetterProspect
 
@@ -375,6 +384,7 @@ class Draft:
 
 
     def MakePick(self,pck,sessionId):
+        startTime = time.time()
 
         print("The pck:",pck)
         # Get Needs For Team
@@ -398,7 +408,8 @@ class Draft:
             for r in rs:
                 DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
 
-                self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+
+            self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
 
 
         if (needs):
@@ -484,7 +495,10 @@ class Draft:
             self.removeProspectFromCache(sessionId,Player)
             self.MarkNeedAsSelected(Team, position,sessionId)
 
+        endtime = time.time()
+        elapsedTime = endtime-startTime
 
+        print("MakePick Time:",str(elapsedTime))
         return True
 
 
