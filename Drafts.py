@@ -257,7 +257,9 @@ class Draft:
     def cacheTeamNeeds(self,sessionId):
 
         #We need to account for position translations for OL, DL, etc.
-        self._allTeamNeeds=[]
+       # self._allTeamNeeds=[]
+
+
 
         theTeams = Teams.Team.getAllTeams()
         for t in theTeams:
@@ -280,7 +282,7 @@ class Draft:
 
                 DBLib.DB.AddTeamNeedForSessionDB(sessionId,n[0],n[1],n[2],n[3])
 
-            self._allTeamNeeds = needs
+        self._allTeamNeeds = needs
 
 
 
@@ -388,6 +390,8 @@ class Draft:
 
         print("The pck:",pck)
         # Get Needs For Team
+
+
         t = Teams.Team.getTeamByAbr(pck[3])
 
         city = t[0][2]
@@ -396,6 +400,7 @@ class Draft:
         Team = abr
 
         pickMade = False
+
 
         needs = self.getTeamNeeds(abr)
 
