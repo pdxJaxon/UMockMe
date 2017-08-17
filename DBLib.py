@@ -527,6 +527,23 @@ class DB:
 
 
 
+    def GetAllPickDetailsForYearDB(year, sessionid):
+
+
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute(
+                "SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade, x.school From Draft as d INNER JOIN  Pick as p on p.DraftID = d.DraftID inner join Prospect x on x.Id = p.ProspectId where d.Year={} and p.SessionId='{}' ORDER BY p.OverallPickNum ".format(
+                    year, sessionid))
+
+            PickDetails = cur.fetchall()
+
+        return PickDetails
+
+
 
 
 
