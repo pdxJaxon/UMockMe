@@ -11,6 +11,7 @@ import uuid
 import DataRefreshService
 import forms
 import Users
+import time,datetime
 
 
 import json
@@ -267,6 +268,7 @@ def ComingSoon():
 
 @app.route("/QuickDraft")
 def QuickDraft():
+    start = time.time()
 
     session.clear()
 
@@ -306,6 +308,11 @@ def QuickDraft():
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 6,sessionid)
     picks += Picks.Pick.getAllPickDetailsForRound(2017, 7,sessionid)
 
+    endtime = time.time()
+
+    diff = endtime - start
+
+    print("Elapsed overall:",str(diff))
 
     return render_template('QuickDraft.html',picks=picks,usr=usr)
 
