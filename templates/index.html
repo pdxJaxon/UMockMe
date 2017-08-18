@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="keywords" content="NFL Mock Draft, Emulater, Engine, Game, Mock Draft Site" />
+    <meta name="keywords" content="NFL Mock Draft, Emulator, Engine, Game, Mock Draft Site" />
     <meta name="description" content="This site emulates the NFL Draft using a sophisticated engine that predicts each pick in the draft. You can Make Picks for you own team or let the engine run the entire draft for you." />
     <meta name="robots" content="index,follow" />
     <title>UMockMe.com - NFL Mock Draft Site</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 </head>
 <body>
 
@@ -17,7 +18,7 @@
     <div class="w3-row">
         <div class="w3-container w3-third" id=""menu">
              <ul class="w3-striped">
-            <li><a href="/QuickDraft">QuickDraft - no account needed</a></li>
+            <li><a href="{{url_for('QuickDraft',usr=usr)}}">QuickDraft - no account needed</a></li>
             <li><a href="/ComingSoon">Features Coming Soon</a></li>
             {%if usr%}
                  <li><a href="/EditProspects">Edit Draft Prospect Data</a></li>
@@ -40,8 +41,20 @@
 
         <div id="login" class="w3-container w3-third">
             {%if not usr%}
+            {%if login==0%}INVALID LOGIN{%endif%}
+
+            {% if form.email.errors %}
+                <span>
+                <ul>
+                    {% for err in form.email.errors %}
+                        <li>{{ err }}</li>
+                    {% endfor %}
+                </ul>
+                </span>
+            {% endif %}
+
             <form action = "/Login" method = "post">
-         <fieldset>
+            <fieldset>
             <legend>Login</legend>
             {{ form.hidden_tag() }}
 

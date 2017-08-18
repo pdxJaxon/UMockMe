@@ -14,12 +14,27 @@
     <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
     <div class="w3-container w3-row">
         <div id="divAvailable" class="w3-container w3-half">
-            <h4>LIST Available Players here in a select grid....</h4>
+            <h4>Available Players</h4>
             <br/>
-            <button ng-click="getData()">Get Next Pick</button>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
             <br/>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
-            <span id="rawData" ng-bind="draftData"></span>
+             <table id="tblAvailablePlayers" class="w3-table w3-bordered w3-striped">
+                <tr class="w3-teal">
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>School</th>
+                    <th>Expert Score</th>
+                </tr>
+                {% raw %}
+                <tr ng-repeat="x in availablePlayers">
+                    <td>{{ x[1] + ' ' + x[2] }}</td>
+                    <td>{{ p[3] }}</td>
+                    <td>{{ p[4] }}</td>
+                    <td>{{ p[5] }}</td>
+                </tr>
+                {% endraw %}
+            </table>
         </div>
         <div id="divPicks" class="w3-container w3-half">
 
@@ -41,7 +56,7 @@
                     <td>{{ p[3] }}</td>
                     <td>{{ p[5]  + ' ' + p[6]}}</td>
                     <td>{{ p[7] }}</td>
-                    <td>{{ p[9] }}</td>
+                    <td>{{ p[8] }}</td>
                 </tr>
                 {% endraw %}
             </table>
@@ -52,10 +67,9 @@
     var app = angular.module('UMM',[]);
     app.controller('ummController',function($scope,$http){
         $scope.draftData = ""
+        $scope.availablePlayers = sessionStorage.getItem("_prospects")
         $scope.showMsg=false;
-        $scope.roundNumber={{roundNumber}}
-        $scope.pickNumber={{pickNumber}}
-
+        $scope.showBtn=true;
         $scope.getData=function(){
 
         $scope.showMsg=true;
@@ -63,12 +77,16 @@
         $http({
             method:'POST',
             url: '/getDraftData',
-            headers:{'Content-Type':undefined},
-            data: {roundNumber:$scope.roundNumber, pickNumber:$scope.pickNumber}
+            headers:{'Content-Type':undefined}
         }).then(function(response){
-        $scope.draftData = response.data;
+        if(response.data){
+            $scope.draftData = response.data;
+            $scope.availablePlayers = sessionStorage.getItem("_prospects")
+            }
+            else{
+                $scope.showBtn=false;
+            }
         $scope.showMsg=false;
-        console.log("data",$scope.draftData);
         }, function(err){
             console.log(err);
         });

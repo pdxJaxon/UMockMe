@@ -102,6 +102,57 @@ def EditTeams():
 
 
 
+@app.route("/getQuickDraftData", methods= ['GET','POST'])
+def getQuickDraftData():
+
+    start = time.time()
+
+    session.clear()
+
+    try:
+        sessionid = session['sessionid']
+    except KeyError:
+        session['sessionid'] = uuid.uuid1()
+        sessionid = session['sessionid']
+
+    usr = request.args.get('usr')
+
+    myDraft = Drafts.Draft(sessionid)
+
+    # When user first navigates to this page, they should have no picks yet
+    myDraft.ClearAllPicksForUser(sessionid)
+
+    DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
+    DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
+
+    myDraft.doDraft(sessionid)
+
+    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
+    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
+
+
+    endtime = time.time()
+
+    diff = endtime - start
+
+    print("Elapsed overall:", str(diff))
+
+    return (jsonify(picks))
+
+
+
+
+
+
+
+
+
+
 
 @app.route("/getDraftData", methods= ['GET','POST'])
 def getDraftData():
@@ -146,17 +197,6 @@ def CustomDraft():
     DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
 
     usr = request.args.get('usr')
-
-
-    '''
-    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
-    '''
 
 
 
@@ -268,53 +308,8 @@ def ComingSoon():
 
 @app.route("/QuickDraft")
 def QuickDraft():
-    start = time.time()
-
-    session.clear()
-
-    try:
-        sessionid = session['sessionid']
-    except KeyError:
-        session['sessionid'] = uuid.uuid1()
-        sessionid = session['sessionid']
-
-
-
-
-
-
-
-
-
-
     usr = request.args.get('usr')
-
-    myDraft = Drafts.Draft(sessionid)
-
-
-    # When user first navigates to this page, they should have no picks yet
-    myDraft.ClearAllPicksForUser(sessionid)
-
-    DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
-    DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
-
-    myDraft.doDraft(sessionid)
-
-    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1,sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2,sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3,sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4,sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5,sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6,sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7,sessionid)
-
-    endtime = time.time()
-
-    diff = endtime - start
-
-    print("Elapsed overall:",str(diff))
-
-    return render_template('QuickDraft.html',picks=picks,usr=usr)
+    return render_template('QuickDraft.html',usr=usr)
 
 
 

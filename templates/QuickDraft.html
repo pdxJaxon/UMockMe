@@ -4,35 +4,98 @@
     <meta charset="UTF-8">
     <title>UMockMe.com - 2017 Draft</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 </head>
 <body>
 
-<div id="draftResult" class="w3-container">
-    <h3><a href="/">Home</a></h3>
+<div id="draftResult" class="w3-container" ng-app="UMM" ng-controller="ummController">
+     <h3><a href="{{url_for('index',usr=usr)}}">Home</a></h3>
     <br/>
-    <h2>UMockMe.com - Draft Results...</h2>
-    <table id="tblpicks" class="w3-table w3-bordered w3-striped">
-        <tr class="w3-teal">
-            <th>Round #</th>
-            <th>Pick #</th>
-            <th>Overall Pick #</th>
-            <th>Team</th>
-            <th>Player</th>
-            <th>Position</th>
-            <th>School</th>
-        </tr>
-        {%for p in picks %}
-        <tr>
-            <td>{{p[0]}}</td>
-            <td>{{p[1]}}</td>
-            <td>{{p[2]}}</td>
-            <td>{{p[3]}}</td>
-            <td>{{p[5] + ' ' + p[6]}}</td>
-            <td>{{p[7]}}</td>
-            <td>{{p[9]}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
+    <div class="w3-container w3-row">
+        <div id="divAvailable" class="w3-container w3-half">
+            <h4>Available Players</h4>
+            <br/>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
+            <br/>
+            <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
+             <table id="tblAvailablePlayers" class="w3-table w3-bordered w3-striped">
+                <tr class="w3-teal">
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>School</th>
+                    <th>Expert Score</th>
+                </tr>
+                {% raw %}
+                <tr ng-repeat="x in availablePlayers">
+                    <td>{{ x[1] + ' ' + x[2] }}</td>
+                    <td>{{ p[3] }}</td>
+                    <td>{{ p[4] }}</td>
+                    <td>{{ p[5] }}</td>
+                </tr>
+                {% endraw %}
+            </table>
+        </div>
+        <div id="divPicks" class="w3-container w3-half">
+
+            <table id="tblpicks" class="w3-table w3-bordered w3-striped">
+                <tr class="w3-teal">
+                    <th>Round #</th>
+                    <th>Pick #</th>
+                    <th>Overall Pick #</th>
+                    <th>Team</th>
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>School</th>
+                </tr>
+                {% raw %}
+                <tr ng-repeat="p in draftData">
+                    <td>{{ p[0] }}</td>
+                    <td>{{ p[1] }}</td>
+                    <td>{{ p[2] }}</td>
+                    <td>{{ p[3] }}</td>
+                    <td>{{ p[5]  + ' ' + p[6]}}</td>
+                    <td>{{ p[7] }}</td>
+                    <td>{{ p[8] }}</td>
+                </tr>
+                {% endraw %}
+            </table>
+        </div>
+    </div>
 </div>
+<script>
+    var app = angular.module('UMM',[]);
+    app.controller('ummController',function($scope,$http){
+        $scope.draftData = ""
+        $scope.availablePlayers = sessionStorage.getItem("_prospects")
+        $scope.showMsg=false;
+        $scope.showBtn=true;
+        $scope.getData=function(){
+
+        $scope.showMsg=true;
+
+        $http({
+            method:'POST',
+            url: '/getQuickDraftData',
+            headers:{'Content-Type':undefined}
+        }).then(function(response){
+        if(response.data){
+            $scope.draftData = response.data;
+            $scope.availablePlayers = sessionStorage.getItem("_prospects")
+            }
+            else{
+                $scope.showBtn=false;
+            }
+        $scope.showMsg=false;
+        }, function(err){
+            console.log(err);
+        });
+        }
+
+
+    });
+
+
+</script>
 </body>
 </html>

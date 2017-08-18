@@ -2,10 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>uMockMe - New Account</title>
+    <meta name="keywords" content="NFL Mock Draft, Emulator, Engine, Game, Mock Draft Site" />
+    <meta name="description" content="This site emulates the NFL Draft using a sophisticated engine that predicts each pick in the draft. You can Make Picks for you own team or let the engine run the entire draft for you." />
+    <meta name="robots" content="index,follow" />
+    <title>UMockMe.com - NFL Mock Draft Site New Account</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-    <h2 style = "text-align: center;">New Account</h2>
+<div>
+     <header class="w3-container w3-teal ">
+        <h1>UMockMe.com Create New Account</h1>
+    </header>
+    <div class="w3-row">
+        <h3><a href="{{url_for('index',usr=usr)}}">Home</a></h3>
+        <br/>
+        <div class="w3-container w3-third">
+            <ul class="w3-striped">
+            <li><a href="{{url_for('QuickDraft',usr=usr)}}">QuickDraft - no account needed</a></li>
+            <li><a href="/ComingSoon">Features Coming Soon</a></li>
+            {%if usr%}
+                 <li><a href="/EditProspects">Edit Draft Prospect Data</a></li>
+                <li><a href="/EditTeams">Edit NFL Team Draft Needs and Preferences</a></li>
+                <li><a href="{{url_for('CustomDraft',usr=usr)}}">Custom Draft</a></li>
+            {%endif%}
+            </ul>
+        </div>
+        <div class="w3-container w3-twothird" id=""newAccount">
 
       {% for message in form.errors %}
          <div>{{ message }}</div>
@@ -41,5 +63,6 @@
 
          </fieldset>
       </form>
+</div>
 </body>
 </html>
