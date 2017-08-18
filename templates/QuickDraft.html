@@ -13,31 +13,12 @@
     <br/>
     <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
     <div class="w3-container w3-row">
-        <div id="divAvailable" class="w3-container w3-half">
-            <h4>Available Players</h4>
+
+        <div id="divPicks" class="w3-container">
             <br/>
-            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Run Draft</button>
             <br/>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
-             <table id="tblAvailablePlayers" class="w3-table w3-bordered w3-striped">
-                <tr class="w3-teal">
-                    <th>Player</th>
-                    <th>Position</th>
-                    <th>School</th>
-                    <th>Expert Score</th>
-                </tr>
-                {% raw %}
-                <tr ng-repeat="x in availablePlayers">
-                    <td>{{ x[1] + ' ' + x[2] }}</td>
-                    <td>{{ p[3] }}</td>
-                    <td>{{ p[4] }}</td>
-                    <td>{{ p[5] }}</td>
-                </tr>
-                {% endraw %}
-            </table>
-        </div>
-        <div id="divPicks" class="w3-container w3-half">
-
             <table id="tblpicks" class="w3-table w3-bordered w3-striped">
                 <tr class="w3-teal">
                     <th>Round #</th>
@@ -53,10 +34,10 @@
                     <td>{{ p[0] }}</td>
                     <td>{{ p[1] }}</td>
                     <td>{{ p[2] }}</td>
-                    <td>{{ p[3] }}</td>
+                    <td>{{ p[3]}}</td>
                     <td>{{ p[5]  + ' ' + p[6]}}</td>
                     <td>{{ p[7] }}</td>
-                    <td>{{ p[8] }}</td>
+                    <td>{{ p[9] }}</td>
                 </tr>
                 {% endraw %}
             </table>
@@ -71,7 +52,7 @@
         $scope.showMsg=false;
         $scope.showBtn=true;
         $scope.getData=function(){
-
+        $scope.draftData = ""
         $scope.showMsg=true;
 
         $http({
