@@ -18,6 +18,9 @@ class Pick:
         return picks
 
 
+    def getAllPickDetailsForYear(year,sessionId):
+        pickDetails - DBLib.DB.GetAllPickDetailsForRoundDB(year,sessionId)
+        return pickdetails
 
     def getAllPickDetailsForRound(year,round,sessionid):
         pickdetails = DBLib.DB.GetAllPickDetailsForRoundDB(year,round,sessionid)

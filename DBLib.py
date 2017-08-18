@@ -90,26 +90,26 @@ class DB:
 
                 if ("DATABASE_URL" in os.environ):
                     print("1a1")
-                    cur.execute("CREATE TABLE if not exists Prospect(Id integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school varchar(50))")
+                    cur.execute("CREATE TABLE if not exists Prospect(ProspectId integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school varchar(50), CONSTRAINT pkProspectId PRIMARY KEY(ProspectId))")
                     print("1a2")
-                    cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50))")
+                    cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50), CONSTRAINT pkAbbr PRIMARY KEY(Abbr))")
                     print("1a3")
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
                     print("1a4")
-                    cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50))")
+                    cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50), CONSTRAINT pkUserEmail PRIMARY KEY(email))")
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
-                    cur.execute("CREATE TABLE if not exists College(Id integer, Name varchar(50), Conference varchar(50))")
+                    cur.execute("CREATE TABLE if not exists College(CollegeId integer, Name varchar(50), Conference varchar(50), CONSTRAINT pkCollegeId PRIMARY KEY(CollegeId))")
                     print("1a5")
 
-                    cur.execute("CREATE TABLE if not exists UserSession(SessionId varchar,UserEmail varchar(75),TheKey varchar(50), TheValue varchar, theDate timestamp)")
-                    cur.execute("CREATE TABLE if not exists SessionProspect(SessionId varchar,ProspectId integer)")
-                    cur.execute("CREATE TABLE if not exists SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
+                    cur.execute("CREATE TABLE if not exists UserSession(SessionId varchar,UserEmail varchar(75),TheKey varchar(50), TheValue varchar, theDate timestamp, CONSTRAINT pkSessionId PRIMARY KEY(SessionId))")
+                    cur.execute("CREATE TABLE if not exists SessionProspect(SessionId varchar,ProspectId integer, CONSTRAINT pkSessionProspect PRIMARY KEY(SessionId,ProspectId))")
+                    cur.execute("CREATE TABLE if not exists SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer, CONSTRAINT pkSessionTeamNeed PRIMARY KEY(SessionId,Abbr,Need))")
 
-                    cur.execute("CREATE TABLE if not exists Meeting(MeetingId integer, MeetingName varchar(50), PointValue integer)")
+                    cur.execute("CREATE TABLE if not exists Meeting(MeetingId integer, MeetingName varchar(50), PointValue integer, CONSTRAINT pkMeetingId PRIMARY KEY(MeetingId))")
                     print("1a6")
-                    cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID integer,TeamId integer,ProspectId integer)")
+                    cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID integer,TeamId integer,ProspectId integer, CONSTRAINT pkTeamMeetingPlayer PRIMARY KEY(MeetingId,TeamId,ProspectId))")
                     print("1a7")
-                    cur.execute("CREATE TABLE if not exists Draft(DraftID integer, Year integer)")
+                    cur.execute("CREATE TABLE if not exists Draft(DraftID integer, Year integer, CONSTRAINT pkDraftId PRIMARY KEY(DraftId))")
 
                     print("2a")
 
@@ -118,7 +118,7 @@ class DB:
 
                     print("3a")
 
-                    cur.execute("CREATE TABLE if not exists Round(DraftID integer,RoundId integer,Round integer)")
+                    cur.execute("CREATE TABLE if not exists Round(DraftID integer,RoundId integer,Round integer, CONSTRAINT pkRound PRIMARY KEY(DraftId,RoundId))")
                     cur.execute("INSERT INTO ROUND VALUES(1,1,1)")
                     cur.execute("INSERT INTO ROUND VALUES(1,2,2)")
                     cur.execute("INSERT INTO ROUND VALUES(1,3,3)")
@@ -129,7 +129,7 @@ class DB:
 
                     print("4a")
 
-                    cur.execute("CREATE TABLE if not exists Pick(RoundId integer, RoundPickNum integer, OverallPickNum integer, TeamAbbr varchar(50), ProspectId integer, SessionId varchar(50), CreateDate varchar(50))")
+                    cur.execute("CREATE TABLE if not exists Pick(RoundId integer, RoundPickNum integer, OverallPickNum integer, TeamAbbr varchar(50), ProspectId integer, SessionId varchar(50), CreateDate varchar(50), CONSTRAINT pkPickId PRIMARY KEY(RoundId, RoundPickNum,SessionId))")
                     print("5a")
 
 
@@ -141,35 +141,36 @@ class DB:
                     cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId integer, ProspectId integer, Rank integer)")
                     print("7a")
                 else:
-                    print("1b")
-                    cur.execute("CREATE TABLE if not exists Prospect(Id Int, lastName Text, firstName Text, pos Text, height Text, weight Text, expertGrade float,DraftProjectedRound int, DraftProjectedPick int,uMockMeGrade float,school Text)")
-                    cur.execute("CREATE TABLE if not exists Team(Abbr Text,URL Text,City Text,Nickname Text,Conference Text,Division Text)")
-                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr Text, Need Text, NeedScore int, NeedCount int)")
-                    cur.execute("CREATE TABLE if not exists College(Id Int, Name Text, Conference Text)")
-                    print("1b1")
+                    print("1a1")
+                    cur.execute("CREATE TABLE if not exists Prospect(ProspectId integer, lastName text, firstName text, pos text, height text, weight text, expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school text, PRIMARY KEY(ProspectId))")
+                    print("1aq1")
+                    cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50), PRIMARY KEY(Abbr))")
+                    print("1aq2")
+                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
+                    print("1aq3")
+                    cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50), PRIMARY KEY(email))")
+                    cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
+                    cur.execute("CREATE TABLE if not exists College(CollegeId integer, Name varchar(50), Conference varchar(50), PRIMARY KEY(CollegeId))")
+                    print("1aq4")
 
-                    cur.execute("CREATE TABLE if not exists UMMUser(email text, UserName text, Password text, FavoriteTeam text, fName text, lname text)")
-                    cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail text, TeamAbbr text, pos text, needScore int, needCount int)")
+                    cur.execute("CREATE TABLE if not exists UserSession(SessionId varchar,UserEmail varchar(75),TheKey varchar(50), TheValue varchar, theDate timestamp, PRIMARY KEY(SessionId))")
+                    cur.execute("CREATE TABLE if not exists SessionProspect(SessionId varchar,ProspectId integer,PRIMARY KEY(SessionId,ProspectId))")
+                    cur.execute("CREATE TABLE if not exists SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer, PRIMARY KEY(SessionId,Abbr,Need))")
 
-                    print("1b2")
+                    cur.execute("CREATE TABLE if not exists Meeting(MeetingId integer, MeetingName varchar(50), PointValue integer,PRIMARY KEY(MeetingId))")
+                    print("1aq5")
+                    cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID integer,TeamId integer,ProspectId integer,PRIMARY KEY(MeetingId,TeamId,ProspectId))")
+                    print("1aq6")
+                    cur.execute("CREATE TABLE if not exists Draft(DraftID integer, Year integer,PRIMARY KEY(DraftId))")
 
-                    cur.execute("CREATE TABLE if not exists UserSession(SessionId text,UserEmail text,TheKey text, TheValue text, theDate varchar)")
-                    cur.execute("CREATE TABLE if not exists Meeting(MeetingId Int, MeetingName Text, PointValue int)")
-                    cur.execute("CREATE TABLE if not exists SessionProspect(SessionId text,ProspectId int)")
-                    cur.execute("CREATE TABLE if not exists SessionTeamNeed(SessionId text,Abbr text, Need text, NeedScore int, NeedCount int)")
-                    print("1b3")
-
-                    cur.execute("CREATE TABLE if not exists TeamPlayerMeeting(MeetingID,TeamId,ProspectId)")
-                    cur.execute("CREATE TABLE if not exists Draft(DraftID int, Year int)")
-
-                    print("2b")
+                    print("2a")
 
                     # populate static data for 2017 - we dont import draft info yet as this version is just an MVP
                     cur.execute("INSERT INTO DRAFT VALUES(1,2017)")
 
-                    print("3b")
+                    print("3a")
 
-                    cur.execute("CREATE TABLE if not exists Round(DraftID int,RoundId int,Round int)")
+                    cur.execute("CREATE TABLE if not exists Round(DraftID integer,RoundId integer,Round integer,PRIMARY KEY(DraftId,RoundId))")
                     cur.execute("INSERT INTO ROUND VALUES(1,1,1)")
                     cur.execute("INSERT INTO ROUND VALUES(1,2,2)")
                     cur.execute("INSERT INTO ROUND VALUES(1,3,3)")
@@ -178,19 +179,17 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(1,6,6)")
                     cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
 
-                    print("4b")
+                    print("4a")
 
-                    cur.execute(
-                        "CREATE TABLE if not exists Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int, SessionId Text, CreateDate Text)")
-                    print("5b")
+                    cur.execute("CREATE TABLE if not exists Pick(RoundId integer, RoundPickNum integer, OverallPickNum integer, TeamAbbr varchar(50), ProspectId integer, SessionId varchar(50), CreateDate varchar(50), PRIMARY KEY(RoundId, RoundPickNum,SessionId))")
+                    print("5a")
 
-                    cur.execute("CREATE TABLE if not exists DeragatoryRemark(RemarkId int, Name Text, PointValue int)")
-                    cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId int, ProspectId Int)")
-                    print("6b")
-                    cur.execute(
-                        "CREATE TABLE if not exists BigBoard(BigBoardId int, DraftId int, TeamId Int, sourceId text)")
-                    cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId int, ProspectId int, Rank int)")
-                    print("7b")
+                    cur.execute("CREATE TABLE if not exists DeragatoryRemark(RemarkId integer, Name varchar(50), PointValue integer)")
+                    cur.execute("CREATE TABLE if not exists ProspectDeragatoryRemark(RemarkId integer, ProspectId integer)")
+                    print("6a")
+                    cur.execute("CREATE TABLE if not exists BigBoard(BigBoardId integer, DraftId integer, TeamId integer, sourceId varchar(50))")
+                    cur.execute("CREATE TABLE if not exists BigBoardProspect(BigBoardId integer, ProspectId integer, Rank integer)")
+                    print("7a")
 
         except:
             print("Error - db already exists")          #This error just means the DB already exists......no biggy
@@ -308,6 +307,14 @@ class DB:
 
 
     def AddTeamNeedForSessionDB(sessionId,team,pos,needScore,needCount):
+
+        #SessionId varchar,Abbr varchar(50), Need varchar(50)
+
+
+        sql = "DELETE FROM SessionTeamNeed WHERE SessionId='{}' AND Abbr='{}' AND Need='{}'".format(sessionId,team,pos)
+        DB.ExecuteSQL(sql)
+
+
         sql = "INSERT INTO SessionTeamNeed VALUES('{}','{}','{}',{},{})".format(sessionId, team,pos,needScore,needCount)
         # print(sql)
         DB.ExecuteSQL(sql)
@@ -434,7 +441,7 @@ class DB:
 
         with con:
             cur = con.cursor()
-            cur.execute("SELECT p.* FROM SessionProspect as s INNER JOIN Prospect as p on p.Id = s.ProspectId WHERE s.SessionId='{}' Order By Expertgrade desc".format(sessionId))
+            cur.execute("SELECT p.* FROM SessionProspect as s INNER JOIN Prospect as p on p.ProspectId = s.ProspectId WHERE s.SessionId='{}' Order By Expertgrade desc".format(sessionId))
 
             prospects = cur.fetchall()
 
@@ -558,7 +565,7 @@ class DB:
         with con:
             cur = con.cursor()
 
-            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade, x.school From Pick as p inner join Prospect x on x.Id = p.ProspectId where p.roundId={} and p.SessionId='{}' ORDER BY p.OverallPickNum ".format(round,sessionid))
+            cur.execute("SELECT p.RoundId,p.RoundPickNum,p.OverallPickNum,p.TeamAbbr,p.ProspectId, x.firstName,x.LastName,x.pos,x.expertGrade, x.school From Pick as p inner join Prospect x on x.ProspectId = p.ProspectId where p.roundId={} and p.SessionId='{}' ORDER BY p.OverallPickNum ".format(round,sessionid))
 
             PickDetails = cur.fetchall()
 
@@ -569,7 +576,7 @@ class DB:
 
     def GetCollegeById(id=-1):
         con = DB.getConnection()
-        sql = "SELECT * FROM College WHERE id={}".format(id)
+        sql = "SELECT * FROM College WHERE Collegeid={}".format(id)
 
         with con:
             cur = con.cursor()
