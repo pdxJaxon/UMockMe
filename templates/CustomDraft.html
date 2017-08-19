@@ -14,10 +14,9 @@
     <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
     <div class="w3-container w3-row">
         <div id="divAvailable" class="w3-container w3-half">
-            <h4>Available Players</h4>
+            <button id="btnGetData" ng-click="getData();getProspects()" ng-show="showBtn">Get Next Pick</button>
             <br/>
-            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
-            <br/>
+            <h4>Available Players By Rating</h4>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
              <table id="tblAvailablePlayers" class="w3-table w3-bordered w3-striped">
                 <tr class="w3-teal">
@@ -29,9 +28,9 @@
                 {% raw %}
                 <tr ng-repeat="x in AvailableProspects">
                     <td>{{ x[1] + ' ' + x[2] }}</td>
-                    <td>{{ p[3] }}</td>
-                    <td>{{ p[4] }}</td>
-                    <td>{{ p[5] }}</td>
+                    <td>{{ x[3] }}</td>
+                    <td>{{ x[4] }}</td>
+                    <td>{{ x[6]}}</td>
                 </tr>
                 {% endraw %}
             </table>
@@ -67,12 +66,40 @@
     var app = angular.module('UMM',[]);
     app.controller('ummController',function($scope,$http){
         $scope.draftData = ""
-
+        $scope.AvailableProspects = ""
         $scope.showMsg=false;
         $scope.showBtn=true;
 
-        $scope.getData=function(){
 
+
+         $scope.getProspects=function(){
+            $scope.draftData = ""
+            $scope.showMsg=true;
+
+             $http({
+                method:'POST',
+                url: '/getAvailableProspects',
+                headers:{'Content-Type':undefined}
+            }).then(function(response){
+                if(response.data){
+                    $scope.AvailableProspects = response.data;
+                }
+                else{
+                    $scope.AvailableProspects = ""
+                }
+
+            $scope.showMsg=false;
+            }, function(err){
+            console.log(err);
+            });
+            }
+
+
+
+
+
+
+        $scope.getData=function(){
             $scope.showMsg=true;
 
             $http({
@@ -89,9 +116,8 @@
                     $scope.showMsg=false;
                 }, function(response){
                     $scope.AvailableProspects = "ERR"
+                    });
                     }
-                );
-            }
         }
     )
 
