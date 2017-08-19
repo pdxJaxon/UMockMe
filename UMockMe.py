@@ -127,13 +127,8 @@ def getQuickDraftData():
 
     myDraft.doDraft(sessionid)
 
-    picks = Picks.Pick.getAllPickDetailsForRound(2017, 1, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 2, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 3, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 4, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 5, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 6, sessionid)
-    picks += Picks.Pick.getAllPickDetailsForRound(2017, 7, sessionid)
+
+    picks = DBLib.DB.getAllPicksForUser(sessionid)
 
 
     endtime = time.time()
