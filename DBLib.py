@@ -920,7 +920,7 @@ class DB:
 
             cur.execute("DELETE FROM PICK WHERE SessionId='{}'".format(sessionid))
 
-            theTime = datetime.now()
+            theTime = time.time()
 
             # 1 - 32 picks
             cur.execute("INSERT INTO PICK VALUES(1,1,1,'CLE',null,'{}','{}')".format(sessionid,theTime))
@@ -1222,7 +1222,11 @@ class DB:
             cur.execute("INSERT INTO PICK VALUES(7,34,252,'DEN',null,'{}','{}')".format(sessionid,theTime))
             cur.execute("INSERT INTO PICK VALUES(7,35,253,'DEN',null,'{}','{}')".format(sessionid,theTime))
 
+            theTimeEnd = time.time()
 
+            diffy = theTimeEnd - theTime
+
+            print("Pop Picks Time:",str(diffy))
 
 
 
