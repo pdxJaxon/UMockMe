@@ -73,7 +73,9 @@
 
             $scope.showMsg=false;
             }, function(err){
-            console.log(err);
+                console.log(err);
+                $scope.showMsg=true;
+                document.getElementById("msgWait").innerHTML = response.status + " " + response.statustext
             });
             }
 
