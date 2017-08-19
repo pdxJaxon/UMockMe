@@ -391,23 +391,29 @@ class Draft:
         print("The pck:",pck)
         # Get Needs For Team
 
-
+        step1StartTime = time.time()
         t = Teams.Team.getTeamByAbr(pck[3])
 
         city = t[0][2]
         abr = t[0][0]
         teamName = t[0][3]
         Team = abr
+        step1StopTime = time.time()
 
         pickMade = False
 
-
+        step2StartTime = time.time()
         needs = self.getTeamNeeds(abr)
+        step2StopTime = time.time()
+
+        step3StartTime = time.time()
+        step3StopTime = time.time()
 
         print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
 
         if(len(self._prospects)==0):
+            step3StartTime = time.time()
             rs = DBLib.DB.getAllProspects()
 
             for r in rs:
@@ -415,13 +421,16 @@ class Draft:
 
 
             self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+            step3StopTime = time.time()
 
+        step4StartTime=time.time()
+        step4StopTime = time.time()
 
         if (needs):
             passedUpPlayers = []
 
 
-
+            step4StartTime=time.time()
             for p in self._prospects:
 
                 if (p[0] != 0):
@@ -500,9 +509,21 @@ class Draft:
             self.removeProspectFromCache(sessionId,Player)
             self.MarkNeedAsSelected(Team, position,sessionId)
 
+        step4StopTime = time.time()
+
+
         endtime = time.time()
         elapsedTime = endtime-startTime
 
+        Step1ElapsedTime = step1StopTime - step1StartTime
+        Step2ElapsedTime = step2StopTime - step2StartTime
+        Step3ElapsedTime = step3StopTime - step3StartTime
+        Step4ElapsedTime = step4StopTime - step4StartTime
+
+        print("Step1 Time:",str(Step1ElapsedTime))
+        print("Step2 Time:", str(Step2ElapsedTime))
+        print("Step3 Time:", str(Step3ElapsedTime))
+        print("Step4 Time:", str(Step4ElapsedTime))
         print("MakePick Time:",str(elapsedTime))
         return True
 
