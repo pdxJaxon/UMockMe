@@ -293,6 +293,12 @@ class DB:
 
 
 
+
+
+
+
+
+
     def CacheTeamNeedsForSession(sessionId):
         #SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer
 
@@ -303,7 +309,15 @@ class DB:
         DB.ExecuteSQL(sql)
 
 
+    def PopulateSessionProspects(sessionId):
+        # SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer
 
+        sql = "DELETE FROM SessionProspect WHERE SessionId='{}'".format(sessionId)
+        DB.ExecuteSQL(sql)
+
+        sql = "INSERT INTO SessionProspect(SessionId,ProspectId) SELECT DISTINCT '" + str(
+            sessionId) + "',ProspectId FROM Prospect"
+        DB.ExecuteSQL(sql)
 
 
 

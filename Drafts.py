@@ -419,10 +419,12 @@ class Draft:
 
         if(len(self._prospects)==0):
             step3StartTime = time.time()
-            rs = DBLib.DB.getAllProspects()
+            #rs = DBLib.DB.getAllProspects()
 
-            for r in rs:
-                DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
+            #for r in rs:
+               # DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
+
+            DBLib.DB.PopulateSessionProspects(sessionId)
 
 
             self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
