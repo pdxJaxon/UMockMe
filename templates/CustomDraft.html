@@ -14,7 +14,7 @@
     <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
     <div class="w3-container w3-row">
         <div id="divAvailable" class="w3-container w3-half">
-            <button id="btnGetData" ng-click="getData();getProspects()" ng-show="showBtn">Get Next Pick</button>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
             <br/>
             <h4>Available Players By Rating</h4>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
@@ -36,7 +36,9 @@
             </table>
         </div>
         <div id="divPicks" class="w3-container w3-half">
-
+            <button id="btnGetData" ng-click="getData();getProspects()" ng-show="False">Get Next Pick</button>
+            <br/>
+            <h4></h4>
             <table id="tblpicks" class="w3-table w3-bordered w3-striped">
                 <tr class="w3-teal">
                     <th>Round #</th>
@@ -73,8 +75,7 @@
 
 
          $scope.getProspects=function(){
-            $scope.draftData = ""
-            $scope.showMsg=true;
+             $scope.showMsg=true;
 
              $http({
                 method:'POST',
@@ -109,6 +110,8 @@
             }).then(function(response){
                     if(response.data){
                         $scope.draftData = response.data;
+
+                        $scope.getProspects()
                     }
                     else{
                         $scope.showBtn=false;
