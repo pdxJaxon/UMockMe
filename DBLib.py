@@ -6,6 +6,7 @@ import os
 import sys
 from random import *
 from datetime import datetime, timedelta
+import time
 import json
 
 
@@ -15,7 +16,7 @@ class DB:
 
     def getConnection():
 
-
+        conStart = time.time()
 
         if ("DATABASE_URL" in os.environ):
             urlparse.uses_netloc.append("postgres")
@@ -31,6 +32,11 @@ class DB:
         else:
             con = lite2.connect("UMockMe.db")
 
+        conStop = time.time()
+
+        timeDiff = conStop - conStart
+
+        print("Connect Time:",str(timeDiff))
 
         return con
 
