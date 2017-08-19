@@ -447,7 +447,7 @@ class Draft:
                     if (pPos == "SS" or pPos == "FS"):
                         pPos = "S"
 
-                    if (self.isHighestNeed(pPos, needs)):
+                    if (self.isHighestNeed(pPos, needs) or len(passedUpPlayers)>20):
 
                         # Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
                         AlternatePicks = self.BetterPlayerPassedUp(needs, pPos, p, passedUpPlayers)
