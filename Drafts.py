@@ -287,7 +287,7 @@ class Draft:
 
 
 
-        self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
+        #self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
 
 
