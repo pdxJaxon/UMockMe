@@ -100,7 +100,7 @@ class DB:
                     print("1a2")
                     cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50), CONSTRAINT pkAbbr PRIMARY KEY(Abbr))")
                     print("1a3")
-                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
+                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer, CONSTRAINT pkTeamNeed PRIMARY KEY(Abbr,Need))")
                     print("1a4")
                     cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50), CONSTRAINT pkUserEmail PRIMARY KEY(email))")
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
@@ -152,7 +152,7 @@ class DB:
                     print("1aq1")
                     cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50), PRIMARY KEY(Abbr))")
                     print("1aq2")
-                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer)")
+                    cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer, CONSTRAINT pkTeamNeed PRIMARY KEY(Abbr,Need))")
                     print("1aq3")
                     cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50), PRIMARY KEY(email))")
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
@@ -274,8 +274,34 @@ class DB:
 
 
     def AddTeamNeedDB(abbr,need,needScore,needCount):
-        sql = "INSERT INTO TeamNeed VALUES('{}','{}',{},{})".format(abbr, need, needScore, needCount)
+
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT 1 FROM TeamNeed WHERE Abbr='{}' AND need='{}'".format(abbr,need))
+
+            teamNeeds = cur.fetchall()
+
+
+        if(len(teamNeeds)>0):
+            sql="UPDATE TeamNeed SET needScore={}, needCount={} WHERE Abbr='{}' AND Need='{}'"
+        else:
+            sql = "INSERT INTO TeamNeed VALUES('{}','{}',{},{})".format(abbr, need, needScore, needCount)
+
         DB.ExecuteSQL(sql)
+
+
+
+    def CacheTeamNeedsForSession(sessionId):
+        #SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer
+
+        sql = "DELETE FROM SessionTeamNeed WHERE SessionId='{}'".format(sessionId)
+        DB.ExecuteSQL(sql)
+
+        sql = "INSERT INTO SessionTeamNeed(SessionId,Abbr,Need,NeedScore,NeedCount) SELECT DISTINCT '" + str(sessionId) + "',Abbr,Need,NeedScore,NeedCount FROM TeamNeed"
+        DB.ExecuteSQL(sql)
+
 
 
 
@@ -344,6 +370,23 @@ class DB:
 
         # print(sql)
         DB.ExecuteSQL(sql)
+
+
+
+
+
+
+
+    def getNeedsForAllTeams(sessionId):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM SessionTeamNeed WHERE sessionId='{}'".format(sessionId))
+
+            teamNeeds = cur.fetchall()
+
+            return teamNeeds
 
 
 

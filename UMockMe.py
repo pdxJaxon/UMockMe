@@ -117,6 +117,7 @@ def getQuickDraftData():
 
     usr = request.args.get('usr')
 
+    startPre = time.time()
     myDraft = Drafts.Draft(sessionid)
 
     # When user first navigates to this page, they should have no picks yet
@@ -124,7 +125,10 @@ def getQuickDraftData():
 
     DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
     DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
+    stopPre=time.time()
 
+    preProcessing = stopPre-startPre
+    print("PreProcessing-",str(preProcessing))
     myDraft.doDraft(sessionid)
 
 

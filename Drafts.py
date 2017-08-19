@@ -260,7 +260,7 @@ class Draft:
        # self._allTeamNeeds=[]
 
 
-
+        '''
         theTeams = Teams.Team.getAllTeams()
         for t in theTeams:
             city = t[2]
@@ -281,8 +281,13 @@ class Draft:
                     n[1] = "S"
 
                 DBLib.DB.AddTeamNeedForSessionDB(sessionId,n[0],n[1],n[2],n[3])
+        '''
 
-        self._allTeamNeeds = needs
+        DBLib.DB.CacheTeamNeedsForSession(sessionId)
+
+
+
+        self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
 
 
