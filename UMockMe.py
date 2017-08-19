@@ -175,6 +175,20 @@ def getDraftData():
 
 
 
+@app.route("/getAvailableProspects", methods = ['GET','POST'])
+def getAvailableProspects():
+
+    try:
+        sessionid = session['sessionid']
+    except KeyError:
+        session['sessionid'] = uuid.uuid1()
+        sessionid = session['sessionid']
+
+    myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
+
+
+    return (jsonify(myProspects))
+
 
 
 

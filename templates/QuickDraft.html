@@ -51,27 +51,32 @@
         $scope.availablePlayers = sessionStorage.getItem("_prospects")
         $scope.showMsg=false;
         $scope.showBtn=true;
-        $scope.getData=function(){
-        $scope.draftData = ""
-        $scope.showMsg=true;
 
-        $http({
-            method:'POST',
-            url: '/getQuickDraftData',
-            headers:{'Content-Type':undefined}
-        }).then(function(response){
-        if(response.data){
-            $scope.draftData = response.data;
-            $scope.availablePlayers = sessionStorage.getItem("_prospects")
-            }
-            else{
-                $scope.showBtn=false;
-            }
-        $scope.showMsg=false;
-        }, function(err){
+
+
+
+        $scope.getData=function(){
+            $scope.draftData = ""
+            $scope.showMsg=true;
+
+             $http({
+                method:'POST',
+                url: '/getQuickDraftData',
+                headers:{'Content-Type':undefined}
+            }).then(function(response){
+                if(response.data){
+                    $scope.draftData = response.data;
+                }
+                else{
+                    $scope.showBtn=false;
+                }
+
+
+            $scope.showMsg=false;
+            }, function(err){
             console.log(err);
-        });
-        }
+            });
+            }
 
 
     });

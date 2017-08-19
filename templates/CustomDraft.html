@@ -27,7 +27,7 @@
                     <th>Expert Score</th>
                 </tr>
                 {% raw %}
-                <tr ng-repeat="x in availablePlayers">
+                <tr ng-repeat="x in AvailableProspects">
                     <td>{{ x[1] + ' ' + x[2] }}</td>
                     <td>{{ p[3] }}</td>
                     <td>{{ p[4] }}</td>
@@ -67,34 +67,33 @@
     var app = angular.module('UMM',[]);
     app.controller('ummController',function($scope,$http){
         $scope.draftData = ""
-        $scope.availablePlayers = sessionStorage.getItem("_prospects")
+
         $scope.showMsg=false;
         $scope.showBtn=true;
+
         $scope.getData=function(){
 
-        $scope.showMsg=true;
+            $scope.showMsg=true;
 
-        $http({
-            method:'POST',
-            url: '/getDraftData',
-            headers:{'Content-Type':undefined}
-        }).then(function(response){
-        if(response.data){
-            $scope.draftData = response.data;
-            $scope.availablePlayers = sessionStorage.getItem("_prospects")
+            $http({
+                method:'POST',
+                url: '/getDraftData',
+                headers:{'Content-Type':undefined}
+            }).then(function(response){
+                    if(response.data){
+                        $scope.draftData = response.data;
+                    }
+                    else{
+                        $scope.showBtn=false;
+                    }
+                    $scope.showMsg=false;
+                }, function(response){
+                    $scope.AvailableProspects = "ERR"
+                    }
+                );
             }
-            else{
-                $scope.showBtn=false;
-            }
-        $scope.showMsg=false;
-        }, function(err){
-            console.log(err);
-        });
         }
-
-
-    });
-
+    )
 
 </script>
 </body>

@@ -801,7 +801,7 @@ class DB:
         with con:
             cur = con.cursor()
             cur.execute(
-                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.Id, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p INNER JOIN Prospect AS t on t.id = p.ProspectId WHERE p.ProspectId is not null AND p.SessionId='{}' ORDER BY p.OverallPickNum ASC".format(sessionId))
+                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.ProspectId, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p INNER JOIN Prospect AS t on t.ProspectId = p.ProspectId WHERE p.ProspectId is not null AND p.SessionId='{}' ORDER BY p.OverallPickNum ASC".format(sessionId))
 
             p = cur.fetchall()
 
