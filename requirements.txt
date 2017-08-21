@@ -9,3 +9,4 @@ nose2==0.6.5
 six==1.10.0
 Werkzeug==0.12.2
 psycopg2==2.7.3
+newrelic
