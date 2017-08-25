@@ -16,7 +16,7 @@
 
         <div id="divPicks" class="w3-container">
             <br/>
-            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Run Draft</button>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Pick for Round {{rnd}}</button>
             <br/>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
             <table id="tblpicks" class="w3-table w3-bordered w3-striped">
@@ -31,7 +31,7 @@
                 </tr>
                 {% raw %}
                 <tr ng-repeat="p in draftData">
-                    <td>{{ p[0] }}</td>
+                    <td><span id="rnd">{{ p[0] }}</span></td>
                     <td>{{ p[1] }}</td>
                     <td>{{ p[2] }}</td>
                     <td>{{ p[3]}}</td>
@@ -47,25 +47,25 @@
 <script>
     var app = angular.module('UMM',[]);
     app.controller('ummController',function($scope,$http){
-        $scope.draftData = ""
-
+        $scope.draftData = "";
         $scope.showMsg=false;
         $scope.showBtn=true;
-
-
-
+        $scope.round=0;
 
         $scope.getData=function(){
-            $scope.draftData = ""
+            $scope.draftData = "";
             $scope.showMsg=true;
+            $scope.round+=1;
 
              $http({
                 method:'POST',
                 url: '/getQuickDraftData',
+                data: {'round' : $scope.round },
                 headers:{'Content-Type':undefined}
             }).then(function(response){
                 if(response.data){
                     $scope.draftData = response.data;
+
                 }
                 else{
                     $scope.showBtn=false;
