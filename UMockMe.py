@@ -107,7 +107,6 @@ def getQuickDraftData():
 
     start = time.time()
 
-    session.clear()
 
     try:
         sessionid = session['sessionid']
@@ -115,24 +114,42 @@ def getQuickDraftData():
         session['sessionid'] = uuid.uuid1()
         sessionid = session['sessionid']
 
+
+
+
+
     usr = request.args.get('usr')
+    round = str(request.data)
+
+    lengthOfString = len(round)
+    colPos = round.find(":")
+
+    round=round[colPos+1:lengthOfString-2]
+
+    print("ROUND:{} for Session:{}".format(round,sessionid))
 
     startPre = time.time()
     myDraft = Drafts.Draft(sessionid)
 
-    # When user first navigates to this page, they should have no picks yet
-    myDraft.ClearAllPicksForUser(sessionid)
+    # When user first navigates to this page, they should have no picks yet if it's round 1
+    if(int(round)<=1):
+        myDraft.ClearAllPicksForUser(sessionid)
 
-    DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
-    DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
+        DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
+        DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
+
+
     stopPre=time.time()
 
     preProcessing = stopPre-startPre
     print("PreProcessing-",str(preProcessing))
-    myDraft.doDraft(sessionid)
+
+
+    myDraft.doDraft(sessionid,round)
 
 
     picks = DBLib.DB.getAllPicksForUser(sessionid)
+
 
 
     endtime = time.time()
@@ -224,44 +241,6 @@ def CustomDraft():
 
 
 
-@app.route("/DBRefresh0")
-def refresh0():
-    DataRefreshService.DataDude.NukeDB()
-
-
-
-    return ("Database Scrubbed - <a href='/'>Return to Home Page</a>")
-
-
-
-
-
-
-@app.route("/DBRefresh1")
-def refresh1():
-    DataRefreshService.DataDude.BuildDB()
-
-
-
-    return ("Database Rebuilt - <a href='/'>Return to Home Page</a>")
-
-
-
-
-
-
-
-@app.route("/DBRefresh2")
-def refresh2():
-    DataRefreshService.DataDude.RefreshStaticData()
-
-
-    return ("Database Populated - <a href='/'>Return to Home Page</a>")
-
-
-
-
-
 
 
 
@@ -323,6 +302,56 @@ def ComingSoon():
 def QuickDraft():
     usr = request.args.get('usr')
     return render_template('QuickDraft.html',usr=usr)
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route("/DBRefresh0")
+def refresh0():
+    DataRefreshService.DataDude.NukeDB()
+
+
+
+    return ("Database Scrubbed - <a href='/'>Return to Home Page</a>")
+
+
+
+
+
+
+@app.route("/DBRefresh1")
+def refresh1():
+    DataRefreshService.DataDude.BuildDB()
+
+
+
+    return ("Database Rebuilt - <a href='/'>Return to Home Page</a>")
+
+
+
+
+
+
+
+@app.route("/DBRefresh2")
+def refresh2():
+    DataRefreshService.DataDude.RefreshStaticData()
+
+
+    return ("Database Populated - <a href='/'>Return to Home Page</a>")
+
+
+
+
+
 
 
 

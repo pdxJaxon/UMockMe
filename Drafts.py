@@ -544,6 +544,10 @@ class Draft:
 
 
 
+
+
+
+
     def getPickedPlayers(self):
         return True
 
@@ -576,7 +580,8 @@ class Draft:
 
 
 
-    def doDraft(self,sessionId):
+    def doDraft(self,sessionId,round=0):
+
 
 
 
@@ -586,19 +591,15 @@ class Draft:
         #1 - get all rounds
         rounds = Draft.getAllRoundsByDraft(2017)
 
-        # static data
-        DBLib.DB.PopulatePicks(sessionId)   #this is only gonna work for current  year......
-        
-        #2 - Goto Round 1
-        for rnd in rounds:
-
-            picks = Picks.Pick.getAllPicksForRound(2017,rnd[1],sessionId)
-            #print("Picks for round {} - {}".format(rnd[1],picks))
 
 
 
-            #3 goto next pick
-            for pck in picks:
-                #print("Pick:",pck)
+        if(int(round)<=1):
+            # static data
+            DBLib.DB.PopulatePicks(sessionId)  # this is only gonna work for current  year......
 
-                self.MakePick(pck,sessionId)
+
+        picks = Picks.Pick.getAllPicksForRound(2017,round,sessionId)
+
+        for pck in picks:
+            self.MakePick(pck,sessionId)
