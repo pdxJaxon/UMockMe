@@ -287,7 +287,7 @@ def index():
         url3 = "https://www.umockme.com.herokudns.com."
 
         if(request.url != url and request.url != url2 and request.url != url3):
-            return redirect(url2)
+            return redirect(url)
 
     frm = forms.Login()
     usr = request.args.get('usr')
