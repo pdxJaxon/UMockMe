@@ -286,7 +286,9 @@ def index():
         url2 = r"https://www.umockme.com.herokudns.com"
         url3 = r"https://www.umockme.com.herokudns.com."
 
+
         if(request.url.lower() != url and request.url.lower() != url2 and request.url.lower() != url3):
+            print("REDIRECT {} -->{}".format(request.url, url))
             return redirect(url)
 
     frm = forms.Login()
