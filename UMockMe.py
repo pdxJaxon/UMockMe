@@ -281,6 +281,14 @@ def Login():
 
 @app.route("/", methods= ['GET','POST'])
 def index():
+    if ("DATABASE_URL" in os.environ):
+        url = "https://www.umockme.com"
+        url2 = "https://www.umockme.com.herokudns.com"
+        url3 = "https://www.umockme.com.herokudns.com."
+
+        if(request.url != url and request.url != url2 and request.url != url3):
+            return redirect(url2)
+
     frm = forms.Login()
     usr = request.args.get('usr')
     print("User=",usr)
