@@ -282,11 +282,11 @@ def Login():
 @app.route("/", methods= ['GET','POST'])
 def index():
     if ("DATABASE_URL" in os.environ):
-        url = "https://www.umockme.com"
-        url2 = "https://www.umockme.com.herokudns.com"
-        url3 = "https://www.umockme.com.herokudns.com."
+        url = r"https://www.umockme.com"
+        url2 = r"https://www.umockme.com.herokudns.com"
+        url3 = r"https://www.umockme.com.herokudns.com."
 
-        if(request.url != url and request.url != url2 and request.url != url3):
+        if(request.url.lower() != url and request.url.lower() != url2 and request.url.lower() != url3):
             return redirect(url)
 
     frm = forms.Login()
