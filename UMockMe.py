@@ -12,6 +12,7 @@ import DataRefreshService
 import forms
 import Users
 import time,datetime
+import os
 
 
 import json
@@ -39,11 +40,13 @@ app.logger.disabled=False
 
 
 
-
 @app.before_first_request
 def initSite():
-    return True
-
+    if ("DATABASE_URL" in os.environ):
+        if request.url.lower().startswith('http:'):
+            url = request.url.lower().replace('http:', 'https:', 1)
+            code = 301
+            return redirect(url, code=code)
 
 
 
