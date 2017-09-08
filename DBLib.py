@@ -285,7 +285,7 @@ class DB:
 
 
         if(len(teamNeeds)>0):
-            sql="UPDATE TeamNeed SET needScore={}, needCount={} WHERE Abbr='{}' AND Need='{}'"
+            sql="UPDATE TeamNeed SET needScore={}, needCount={} WHERE Abbr='{}' AND Need='{}'".format(needScore,needCount,abbr,need)
         else:
             sql = "INSERT INTO TeamNeed VALUES('{}','{}',{},{})".format(abbr, need, needScore, needCount)
 
