@@ -13,6 +13,8 @@ import forms
 import Users
 import time,datetime
 import os
+import re
+
 
 
 import json
@@ -283,11 +285,9 @@ def Login():
 def index():
     if ("DATABASE_URL" in os.environ):
         url = r"https://www.umockme.com"
-        url2 = r"https://www.umockme.com.herokudns.com"
-        url3 = r"https://www.umockme.com.herokudns.com."
 
-
-        if(request.url.lower() != url and request.url.lower() != url2 and request.url.lower() != url3):
+        matchObj = re.match(r'^http://',request.url,re.I)
+        if(matchObj):
             print("REDIRECT {} -->{}".format(request.url, url))
             return redirect(url)
 
