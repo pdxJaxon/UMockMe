@@ -573,7 +573,7 @@ class Draft:
         DBLib.DB.DeleteProspectForSessionDB(sessionId,ProspectId)
 
         self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
-        session['prospects'] = self._prospects
+        #session['prospects'] = self._prospects
 
 
 
