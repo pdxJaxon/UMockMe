@@ -12,10 +12,11 @@
      <h3><a href="{{url_for('index',usr=usr)}}">Home</a></h3>
     <br/>
     <h2>UMockMe.com - Draft Results...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
+    <br/>
+    <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
+    <br/>
     <div class="w3-container w3-row">
         <div id="divAvailable" class="w3-container w3-half">
-            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Get Next Pick</button>
-            <br/>
             <h4>Available Players By Rating</h4>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
              <table id="tblAvailablePlayers" class="w3-table w3-bordered w3-striped">
@@ -36,9 +37,8 @@
             </table>
         </div>
         <div id="divPicks" class="w3-container w3-half">
-            <button id="btnGetData" ng-click="getData();getProspects()" ng-show="False">Get Next Pick</button>
-            <br/>
-            <h4></h4>
+            <h4>Picks</h4>
+            <span id="msgWaiting" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
             <table id="tblpicks" class="w3-table w3-bordered w3-striped">
                 <tr class="w3-teal">
                     <th>Round #</th>
@@ -71,15 +71,17 @@
         $scope.AvailableProspects = ""
         $scope.showMsg=false;
         $scope.showBtn=true;
-
+        $scope.round=0;
 
 
          $scope.getProspects=function(){
              $scope.showMsg=true;
+             $scope.round+=1;
 
              $http({
                 method:'POST',
                 url: '/getAvailableProspects',
+                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
                 headers:{'Content-Type':undefined}
             }).then(function(response){
                 if(response.data){
@@ -106,6 +108,7 @@
             $http({
                 method:'POST',
                 url: '/getDraftData',
+                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
                 headers:{'Content-Type':undefined}
             }).then(function(response){
                     if(response.data){

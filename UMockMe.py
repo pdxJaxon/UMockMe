@@ -32,7 +32,7 @@ from flask.json import jsonify
 
 app = Flask(__name__, static_url_path='', static_folder="static")
 app.secret_key = "I Like Turtles"
-app.config['SESSION_TYPE'] = 'memcached'
+#app.config['SESSION_TYPE'] = 'memcached'
 
 
 
@@ -180,8 +180,30 @@ def getDraftData():
     print("session:",sessionid)
     myDraft = Drafts.Draft(sessionid)
 
+    round = str(request.data)
+    print("the round is:", str(round))
+
+
+
+    lengthOfString = len(round)
+    colPos = round.find(":")
+
+    round = round[colPos + 1:lengthOfString - 2]
+
+
+    # When user first navigates to this page, they should have no picks yet if it's round 1
+    if (int(round) <= 1):
+        myDraft.ClearAllPicksForUser(sessionid)
+
+        DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
+        DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
+
+
 
     picks = myDraft.getNextPick(sessionid)
+
+
+
 
 
     return (jsonify(picks))
@@ -221,8 +243,7 @@ def CustomDraft():
 
 
 
-    return render_template('CustomDraft.html',usr=usr)
-
+    return render_template('CustomDraft.html',usr=usr, sessionid=sessionid)
 
 
 
