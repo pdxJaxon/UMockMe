@@ -320,33 +320,36 @@ def QuickDraft():
 
 
 
+@app.route("/Admin")
+def Admin():
+    usr = request.args.get('usr')
+    return render_template('Admin.html', usr=usr)
 
 
 
 
 
 
-
-@app.route("/DBRefresh0")
-def refresh0():
+@app.route("/DBNukeDB")
+def NukeDB():
     DataRefreshService.DataDude.NukeDB()
 
 
 
-    return ("Database Scrubbed - <a href='/'>Return to Home Page</a>")
+    return ("Database Scrubbed - <a href='/Admin'>Return to Admin Page</a>")
 
 
 
 
 
 
-@app.route("/DBRefresh1")
-def refresh1():
+@app.route("/DBRebuildDB")
+def rebuildDB():
     DataRefreshService.DataDude.BuildDB()
 
 
 
-    return ("Database Rebuilt - <a href='/'>Return to Home Page</a>")
+    return ("Database Rebuilt - <a href='/Admin'>Return to Admin Page</a>")
 
 
 
@@ -354,12 +357,34 @@ def refresh1():
 
 
 
-@app.route("/DBRefresh2")
-def refresh2():
-    DataRefreshService.DataDude.RefreshStaticData()
+@app.route("/DBRefreshProspects")
+def refreshProspects():
+    DataRefreshService.DataDude.RefreshStaticProspects()
 
 
-    return ("Database Populated - <a href='/'>Return to Home Page</a>")
+    return ("Prospects Refreshed - <a href='/Admin'>Return to Admin Page</a>")
+
+
+
+
+
+@app.route("/DBRefreshColleges")
+def refreshColleges():
+    DataRefreshService.DataDude.RefreshStaticCollegeData()
+
+
+    return ("Colleges Refreshed - <a href='/Admin'>Return to Admin Page</a>")
+
+
+
+
+
+@app.route("/DBRefreshNFLTeams")
+def refreshNFLTeams():
+    DataRefreshService.DataDude.RefreshStaticTeamData()
+
+
+    return ("NFL Teams Refreshed - <a href='/Admin'>Return to Admin Page</a>")
 
 
 

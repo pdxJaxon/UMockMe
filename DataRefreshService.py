@@ -36,45 +36,55 @@ class DataDude:
 
 
 
-
-
-
-    def RefreshStaticData():
+    def RefreshStaticProspects():
         # Go Get Raw Prospect Data From NFL.com
         rawData = Prospects.Prospect.getRawData()
         jsonData = Prospects.Prospect.stringToJson(rawData)
 
-
         print("Prospects Retrieved")
         # print(jsonData)
 
-        # Go Get Raw Team Data
-        rawTeamData = Teams.Team.getRawTeamData()
-        jsonTeamData = Teams.Team.stringToJson(rawTeamData)
+        # Pump all of our JSON records into the DB
+        if (jsonData):
+            Prospects.Prospect.AddBatch(jsonData)
+
+        print("Prospects Updated")
 
 
+
+
+
+
+    def RefreshStaticCollegeData():
         print("Teams Retrieved")
         # Get College Data
         rawCollegeData = Colleges.College.getCollegeData()
         jsonCollegeData = Colleges.College.stringToJson(rawCollegeData)
 
-
         print("Colleges Retrieved")
-
         # add teams to DB
         if (jsonCollegeData):
             Colleges.College.AddBatch(jsonCollegeData)
 
         print("Colleges Updated")
 
-        # Pump all of our JSON records into the DB
-        if (jsonData):
-            Prospects.Prospect.AddBatch(jsonData)
 
 
-        print("Prospects Updated")
 
-            # add teams to DB
+
+
+    def RefreshStaticTeamData():
+
+
+        # Go Get Raw Team Data
+        rawTeamData = Teams.Team.getRawTeamData()
+        jsonTeamData = Teams.Team.stringToJson(rawTeamData)
+
+
+
+
+
+        # add teams to DB
         if (jsonTeamData):
             Teams.Team.AddBatch(jsonTeamData)
 
@@ -82,6 +92,5 @@ class DataDude:
 
         print("DB Refresh Complete")
 
+        #Prospects.Prospect.CalculateUmockMeGrades()
 
-
-        Prospects.Prospect.CalculateUmockMeGrades()
