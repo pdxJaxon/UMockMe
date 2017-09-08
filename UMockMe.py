@@ -32,7 +32,7 @@ from flask.json import jsonify
 
 app = Flask(__name__, static_url_path='', static_folder="static")
 app.secret_key = "I Like Turtles"
-app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_TYPE'] = 'memcached'
 
 
 
@@ -113,11 +113,8 @@ def getQuickDraftData():
     start = time.time()
 
 
-    try:
-        sessionid = session['sessionid']
-    except KeyError:
-        session['sessionid'] = uuid.uuid1()
-        sessionid = session['sessionid']
+    sessionid = request.args.get('sessionid')
+
 
 
 
@@ -177,12 +174,9 @@ def getQuickDraftData():
 
 @app.route("/getDraftData", methods= ['GET','POST'])
 def getDraftData():
-    try:
-        sessionid = session['sessionid']
-    except KeyError:
-        session['sessionid'] = uuid.uuid1()
-        sessionid = session['sessionid']
+    sessionid = request.args.get('sessionid')
 
+    usr = request.args.get('usr')
     print("session:",sessionid)
     myDraft = Drafts.Draft(sessionid)
 
@@ -198,12 +192,9 @@ def getDraftData():
 
 @app.route("/getAvailableProspects", methods = ['GET','POST'])
 def getAvailableProspects():
+    sessionid = request.args.get('sessionid')
 
-    try:
-        sessionid = session['sessionid']
-    except KeyError:
-        session['sessionid'] = uuid.uuid1()
-        sessionid = session['sessionid']
+    usr = request.args.get('usr')
 
     myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
 
@@ -215,14 +206,9 @@ def getAvailableProspects():
 
 @app.route("/CustomDraft")
 def CustomDraft():
+    sessionid = request.args.get('sessionid')
 
-    session.clear()
-
-    try:
-        sessionid = session['sessionid']
-    except KeyError:
-        session['sessionid'] = uuid.uuid1()
-        sessionid = session['sessionid']
+    usr = request.args.get('usr')
 
     myDraft = Drafts.Draft(sessionid)
 
@@ -314,7 +300,8 @@ def ComingSoon():
 @app.route("/QuickDraft")
 def QuickDraft():
     usr = request.args.get('usr')
-    return render_template('QuickDraft.html',usr=usr)
+    sessionid = request.args.get('sessionid')
+    return render_template('QuickDraft.html',usr=usr,sessionid=sessionid)
 
 
 
@@ -323,6 +310,7 @@ def QuickDraft():
 @app.route("/Admin")
 def Admin():
     usr = request.args.get('usr')
+    sessionid = request.args.get('sessionid')
     return render_template('Admin.html', usr=usr)
 
 

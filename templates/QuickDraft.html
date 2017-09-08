@@ -16,7 +16,7 @@
 
         <div id="divPicks" class="w3-container">
             <br/>
-            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Pick for Round {{rnd}}</button>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Pick for Round {{round}}</button>
             <br/>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
             <table id="tblpicks" class="w3-table w3-bordered w3-striped">
@@ -60,7 +60,7 @@
              $http({
                 method:'POST',
                 url: '/getQuickDraftData',
-                data: {'round' : $scope.round },
+                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
                 headers:{'Content-Type':undefined}
             }).then(function(response){
                 if(response.data){
