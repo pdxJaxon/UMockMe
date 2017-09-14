@@ -78,7 +78,10 @@ class Prospect:
 
 
 
+    def getProspectById(ProspectId):
+        p = DBLib.DB.getProspectById(ProspectId)
 
+        return p
 
 
 

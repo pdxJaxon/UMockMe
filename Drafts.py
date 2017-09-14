@@ -305,8 +305,7 @@ class Draft:
         for i in self._allTeamNeeds:
             if(i[0][0]==TeamAbbr):
 
-                if(TeamAbbr=="PIT"):
-                    print("Start",i)
+
 
                 # [('CLE', 'QB', 90, 1), ('CLE', 'DL', 85, 1), ('CLE', 'LB', 80, 1), ('CLE', 'CB', 75, 1), ('CLE', 'S', 70, 1)]
                 #print("Is this json - {}".format(i[0]))
@@ -329,8 +328,7 @@ class Draft:
                     i.append(newNeed)
                     DBLib.DB.AddTeamNeedForSessionDB(sessionId,i[0][0],NeedPosition,5,1)
 
-                if(TeamAbbr=="PIT"):
-                    print("stop",i)
+
                 break
 
 
@@ -382,6 +380,15 @@ class Draft:
         return pu
 
 
+
+
+    def SelectPlayer(self,round,PickNum,OverallPickNum,Team,Player,pos,sessionid):
+
+        Picks.Pick.UpdatePick(round, PickNum, OverallPickNum, Team, Player, sessionid)
+
+        self.removeProspectFromCache(sessionid, Player)
+        # needs.remove(n)
+        self.MarkNeedAsSelected(Team, pos, sessionid)
 
 
 

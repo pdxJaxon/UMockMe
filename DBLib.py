@@ -405,6 +405,20 @@ class DB:
 
 
 
+    def getProspectById(PlayerId):
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM Prospect Where ProspectId='{}'".format(PlayerId))
+
+            p = cur.fetchall()
+
+            return p
+
+
+
+
 
 
 

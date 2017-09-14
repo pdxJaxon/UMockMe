@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UMockMe.com - 2017 Draft</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+</head>
+<body>
+
+<div id="draftResult" class="w3-container" ng-app="UMM" ng-controller="ummController">
+     <h3><a href="{{url_for('index',usr=usr)}}">Home</a></h3>
+    <br/>
+    <h2>UMockMe.com - Manual Draft...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
+    <br/>
+    <button id="btnGetData" ng-click="getData()" ng-show="showBtn">UMockMe Pick This One</button>
+    <button id="btnMakePick" ng-click="makePick()" ng-show="showBtn">I'll Make This Pick</button>
+    <br/>
+    <div class="w3-container w3-row">
+        <div id="divAvailable" class="w3-container w3-half">
+            <h4>Available Players By Rating</h4>
+            <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
+             <table id="tblAvailablePlayers" class="w3-table w3-bordered w3-striped">
+                <tr class="w3-teal">
+                    <span id="spIPickHeader" class="w3-container" ng-show="isMyPick">
+                        <th>Select</th>
+                    </span>
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>School</th>
+                    <th>Expert Score</th>
+                </tr>
+                {% raw %}
+                <tr ng-repeat="x in AvailableProspects">
+                    <span id="spIPick" class="w3-container" ng-show="isMyPick">
+                        <td><button ng-click="pickPlayer(x[0])">Select</button></td>
+                    </span>
+                    <td>{{ x[1] + ' ' + x[2] }}</td>
+                    <td>{{ x[3] }}</td>
+                    <td>{{ x[10] }}</td>
+                    <td>{{ x[6]}}</td>
+                </tr>
+                {% endraw %}
+            </table>
+        </div>
+        <div id="divPicks" class="w3-container w3-half">
+            <h4>Picks</h4>
+            <span id="msgWaiting" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
+            <table id="tblpicks" class="w3-table w3-bordered w3-striped">
+                <tr class="w3-teal">
+                    <th>Round #</th>
+                    <th>Pick #</th>
+                    <th>Overall Pick #</th>
+                    <th>Team</th>
+                    <th>Player</th>
+                    <th>Position</th>
+                    <th>School</th>
+                </tr>
+                {% raw %}
+                <tr ng-repeat="p in draftData">
+                    <td>{{ p[0] }}</td>
+                    <td>{{ p[1] }}</td>
+                    <td>{{ p[2] }}</td>
+                    <td>{{ p[3] }}</td>
+                    <td>{{ p[5]  + ' ' + p[6]}}</td>
+                    <td>{{ p[7] }}</td>
+                    <td>{{ p[8] }}</td>
+                </tr>
+                {% endraw %}
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('UMM',[]);
+    app.controller('ummController',function($scope,$http){
+        $scope.draftData = ""
+        $scope.AvailableProspects = ""
+        $scope.showMsg=false;
+        $scope.showBtn=true;
+        $scope.isMyPick=false;
+        $scope.round=1;
+
+        $scope.makePick = function(){
+            alert("got it");
+        }
+
+        $scope.pickPlayer = function(playerId){
+            $http({
+                method:'POST',
+                url: '/makePick',
+                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid},
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function(response){
+                if(response.data){
+                    $scope.AvailableProspects = response.data;
+                }
+                else{
+                    $scope.AvailableProspects = ""
+                }
+            $scope.showMsg=false;
+            }, function(err){
+            console.log(err);
+            });
+        }
+
+         $scope.getProspects=function(){
+             $scope.showMsg=true;
+
+             $http({
+                method:'POST',
+                url: '/getAvailableProspects',
+                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
+                headers:{'Content-Type':'application/x-www-form-urlencoded;charset=utf-8'}
+            }).then(function(response){
+                if(response.data){
+                    $scope.AvailableProspects = response.data;
+                }
+                else{
+                    $scope.AvailableProspects = ""
+                }
+
+            $scope.showMsg=false;
+            }, function(err){
+            console.log(err);
+            });
+            }
+
+
+
+
+
+
+        $scope.getData=function(){
+            $scope.showMsg=true;
+
+            $http({
+                method:'POST',
+                url: '/getDraftData',
+                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
+                headers:{'Content-Type':undefined}
+            }).then(function(response){
+                    if(response.data){
+                        $scope.draftData = response.data;
+
+                        $scope.getProspects()
+                    }
+                    else{
+                        $scope.showBtn=false;
+                    }
+                    $scope.round+=1;
+                    $scope.showMsg=false;
+                }, function(response){
+                    $scope.AvailableProspects = "ERR"
+                    });
+                    }
+
+        var initFunc = function(){
+            $scope.getProspects();
+        }
+
+        initFunc();
+
+        }
+    )
+
+</script>
+</body>
+</html>

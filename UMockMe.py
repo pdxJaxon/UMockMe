@@ -211,16 +211,57 @@ def getDraftData():
 
 
 
+@app.route("/makePick", methods = ['GET','POST'])
+def makePick():
+
+
+
+    j = request.get_json()
+    round = j.get('round')
+    usr = j.get('usr')
+    sessionid = j.get('sessionid')
+
+    print("TheRound=", round)
+
+    if (round):
+        if (int(round) <= 1):
+            DBLib.DB.PopulateSessionProspects(sessionid)
+    else:
+        DBLib.DB.PopulateSessionProspects(sessionid)
+
+    myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
+
+    print(myProspects)
+    return (jsonify(myProspects))
+
+
+
+
+
+
 
 @app.route("/getAvailableProspects", methods = ['GET','POST'])
 def getAvailableProspects():
     sessionid = request.args.get('sessionid')
 
+
+
     usr = request.args.get('usr')
+    round = request.args.get('round')
+
+    print("TheRound=",round)
+
+    if(round):
+        if(int(round)<=1):
+            DBLib.DB.PopulateSessionProspects(sessionid)
+    else:
+        DBLib.DB.PopulateSessionProspects(sessionid)
+
+
 
     myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
 
-
+    print(myProspects)
     return (jsonify(myProspects))
 
 
@@ -243,7 +284,9 @@ def CustomDraft():
 
 
 
-    return render_template('CustomDraft.html',usr=usr, sessionid=sessionid)
+    #return render_template('CustomDraft.html',usr=usr, sessionid=sessionid)
+
+    return render_template('ManualDraft.html',usr=usr, sessionid=sessionid,round=0)
 
 
 
