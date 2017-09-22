@@ -174,21 +174,44 @@ def getQuickDraftData():
 
 @app.route("/getDraftData", methods= ['GET','POST'])
 def getDraftData():
-    sessionid = request.args.get('sessionid')
 
-    usr = request.args.get('usr')
-    print("session:",sessionid)
+
+
+
+
+
+    if request.method == "POST":
+        j = request.get_json()
+        round = j.get('round')
+        usr = j.get('usr')
+        sessionid = j.get('sessionid')
+
+
+
+        #sessionid = request.form.get['sessionid']
+        #usr = request.form.get['usr']
+        #round = request.form.get['round']
+    else:
+        sessionid = request.args.get('sessionid')
+        usr = request.args.get('usr')
+
+        round = str(request.data)
+        lengthOfString = len(round)
+        colPos = round.find(":")
+
+        round = round[colPos + 1:lengthOfString - 2]
+
+
+
+
+    print("getDraftData Roundish",round)
+    print("getDraftData session:",sessionid)
     myDraft = Drafts.Draft(sessionid)
 
-    round = str(request.data)
-    print("the round is:", str(round))
 
 
 
-    lengthOfString = len(round)
-    colPos = round.find(":")
 
-    round = round[colPos + 1:lengthOfString - 2]
 
 
     # When user first navigates to this page, they should have no picks yet if it's round 1
@@ -269,7 +292,13 @@ def getAvailableProspects():
 
 @app.route("/CustomDraft")
 def CustomDraft():
-    sessionid = request.args.get('sessionid')
+
+    if request.method == "POST":
+        sessionid = request.form['sessionid']
+    else:
+        sessionid = request.args.get('sessionid')
+
+    print("daddy session:",sessionid)
 
     usr = request.args.get('usr')
 
@@ -284,7 +313,6 @@ def CustomDraft():
 
 
 
-    #return render_template('CustomDraft.html',usr=usr, sessionid=sessionid)
 
     return render_template('ManualDraft.html',usr=usr, sessionid=sessionid,round=0)
 
@@ -342,9 +370,21 @@ def index():
             return redirect(url)
 
     frm = forms.Login()
-    usr = request.args.get('usr')
+
+    if request.method == "POST":
+        usr = request.form["usr"]
+        sessionid = request.form["sessionid"]
+    else:
+        usr = request.args.get('usr')
+        sessionid = request.args.get('sessionId')
+
+
+    if(not sessionid):
+        sessionid = uuid.uuid4()
+
+
     print("User=",usr)
-    return render_template('index.html',form=frm, usr=usr)
+    return render_template('index.html',form=frm, usr=usr, sessionid=sessionid)
 
 
 

@@ -14,7 +14,6 @@
     <h2>UMockMe.com - Manual Draft...{%if usr%}{{usr[0][1]}}{%endif%}</h2>
     <br/>
     <button id="btnGetData" ng-click="getData()" ng-show="showBtn">UMockMe Pick This One</button>
-    <button id="btnMakePick" ng-click="makePick()" ng-show="showBtn">I'll Make This Pick</button>
     <br/>
     <div class="w3-container w3-row">
         <div id="divAvailable" class="w3-container w3-half">
@@ -73,13 +72,15 @@
 </div>
 <script>
     var app = angular.module('UMM',[]);
-    app.controller('ummController',function($scope,$http){
+    app.controller('ummController',function($scope,$http,$location){
         $scope.draftData = ""
         $scope.AvailableProspects = ""
         $scope.showMsg=false;
         $scope.showBtn=true;
         $scope.isMyPick=false;
         $scope.round=1;
+        $scope.sessionid = $location.search().sessionid;
+
 
         $scope.makePick = function(){
             alert("got it");
@@ -137,8 +138,8 @@
             $http({
                 method:'POST',
                 url: '/getDraftData',
-                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
-                headers:{'Content-Type':undefined}
+                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
+                headers: { 'Content-Type': 'application/json' }
             }).then(function(response){
                     if(response.data){
                         $scope.draftData = response.data;

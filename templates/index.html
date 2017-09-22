@@ -18,12 +18,12 @@
     <div class="w3-row">
         <div class="w3-container w3-third" id=""menu">
              <ul class="w3-striped">
-            <li><a href="{{url_for('QuickDraft',usr=usr)}}">QuickDraft - no account needed</a></li>
+            <li><a href="{{url_for('QuickDraft',usr=usr,sessionid=sessionid)}}">QuickDraft - no account needed</a></li>
             <li><a href="/ComingSoon">Features Coming Soon</a></li>
             {%if usr%}
                  <li><a href="/EditProspects">Edit Draft Prospect Data</a></li>
                 <li><a href="/EditTeams">Edit NFL Team Draft Needs and Preferences</a></li>
-                <li><a href="{{url_for('CustomDraft',usr=usr)}}">Custom Draft</a></li>
+                <li><a href="{{url_for('CustomDraft',usr=usr,sessionid=sessionid)}}">Custom Draft</a></li>
             {%endif%}
             <div class="w3-container w3-hide">
                  <p></p>
