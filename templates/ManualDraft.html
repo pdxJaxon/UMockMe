@@ -79,7 +79,9 @@
         $scope.showBtn=true;
         $scope.isMyPick=false;
         $scope.round=1;
-        $scope.sessionid = $location.search().sessionid;
+        token=new URLSearchParams(window.location.search);
+
+        $scope.sessionid = token.get('sessionid');
 
 
         $scope.makePick = function(){
@@ -141,6 +143,7 @@
                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
                 headers: { 'Content-Type': 'application/json' }
             }).then(function(response){
+                    
                     if(response.data){
                         $scope.draftData = response.data;
 

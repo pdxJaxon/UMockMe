@@ -185,12 +185,6 @@ def getDraftData():
         round = j.get('round')
         usr = j.get('usr')
         sessionid = j.get('sessionid')
-
-
-
-        #sessionid = request.form.get['sessionid']
-        #usr = request.form.get['usr']
-        #round = request.form.get['round']
     else:
         sessionid = request.args.get('sessionid')
         usr = request.args.get('usr')

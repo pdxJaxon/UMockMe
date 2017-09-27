@@ -432,7 +432,7 @@ class Draft:
                # DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
 
             DBLib.DB.PopulateSessionProspects(sessionId)
-
+            print("OverWrite my Prospects")
 
             self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
             step3StopTime = time.time()
