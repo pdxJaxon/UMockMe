@@ -232,24 +232,57 @@ def getDraftData():
 def makePick():
 
 
-
     j = request.get_json()
     round = j.get('round')
     usr = j.get('usr')
     sessionid = j.get('sessionid')
+    playerid = j.get('playerid')
+    pos = j.get('pos')
 
-    print("TheRound=", round)
+    pck = Picks.Pick.getNextPickForUser(sessionid)
 
-    if (round):
-        if (int(round) <= 1):
-            DBLib.DB.PopulateSessionProspects(sessionid)
+    print("Gotta Picky:",pck)
+
+
+
+    PickNum = pck[0][1]
+    OverallPickNum=pck[0][2]
+    Team=pck[0][3]
+
+
+
+    myDraft = Drafts.Draft(sessionid)
+
+
+    myDraft.SelectPlayer(round,PickNum,OverallPickNum,Team,playerid,pos,sessionid)
+
+
+    picks = Picks.Pick.getAllPicksForSession(sessionid)
+
+
+
+
+
+    return (jsonify(picks))
+
+
+
+
+@app.route("/getAllPicksForSession", methods= ['GET','POST'])
+def getAllPicksForSession():
+
+    j = request.get_json()
+
+    sessionid = j.get('sessionid')
+
+    picks = Picks.Pick.getAllPicksForSession(sessionid)
+    if(picks):
+        print("picks",sessionid)
     else:
-        DBLib.DB.PopulateSessionProspects(sessionid)
+        DBLib.DB.PopulatePicks(sessionid)
+        picks = Picks.Pick.getAllPicksForSession(sessionid)
 
-    myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
-
-    print(myProspects)
-    return (jsonify(myProspects))
+    return (jsonify(picks))
 
 
 
@@ -259,26 +292,24 @@ def makePick():
 
 @app.route("/getAvailableProspects", methods = ['GET','POST'])
 def getAvailableProspects():
-    sessionid = request.args.get('sessionid')
 
 
+    j = request.get_json()
+    round = j.get('round')
+    usr = j.get('usr')
+    sessionid = j.get('sessionid')
 
-    usr = request.args.get('usr')
-    round = request.args.get('round')
+
 
     print("TheRound=",round)
 
-    if(round):
-        if(int(round)<=1):
-            DBLib.DB.PopulateSessionProspects(sessionid)
-    else:
-        DBLib.DB.PopulateSessionProspects(sessionid)
+
 
 
 
     myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
 
-    print(myProspects)
+
     return (jsonify(myProspects))
 
 
@@ -302,6 +333,12 @@ def CustomDraft():
     myDraft.ClearAllPicksForUser(sessionid)
 
     DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
+
+
+    DBLib.DB.PopulateSessionProspects(sessionid)
+
+
+
 
     usr = request.args.get('usr')
 
