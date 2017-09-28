@@ -204,19 +204,6 @@ def getDraftData():
 
 
 
-
-
-
-
-    # When user first navigates to this page, they should have no picks yet if it's round 1
-    if (int(round) <= 1):
-        myDraft.ClearAllPicksForUser(sessionid)
-
-        DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
-        DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
-
-
-
     picks = myDraft.getNextPick(sessionid)
 
 
@@ -301,13 +288,15 @@ def getAvailableProspects():
 
 
 
-    print("TheRound=",round)
+    print("getAvailableProspects TheRound=",round)
+    print("getAvailableProspects sessionid",sessionid)
 
 
+    myDraft = Drafts.Draft(sessionid)
 
+    myProspects = myDraft.getPlayersAvailable()
 
-
-    myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
+    #myProspects = DBLib.DB.getAllProspectsForSession(sessionid)
 
 
     return (jsonify(myProspects))
@@ -337,7 +326,7 @@ def CustomDraft():
 
     DBLib.DB.PopulateSessionProspects(sessionid)
 
-
+    DBLib.DB.PopulatePicks(sessionid)
 
 
     usr = request.args.get('usr')
@@ -345,7 +334,7 @@ def CustomDraft():
 
 
 
-    return render_template('ManualDraft.html',usr=usr, sessionid=sessionid,round=0)
+    return render_template('ManualDraft.html',usr=usr, sessionid=sessionid)
 
 
 
