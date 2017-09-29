@@ -246,9 +246,7 @@ def makePick():
 
     picks = Picks.Pick.getAllPicksForSession(sessionid)
 
-
-
-
+    print("The Picks:",picks)
 
     return (jsonify(picks))
 

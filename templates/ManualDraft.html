@@ -32,9 +32,9 @@
                 {% raw %}
                 <tr ng-repeat="x in AvailableProspects">
                     <span id="spIPick" class="w3-container" ng-show="isMyPick">
-                        <td><button ng-click="pickPlayer(x[0])">Select</button></td>
+                        <td><button ng-click="pickPlayer(x[0],x[3])">Select</button></td>
                     </span>
-                    <td>{{ x[1] + ' ' + x[2] }}</td>
+                    <td>{{ x[2] + ' ' + x[1] }}</td>
                     <td>{{ x[3] }}</td>
                     <td>{{ x[10] }}</td>
                     <td>{{ x[6]}}</td>
@@ -84,19 +84,21 @@
         $scope.sessionid = token.get('sessionid');
 
 
-        $scope.makePick = function(){
-            alert("got it");
-        }
 
-        $scope.pickPlayer = function(playerId){
+
+
+        $scope.pickPlayer = function(playerId,pos){
             $http({
                 method:'POST',
                 url: '/makePick',
-                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid},
+                data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid, 'playerid': playerId, 'pos': pos},
                 headers: { 'Content-Type': 'application/json' }
             }).then(function(response){
                 if(response.data){
-                    $scope.AvailableProspects = response.data;
+
+                    $scope.draftData = response.data;
+
+                    $scope.getProspects()
                 }
                 else{
                     $scope.AvailableProspects = ""
@@ -114,7 +116,7 @@
                 method:'POST',
                 url: '/getAvailableProspects',
                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
-                headers:{'Content-Type':'application/x-www-form-urlencoded;charset=utf-8'}
+                headers:{'Content-Type':'application/json'}
             }).then(function(response){
                 if(response.data){
                     $scope.AvailableProspects = response.data;
@@ -134,6 +136,36 @@
 
 
 
+        $scope.getAllPicksForSession=function(){
+             $scope.showMsg=true;
+
+             $http({
+                method:'POST',
+                url: '/getAllPicksForSession',
+                data: {'sessionid': $scope.sessionid },
+                headers:{'Content-Type':'application/json'}
+            }).then(function(response){
+                if(response.data){
+                    $scope.draftData = response.data;
+                }
+                else{
+                    $scope.draftData = ""
+                }
+
+            $scope.showMsg=false;
+            }, function(err){
+            console.log(err);
+            });
+            }
+
+
+
+
+
+
+
+
+
         $scope.getData=function(){
             $scope.showMsg=true;
 
@@ -143,16 +175,15 @@
                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
                 headers: { 'Content-Type': 'application/json' }
             }).then(function(response){
-                    
+
                     if(response.data){
                         $scope.draftData = response.data;
-
                         $scope.getProspects()
                     }
                     else{
                         $scope.showBtn=false;
                     }
-                    $scope.round+=1;
+
                     $scope.showMsg=false;
                 }, function(response){
                     $scope.AvailableProspects = "ERR"
@@ -161,6 +192,7 @@
 
         var initFunc = function(){
             $scope.getProspects();
+            $scope.getAllPicksForSession();
         }
 
         initFunc();

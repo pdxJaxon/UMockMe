@@ -20,11 +20,27 @@ class Pick:
 
     def getAllPickDetailsForYear(year,sessionId):
         pickDetails - DBLib.DB.GetAllPickDetailsForRoundDB(year,sessionId)
-        return pickdetails
+        return pickDetails
+
+
+
 
     def getAllPickDetailsForRound(year,round,sessionid):
         pickdetails = DBLib.DB.GetAllPickDetailsForRoundDB(year,round,sessionid)
         return pickdetails
+
+
+    def getNextPickForUser(sessionid):
+        pick = DBLib.DB.getNextPickForUser(sessionid)
+        return pick
+
+
+
+    def getAllPicksForSession(sessionid):
+        picks = DBLib.DB.getAllPicksForUser(sessionid)
+        return picks
+
+
 
 
 
@@ -34,5 +50,5 @@ class Pick:
 
 
     def UpdatePick(rnd,PickNum,OverallPickNum,Team,Player,sessionid):
-        #print("UpdatePick: {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player,sessionid))
+        print("UpdatePick: {} {} {} {} {} {}".format(rnd,PickNum,OverallPickNum,Team,Player,sessionid))
         DBLib.DB.UpdatePick(rnd,PickNum,OverallPickNum,Team,Player,sessionid)

@@ -566,7 +566,7 @@ class Draft:
 
 
     def getPlayersAvailable(self):
-        return True
+        return self._prospects
 
     def getPlayersAvailableByPos(self,pos):
         return True

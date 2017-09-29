@@ -844,7 +844,7 @@ class DB:
         #Pick(RoundId int, RoundPickNum int, OverallPickNum int, TeamAbbr Text, ProspectId int)
 
         sql = "Update Pick SET TeamAbbr = '{}', ProspectId={} WHERE RoundId={} AND RoundPickNum={} AND OverallPickNum={} and SessionId='{}'".format(Team,Player,rnd,PickNum,OverallPickNum,sessionid)
-        #print(sql)
+        print(sql)
         DB.ExecuteSQL(sql)
 
 
