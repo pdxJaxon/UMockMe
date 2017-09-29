@@ -51,6 +51,10 @@
         $scope.showMsg=false;
         $scope.showBtn=true;
         $scope.round=0;
+        token=new URLSearchParams(window.location.search);
+
+        $scope.sessionid = token.get('sessionid');
+
 
         $scope.getData=function(){
             $scope.draftData = "";
@@ -61,7 +65,7 @@
                 method:'POST',
                 url: '/getQuickDraftData',
                 data: {'round' : $scope.round, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
-                headers:{'Content-Type':undefined}
+                headers:{'Content-Type':'application/json'}
             }).then(function(response){
                 if(response.data){
                     $scope.draftData = response.data;
