@@ -112,33 +112,28 @@ def getQuickDraftData():
 
     start = time.time()
 
+    if request.method == "POST":
+        j = request.get_json()
+        round = j.get('round')
+        usr = j.get('usr')
+        sessionid = j.get('sessionid')
+    else:
+        sessionid = request.args.get('sessionid')
+        usr = request.args.get('usr')
 
-    sessionid = request.args.get('sessionid')
+        round = str(request.data)
+        lengthOfString = len(round)
+        colPos = round.find(":")
+
+        round = round[colPos + 1:lengthOfString - 2]
 
 
-
-
-
-
-    usr = request.args.get('usr')
-    round = str(request.data)
-
-    lengthOfString = len(round)
-    colPos = round.find(":")
-
-    round=round[colPos+1:lengthOfString-2]
 
     print("ROUND:{} for Session:{}".format(round,sessionid))
 
     startPre = time.time()
     myDraft = Drafts.Draft(sessionid)
 
-    # When user first navigates to this page, they should have no picks yet if it's round 1
-    if(int(round)<=1):
-        myDraft.ClearAllPicksForUser(sessionid)
-
-        DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
-        DBLib.DB.DeleteAllProspectsForSessionDB(sessionid)
 
 
     stopPre=time.time()
@@ -421,8 +416,34 @@ def ComingSoon():
 
 @app.route("/QuickDraft")
 def QuickDraft():
-    usr = request.args.get('usr')
-    sessionid = request.args.get('sessionid')
+
+    if request.method == "POST":
+        sessionid = request.form['sessionid']
+        usr = request.args.get('usr')
+    else:
+        sessionid = request.args.get('sessionid')
+        usr = request.args.get('usr')
+
+
+    print("daddy session:",sessionid)
+
+
+
+    myDraft = Drafts.Draft(sessionid)
+
+    #When user first navigates to this page, they should have no picks yet
+    myDraft.ClearAllPicksForUser(sessionid)
+
+    DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
+
+
+    DBLib.DB.PopulateSessionProspects(sessionid)
+
+    DBLib.DB.PopulatePicks(sessionid)
+
+
+
+
     return render_template('QuickDraft.html',usr=usr,sessionid=sessionid)
 
 
