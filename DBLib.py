@@ -121,6 +121,7 @@ class DB:
 
                     #populate static data for 2017 - we dont import draft info yet as this version is just an MVP
                     cur.execute("INSERT INTO DRAFT VALUES(1,2017)")
+                    cur.execute("INSERT INTO DRAFT VALUES(2,2018)")
 
                     print("3a")
 
@@ -132,6 +133,14 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(1,5,5)")
                     cur.execute("INSERT INTO ROUND VALUES(1,6,6)")
                     cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
+
+                    cur.execute("INSERT INTO ROUND VALUES(2,8,1)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,9,2)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,10,3)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,11,4)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,12,5)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,13,6)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,14,7)")
 
                     print("4a")
 
@@ -173,6 +182,7 @@ class DB:
 
                     # populate static data for 2017 - we dont import draft info yet as this version is just an MVP
                     cur.execute("INSERT INTO DRAFT VALUES(1,2017)")
+                    cur.execute("INSERT INTO DRAFT VALUES(2,2018)")
 
                     print("3a")
 
@@ -184,6 +194,16 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(1,5,5)")
                     cur.execute("INSERT INTO ROUND VALUES(1,6,6)")
                     cur.execute("INSERT INTO ROUND VALUES(1,7,7)")
+
+                    cur.execute("INSERT INTO ROUND VALUES(2,8,1)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,9,2)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,10,3)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,11,4)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,12,5)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,13,6)")
+                    cur.execute("INSERT INTO ROUND VALUES(2,14,7)")
+
+
 
                     print("4a")
 
@@ -869,6 +889,29 @@ class DB:
         sql="DELETE FROM PICK WHERE CreateData <'{}'".format(StaleDate)
 
         DB.ExecuteSQL(sql)
+
+
+
+
+
+    def DeleteStaleSessionData():
+        StaleDate = str(datetime.now() - timedelta(days=1))
+
+
+        sql="DELETE FROM SessionProspect WHERE SessionID in (SELECT SessionId FROM UserSession WHERE theDate <='" + StaleDate + "')"
+        print(sql)
+        DB.ExecuteSQL(sql)
+
+        sql = "DELETE FROM SessionTeamNeed WHERE SessionID in (SELECT SessionId FROM UserSession WHERE theDate <='" + StaleDate + "')"
+        print(sql)
+        DB.ExecuteSQL(sql)
+
+        sql = "DELETE FROM UserSession WHERE theDate <='" + StaleDate + "'"
+        print(sql)
+        DB.ExecuteSQL(sql)
+
+
+
 
 
 

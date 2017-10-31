@@ -395,6 +395,8 @@ def index():
     if(not sessionid):
         sessionid = uuid.uuid4()
 
+    DBLib.DB.DeleteStaleSessionData()
+
 
     print("User=",usr)
     return render_template('index.html',form=frm, usr=usr, sessionid=sessionid)
