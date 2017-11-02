@@ -899,15 +899,15 @@ class DB:
 
 
         sql="DELETE FROM SessionProspect WHERE SessionID in (SELECT SessionId FROM UserSession WHERE theDate <='" + StaleDate + "')"
-        print(sql)
+
         DB.ExecuteSQL(sql)
 
         sql = "DELETE FROM SessionTeamNeed WHERE SessionID in (SELECT SessionId FROM UserSession WHERE theDate <='" + StaleDate + "')"
-        print(sql)
+
         DB.ExecuteSQL(sql)
 
         sql = "DELETE FROM UserSession WHERE theDate <='" + StaleDate + "'"
-        print(sql)
+
         DB.ExecuteSQL(sql)
 
 
@@ -1358,3 +1358,44 @@ class DB:
 
         #Todo: Will need to check for EMAIL Uniqueness
         DB.ExecuteSQL(sql)
+
+
+
+
+
+    def WireTeamPlayerMeeting():
+
+
+        sql="INSERT INTO Meeting Values(1,'Combine Meeting',3)"
+        DB.ExecuteSQL(sql)
+
+        sql = "INSERT INTO Meeting Values(2,'Player Team Facility Visit',4)"
+        DB.ExecuteSQL(sql)
+
+        sql = "INSERT INTO Meeting Values(3,'Pro Day Visit',3)"
+        DB.ExecuteSQL(sql)
+
+        sql = "INSERT INTO Meeting Values(4,'Private Meeting - Dinner',5)"
+        DB.ExecuteSQL(sql)
+
+
+        sql = "DROP TABLE TeamPlayerMeeting"
+        DB.ExecuteSQL(sql)
+
+        #this relationship says.....As Per This UMockMe User, This Team, Had THIS meeting, With THIS Player. This data is stored at the UMockMeUser Level.
+        sql = "CREATE TABLE if not exists TeamPlayerMeeting(MeetingID integer, TeamId integer, ProspectId integer, userEmail varchar(75), PRIMARY KEY(MeetingId, TeamId, ProspectId, userEmail))"
+        DB.ExecuteSQL(sql)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -54,7 +54,9 @@ def initSite():
 
 @app.route("/EditProspects")
 def EditProspects():
-    return render_template('EditProspects.html')
+    ps = Prospects.Prospect.getAllProspects()
+
+    return render_template('EditProspect.html',prospects=ps)
 
 
 
@@ -520,6 +522,15 @@ def refreshNFLTeams():
     return ("NFL Teams Refreshed - <a href='/Admin'>Return to Admin Page</a>")
 
 
+
+
+
+@app.route("/WireTeamMeetings")
+def WireTeamMeetings():
+    #WireTeamPlayerMeeting():
+    DataRefreshService.DataDude.WireTeamMeetings()
+
+    return ("Team Meetings Wired Up - <a href='/Admin'>Return to Admin Page</a>")
 
 
 

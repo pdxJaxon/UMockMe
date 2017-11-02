@@ -94,3 +94,14 @@ class DataDude:
 
         #Prospects.Prospect.CalculateUmockMeGrades()
 
+
+
+
+
+
+
+    def WireTeamMeetings():
+        DBLib.DB.WireTeamPlayerMeeting()
+
+
+
