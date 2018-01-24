@@ -76,7 +76,8 @@ class Team:
 
         if(teamFile):
             ParsedData = teamFile.read();
-            print("File For Teams Read")
+            print("File For Teams Read");
+            teamFile.close();
         else:
 
 
@@ -90,7 +91,7 @@ class Team:
 
             #print(script.string)
 
-            print("Team Data Web Scraped")
+            print("Team Data Web Scraped");
 
             # m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
             #m = re.search("^\s+nfl.draft.tracker.data.teams\s+=\s+{\\r\\n", script.string, flags=re.IGNORECASE | re.MULTILINE)
