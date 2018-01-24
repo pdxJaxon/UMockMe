@@ -71,30 +71,37 @@ class Team:
         #url = http://feeds.nfl.com/feeds-rs/teams/2017.json
 
 
+        teamFile = open("Teams.json","r")
 
 
+        if(teamFile):
+            ParsedData = teamFile.read();
+            print("File For Teams Read")
+        else:
 
 
-        page = requests.get(url)
+            page = requests.get(url)
 
-        soup = BeautifulSoup(page.content, 'html.parser')
+            soup = BeautifulSoup(page.content, 'html.parser')
 
-        script = soup.find('script', text=re.compile('nfl\.draft\.tracker\.data'))
+            script = soup.find('script', text=re.compile('nfl\.draft\.tracker\.data'))
 
-        #print(soup)
+            #print(soup)
 
-        #print(script.string)
+            #print(script.string)
+
+            print("Team Data Web Scraped")
+
+            # m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
+            #m = re.search("^\s+nfl.draft.tracker.data.teams\s+=\s+{\\r\\n", script.string, flags=re.IGNORECASE | re.MULTILINE)
 
 
+            iFoundStart = script.string.find("nfl.draft.tracker.data.teams")
+            iFoundEnd = script.string.find(";",iFoundStart+1)
 
-        # m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
-        #m = re.search("^\s+nfl.draft.tracker.data.teams\s+=\s+{\\r\\n", script.string, flags=re.IGNORECASE | re.MULTILINE)
+            ParsedData = script.string[iFoundStart:iFoundEnd]
 
 
-        iFoundStart = script.string.find("nfl.draft.tracker.data.teams")
-        iFoundEnd = script.string.find(";",iFoundStart+1)
-
-        ParsedData = script.string[iFoundStart:iFoundEnd]
 
         #print(ParsedData)
 
