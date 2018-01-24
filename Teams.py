@@ -72,7 +72,8 @@ class Team:
         year = datetime.date.year
         fileName = str(year) + "Teams.json"
         fileExists = os.path.isfile(fileName)
-
+        parsedData=""
+        
         if(fileExists):
             teamFile = open(str(year) + "Teams.json", "r")
             parsedData = teamFile.read()
