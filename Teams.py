@@ -152,7 +152,7 @@ class Team:
                 division = jsonData[team]["division"]
                 needs = Team.getNeedsByTeam(city,abbr,nickname)
 
-                #print(abbr,url,city,nickname,conference,division,needs)
+                print(abbr,url,city,nickname,conference,division,needs)
 
                 Team.AddTeam(abbr,url,city,nickname,conference,division)
 

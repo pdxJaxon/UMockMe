@@ -490,6 +490,13 @@ def rebuildDB():
 
 
 
+@app.route("/DBRefreshColleges")
+def refreshColleges():
+    DataRefreshService.DataDude.RefreshStaticCollegeData()
+
+
+    return ("Colleges Refreshed - <a href='/Admin'>Return to Admin Page</a>")
+
 
 
 @app.route("/DBRefreshProspects")
@@ -502,13 +509,6 @@ def refreshProspects():
 
 
 
-
-@app.route("/DBRefreshColleges")
-def refreshColleges():
-    DataRefreshService.DataDude.RefreshStaticCollegeData()
-
-
-    return ("Colleges Refreshed - <a href='/Admin'>Return to Admin Page</a>")
 
 
 
