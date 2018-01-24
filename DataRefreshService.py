@@ -81,7 +81,7 @@ class DataDude:
         jsonTeamData = Teams.Team.stringToJson(rawTeamData)
 
 
-        print("team data:" + jsonTeamData)
+        print("team data:" + str(jsonTeamData))
 
 
         # add teams to DB
