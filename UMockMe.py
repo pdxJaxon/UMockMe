@@ -522,6 +522,11 @@ def refreshNFLTeams():
     return ("NFL Teams Refreshed - <a href='/Admin'>Return to Admin Page</a>")
 
 
+@app.route("/WireTeamNeeds")
+def WireTeamNeeds():
+    DataRefreshService.DataDude.WireTeamNeeds()
+
+    return ("Team Needs Wired Up - <a href='/Admin'>Return to Admin Page</a>")
 
 
 

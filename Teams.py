@@ -66,34 +66,43 @@ class Team:
     def getRawTeamData():
         # nfl.draft.tracker.data.teams    = {
 
-        url = "http://www.nfl.com/draft/2017/tracker#dt-tabs:dt-by-grade"
 
-        #url = http://feeds.nfl.com/feeds-rs/teams/2017.json
+        year = datetime.date.year
 
+        teamFile = open(str(year) + "Teams.json","r")
 
-        teamFile = open("Teams.json","r")
+        if(teamFile):
+            parsedData = teamFile.read()
+            teamFile.close()
+            print("Data from Team File")
+        else:
+            url = "http://www.nfl.com/draft/2017/tracker#dt-tabs:dt-by-grade"
 
-
-        page = requests.get(url)
-
-        soup = BeautifulSoup(page.content, 'html.parser')
-
-        script = soup.find('script', text=re.compile('nfl\.draft\.tracker\.data'))
-
-        #print(soup)
-
-        #print(script.string)
-
-        print("Team Data Web Scraped");
-
-        # m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
-        #m = re.search("^\s+nfl.draft.tracker.data.teams\s+=\s+{\\r\\n", script.string, flags=re.IGNORECASE | re.MULTILINE)
+            #url = http://feeds.nfl.com/feeds-rs/teams/2017.json
 
 
-        iFoundStart = script.string.find("nfl.draft.tracker.data.teams")
-        iFoundEnd = script.string.find(";",iFoundStart+1)
 
-        ParsedData = script.string[iFoundStart:iFoundEnd]
+            page = requests.get(url)
+
+            soup = BeautifulSoup(page.content, 'html.parser')
+
+            script = soup.find('script', text=re.compile('nfl\.draft\.tracker\.data'))
+
+            #print(soup)
+
+            #print(script.string)
+
+            print("Team Data Web Scraped");
+
+            # m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
+            #m = re.search("^\s+nfl.draft.tracker.data.teams\s+=\s+{\\r\\n", script.string, flags=re.IGNORECASE | re.MULTILINE)
+
+
+            iFoundStart = script.string.find("nfl.draft.tracker.data.teams")
+            iFoundEnd = script.string.find(";",iFoundStart+1)
+
+            ParsedData = script.string[iFoundStart:iFoundEnd]
+
 
 
 
