@@ -151,17 +151,18 @@ class Team:
                 nickname = jsonData[team]["nickname"]
                 conference = jsonData[team]["conference"]
                 division = jsonData[team]["division"]
-                needs = Team.getNeedsByTeam(city,abbr,nickname)
+                #needs = Team.getNeedsByTeam(city,abbr,nickname)
+                needs="";
 
                 print("FROM ADD BATCH: " ,abbr,url,city,nickname,conference,division,needs)
 
                 Team.AddTeam(abbr,url,city,nickname,conference,division)
 
                 print("Team Added",abbr)
-                
-                arNeed = needs.split(":")
 
+                #arNeed = needs.split(":")
 
+                '''
                 theScore=100
                 for n in arNeed:
                     if (n == "C" or n == "OT" or n == "OG"):
@@ -179,7 +180,7 @@ class Team:
                 for p in allPositions:
                     if(p not in needs):
                         Team.AddTeamNeed(abbr,p,30,1)
-
+                '''
 
 
 
