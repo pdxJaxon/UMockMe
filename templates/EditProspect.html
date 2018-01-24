@@ -4,20 +4,112 @@
     <meta charset="UTF-8">
     <title>UMockMe.com - Edit Prospects</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 </head>
-<body>
+<body ng-controller="ummController">
 
 
-<div id="EditProspects" class="w3-container">
+<div id="EditProspects" class="w3-container" ng-app="UMM" ng-controller="ummController">
     <h2>UMockMe.com - Edit Prospects...</h2>
     <form name="frm" id="frm">
-    <select size="1">
+
+    <select size="1" id="selGetProspect" ng-model="prospects" ng-change="getProspect(prospects)">
         {%for p in prospects %}
         <option value="{{p[0]}}">{{p[2] + " " + p[1] + " " + p[3] + " " + p[10]}}</option>
         {% endfor %}
     </select>
-    <input type="submit" />
+
+        <br/>
+        <select size="1" id="selProspects" ng-model="pselected" ng-change="getProspect(pselected)" ng-options="p[1] for p in {{prospects}}">
+            <option value="">--select prospect--</option>
+        </select>
+        <span ng-model="pselected">selected prospect: </span>
+
+    <div id="prospectInfo" ng-show="showDetails">
+        <table border="1">
+            <tr>
+                <td>ID</td>
+                <td>{{prospects[0]}}</td>
+            </tr>
+            <tr>
+                <td>FName</td>
+                <td><input type="text" id="fname" /></td>
+            </tr>
+            <tr>
+                <td>LName</td>
+                <td><input type="text" id="lname" /></td>
+            </tr>
+            <tr>
+                <td>Pos</td>
+                <td><input type="text" id="pos" /></td>
+            </tr>
+            <tr>
+                <td>School</td>
+                <td><input type="text" id="school" /></td>
+            </tr>
+            <tr>
+                <td>Height</td>
+                <td><input type="text" id="height" /></td>
+            </tr>
+            <tr>
+                <td>Weight</td>
+                <td><input type="text" id="weight" /></td>
+            </tr>
+            <tr>
+                <td>ExpertGrade</td>
+                <td><input type="text" id="grade" /></td>
+            </tr>
+            <tr>
+                <td>Team Meetings</td>
+                <td>
+                    <Table border="1">
+                        <tr>
+                            <th>Team</th>
+                            <th>Meeting</th>
+                        </tr>
+                    </Table>
+                    <input type="button" ng-click="AddMeeting()">Add Meeting</input>
+                </td>
+            </tr>
+            <tr>
+                <td>Deragatories</td>
+                <td>
+                    <Table border="1">
+                        <tr>
+                            <th>Incident</th>
+                            <th>Severity</th>
+                        </tr>
+                    </Table>
+                    <input type="button" ng-click="AddDerog()">Add Deragatory Incident</input>
+                </td>
+            </tr>
+        </table>
+         <input type="submit" ng-click="saveShit()" text="Update"/>
+    </div>
+
     </form>
 </div>
+
+
+<script>
+    var app = angular.module('UMM',[]);
+
+
+    app.controller('ummController',function($scope,$http) {
+       $scope.showDetails=false;
+       $scope.prospects="{{prospects}}";
+
+       $scope.getProspect=function(p) {
+           console.warn("poop " + p);
+           $scope.showDetails=true;
+       };
+
+    });
+
+
+</script>
+
+
+
 </body>
 </html>

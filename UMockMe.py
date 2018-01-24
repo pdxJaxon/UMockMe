@@ -44,7 +44,7 @@ app.logger.disabled=False
 
 @app.before_first_request
 def initSite():
-    if ("DATABASE_URL" in os.environ):
+    if ("HEROKU_POSTGRESQL_ONYX_URL" in os.environ):
         if request.url.lower().startswith('http:'):
             url = request.url.lower().replace('http:', 'https:', 1)
             code = 301
