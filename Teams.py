@@ -75,7 +75,7 @@ class Team:
 
 
         if(teamFile):
-            ParsedData = teamFile.read();
+            ParsedData = json.dumps(teamFile.read());
             print("File For Teams Read");
             teamFile.close();
         else:
