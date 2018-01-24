@@ -7,6 +7,8 @@ import re
 import datetime
 import json
 import DBLib
+import os.path
+
 
 
 
@@ -68,10 +70,11 @@ class Team:
 
 
         year = datetime.date.year
+        fileName = str(year) + "Teams.json"
+        fileExists = os.path.isfile(fileName)
 
-        teamFile = open(str(year) + "Teams.json","r")
-
-        if(teamFile):
+        if(fileExists):
+            teamFile = open(str(year) + "Teams.json", "r")
             parsedData = teamFile.read()
             teamFile.close()
             print("Data from Team File")
@@ -103,6 +106,9 @@ class Team:
 
             ParsedData = script.string[iFoundStart:iFoundEnd]
 
+            teamFile = open(fileName, "w")
+            teamFile.write(ParsedData)
+            teamFile.close()
 
 
 
