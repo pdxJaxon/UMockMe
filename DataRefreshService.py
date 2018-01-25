@@ -41,7 +41,7 @@ class DataDude:
 
 
     def RefreshCurrentStaticProspects():
-        DataDude.DataRefreshStaticProspects("2018")
+        DataDude.RefreshStaticProspects("2018")
 
 
     def RefreshStaticProspects(theYear):
