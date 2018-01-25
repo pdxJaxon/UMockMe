@@ -53,27 +53,52 @@ class Prospect:
 
 
 
-    def getRawData():
-        url = "http://www.nfl.com/draft/2017/tracker#dt-tabs:dt-by-grade"
+    def getRawData(theYear):
+        url=""
+        page=""
+        soup=""
+        script=""
+        m=""
+
+        if(theYear=="2017"):
+            url = "http://www.nfl.com/draft/2017/tracker#dt-tabs:dt-by-grade"
 
 
-        page = requests.get(url)
+            page = requests.get(url)
 
 
-        soup = BeautifulSoup(page.content, 'html.parser')
+            soup = BeautifulSoup(page.content, 'html.parser')
 
-        script = soup.find('script', text=re.compile('nfl\.global\.dt\.data'))
+            script = soup.find('script', text=re.compile('nfl\.global\.dt\.data'))
 
-        #print(soup)
+            #print(soup)
 
-        m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
+            m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+",script.string,flags=re.IGNORECASE | re.MULTILINE)
 
 
 
-        if(m):
-            return m.group(0)
+            if(m):
+                return m.group(0)
+            else:
+                return ""
         else:
-            return ""
+            url = "http://www.nfl.com/draft/2018/tracker#dt-tabs:dt-by-grade"
+
+            page = requests.get(url)
+
+            soup = BeautifulSoup(page.content, 'html.parser')
+
+            script = soup.find('script', text=re.compile('nfl\.global\.dt\.data'))
+
+            # print(soup)
+
+            m = re.search("^\s+nfl.global.dt.data\s+=\s+{\"picks\".+", script.string,
+                          flags=re.IGNORECASE | re.MULTILINE)
+
+            if (m):
+                return m.group(0)
+            else:
+                return ""
 
 
 

@@ -36,19 +36,33 @@ class DataDude:
 
 
 
-    def RefreshStaticProspects():
-        # Go Get Raw Prospect Data From NFL.com
-        rawData = Prospects.Prospect.getRawData()
-        jsonData = Prospects.Prospect.stringToJson(rawData)
+    def RefreshStaticProspects(theYear):
+        if(theYear=="2017"):
+            # Go Get Raw Prospect Data From NFL.com
+            rawData = Prospects.Prospect.getRawData(theYear)
+            jsonData = Prospects.Prospect.stringToJson(rawData)
 
-        print("Prospects Retrieved")
-        # print(jsonData)
+            print("Prospects Retrieved")
+            # print(jsonData)
 
-        # Pump all of our JSON records into the DB
-        if (jsonData):
-            Prospects.Prospect.AddBatch(jsonData)
+            # Pump all of our JSON records into the DB
+            if (jsonData):
+                Prospects.Prospect.AddBatch(jsonData)
 
-        print("Prospects Updated")
+            print("Prospects Updated for " + str(theYear))
+        else:
+            # Go Get Raw Prospect Data From NFL.com
+            rawData = Prospects.Prospect.getRawData(theYear)
+            jsonData = Prospects.Prospect.stringToJson(rawData)
+
+            print("Prospects Retrieved")
+            # print(jsonData)
+
+            # Pump all of our JSON records into the DB
+            if (jsonData):
+                Prospects.Prospect.AddBatch(jsonData)
+
+            print("Prospects Updated for " + str(theYear))
 
 
 
