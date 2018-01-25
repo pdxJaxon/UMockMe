@@ -251,8 +251,9 @@ class DB:
             cur = con.cursor()
             print("Gots me mah cursor")
             try:
+                print("Start Execute " + sql)
                 cur.execute(sql)
-                print("EXECUTE")
+                print("EXECUTED")
             except:
                 print("Err executing sql - " + sql)
             finally:
