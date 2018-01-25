@@ -255,6 +255,8 @@ class DB:
             #cur.execute(sql)
             #cur.execute("INSERT INTO Prospect VALUES(2560044,'BOBO','BRYCE','WR','6 2','205','4.9',0,0,0,'Colorado',2)")
             cur.execute("select * from Prospect")
+            cur.commit()
+            print("Hmmmmmm.......WTF?")
 
 
     def xescape(Value):
