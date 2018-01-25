@@ -248,7 +248,10 @@ class DB:
         con = DB.getConnection()
         with con:
             cur = con.cursor()
-            cur.execute(sql)
+            try:
+                cur.execute(sql)
+            except:
+                print("Err executing sql - " + sql)
 
 
 
@@ -292,16 +295,12 @@ class DB:
 
         try:
             DB.ExecuteSQL(sql)
-        except psycopg2.IntegrityError:
-            print("psycopg2.IntegrityError")
-        except IntegrityError:
-            print("IntegrityError")
         except:
             print("Generic Error with SQL Execute")
 
 
 
-            
+
 
     def AddTeamNeedDB(abbr,need,needScore,needCount):
 
