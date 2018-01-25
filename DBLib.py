@@ -21,7 +21,7 @@ class DB:
         if ("HEROKU_POSTGRESQL_ONYX_URL" in os.environ):
             urlparse.uses_netloc.append("postgres")
             url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
-            print("DB Params: " + url)
+            
             con = lite.connect(
                 database=url.path[1:],
                 user=url.username,
