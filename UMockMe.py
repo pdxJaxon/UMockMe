@@ -500,7 +500,7 @@ def refreshColleges():
 
 
 @app.route("/DBRefreshOldProspects")
-def refreshProspects():
+def refreshOldProspects():
     DataRefreshService.DataDude.RefreshOldStaticProspects()
 
 
@@ -508,7 +508,7 @@ def refreshProspects():
 
 
 @app.route("/DBRefreshCurrentProspects")
-def refreshProspects():
+def refreshCurrentProspects():
     DataRefreshService.DataDude.RefreshCurrentStaticProspects()
 
 
