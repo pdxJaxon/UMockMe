@@ -246,19 +246,15 @@ class DB:
 
     def ExecuteSQL(sql):
         con = DB.getConnection()
-
-        print("Got connection")
         with con:
             cur = con.cursor()
-            print("Gots me mah cursor")
-
+            print("In")
             cur.execute(sql)
-            #cur.execute("INSERT INTO Prospect VALUES(2560044,'BOBO','BRYCE','WR','6 2','205','4.9',0,0,0,'Colorado',2)")
+            .commit()
+            print("out")
 
-            cur.close()
 
-            
-            print("Hmmmmmm.......WTF?")
+
 
 
     def xescape(Value):
