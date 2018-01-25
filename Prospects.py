@@ -143,7 +143,7 @@ class Prospect:
                     collegeName = college[0][1].replace("'","")
                 except:
                     collegeName="TBD"
-                    print("College Name Failure - " + str(collegeId) + " " + college)
+                    print("College Name Failure - " + str(collegeId) + " " + str(college))
 
                 #todo: Add ProjectedDraftPick
 
