@@ -355,7 +355,10 @@ class DB:
 
         sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}')".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College)
         #print(sql)
-        DB.ExecuteSQL(sql)
+        try:
+            DB.ExecuteSQL(sql)
+        except:
+            print("DB Error with Prospect")
 
 
 
