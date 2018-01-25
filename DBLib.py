@@ -357,6 +357,7 @@ class DB:
         #print(sql)
         try:
             DB.ExecuteSQL(sql)
+            print("Record Added " + fname + " " + lname)
         except:
             print("DB Error with Prospect")
 
