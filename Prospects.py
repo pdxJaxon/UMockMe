@@ -111,7 +111,7 @@ class Prospect:
 
 
     #pass in our JSON Data and pump em into the DB
-    def AddBatch(jsonData):
+    def AddBatch(jsonData,theYear):
 
 
 
@@ -119,7 +119,10 @@ class Prospect:
             # {'pos', 'weight', 'height', 'schoolYear', 'lastName', 'handSize', 'expertGrade', 'pick', 'video',
             #  'hasAnalysis', 'pickAnalysis', 'college', 'armLength', 'personId','firstName', 'fanPick'
 
-
+            if(theYear=="2017"):
+                DraftId=1
+            else:
+                DraftId=2
 
             for dude in jsonData:
                 Id = jsonData[dude]["personId"]
@@ -150,7 +153,7 @@ class Prospect:
 
                 #print(Id,lname,fname,pos,height,weight,grade,collegeName)
 
-                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,collegeName)
+                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,collegeName,DraftId)
 
 
     def CalculateUmockMeGrades():
@@ -173,8 +176,8 @@ class Prospect:
 
 
 
-    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college):
-        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college)
+    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college,DraftId):
+        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college,DraftId)
 
 
 
