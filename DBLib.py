@@ -21,7 +21,7 @@ class DB:
         if ("HEROKU_POSTGRESQL_ONYX_URL" in os.environ):
             urlparse.uses_netloc.append("postgres")
             url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
-
+            print("DB Params: " + url)
             con = lite.connect(
                 database=url.path[1:],
                 user=url.username,
@@ -250,14 +250,9 @@ class DB:
         with con:
             cur = con.cursor()
             print("Gots me mah cursor")
-            try:
-                print("Start Execute " + sql)
-                cur.execute(sql)
-                print("EXECUTED")
-            except:
-                print("Err executing sql - " + sql)
-            finally:
-                print("ExecuteSQL Completed: :" + sql)
+
+            cur.execute(sql)
+
 
 
     def xescape(Value):
@@ -360,13 +355,9 @@ class DB:
 
         sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}',{})".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College,DraftId)
         print(sql)
-        try:
-            DB.ExecuteSQL(sql)
-            print("Record Added " + fname + " " + lname)
-        except:
-            print("DB Error with Prospect")
-        finally:
-            print("Complete AddProspect Call")
+
+        DB.ExecuteSQL(sql)
+
 
 
 
