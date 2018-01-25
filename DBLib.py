@@ -246,10 +246,13 @@ class DB:
 
     def ExecuteSQL(sql):
         con = DB.getConnection()
+        print("Got connection")
         with con:
             cur = con.cursor()
+            print("Gots me mah cursor")
             try:
                 cur.execute(sql)
+                print("EXECUTE")
             except:
                 print("Err executing sql - " + sql)
             finally:
