@@ -252,7 +252,8 @@ class DB:
                 cur.execute(sql)
             except:
                 print("Err executing sql - " + sql)
-
+            finally:
+                print("ExecuteSQL Completed: :" + sql)
 
 
     def xescape(Value):
@@ -360,7 +361,8 @@ class DB:
             print("Record Added " + fname + " " + lname)
         except:
             print("DB Error with Prospect")
-
+        finally:
+            print("Complete AddProspect Call")
 
 
 

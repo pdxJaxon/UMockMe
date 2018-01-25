@@ -154,7 +154,7 @@ class Prospect:
                 print(Id,lname,fname,pos,height,weight,grade,collegeName,DraftId)
 
                 Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,collegeName,DraftId)
-
+                print("I came back once " + str(Id))
 
     def CalculateUmockMeGrades():
         '''
