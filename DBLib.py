@@ -289,9 +289,19 @@ class DB:
     def AddTeamDB(abbr,url,city,nickname,conference,division):
         sql = "INSERT INTO Team VALUES('{}','{}','{}','{}','{}','{}')".format(abbr,url,city,nickname,conference,division)
         #print(sql)
-        DB.ExecuteSQL(sql)
+
+        try:
+            DB.ExecuteSQL(sql)
+        except psycopg2.IntegrityError:
+            print("psycopg2.IntegrityError")
+        except IntegrityError:
+            print("IntegrityError")
+        except:
+            print("Generic Error with SQL Execute")
 
 
+
+            
 
     def AddTeamNeedDB(abbr,need,needScore,needCount):
 
