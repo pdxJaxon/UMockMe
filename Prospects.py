@@ -178,7 +178,7 @@ class Prospect:
 
     def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college,DraftId):
         DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college,DraftId)
-
+        print("prospect added" + Last)
 
 
 
