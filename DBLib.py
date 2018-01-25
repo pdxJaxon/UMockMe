@@ -96,7 +96,7 @@ class DB:
 
                 if ("DATABASE_URL" in os.environ):
                     print("1a1")
-                    cur.execute("CREATE TABLE if not exists Prospect(ProspectId integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school varchar(50), CONSTRAINT pkProspectId PRIMARY KEY(ProspectId))")
+                    cur.execute("CREATE TABLE if not exists Prospect(ProspectId integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,school varchar(50),DraftId integer, CONSTRAINT pkProspectId PRIMARY KEY(ProspectId))")
                     print("1a2")
                     cur.execute("CREATE TABLE if not exists Team(Abbr varchar(50),URL varchar(50),City varchar(50),Nickname varchar(50),Conference varchar(50),Division varchar(50), CONSTRAINT pkAbbr PRIMARY KEY(Abbr))")
                     print("1a3")
@@ -351,9 +351,9 @@ class DB:
 
 
 
-    def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade,College):
+    def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade,College,DraftId):
 
-        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}')".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College)
+        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}','{}')".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College,DraftId)
         #print(sql)
         try:
             DB.ExecuteSQL(sql)

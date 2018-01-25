@@ -55,7 +55,7 @@ class DataDude:
 
             # Pump all of our JSON records into the DB
             if (jsonData):
-                Prospects.Prospect.AddBatch(jsonData)
+                Prospects.Prospect.AddBatch(jsonData,theYear)
 
             print("Prospects Updated for " + str(theYear))
         else:
@@ -68,7 +68,7 @@ class DataDude:
 
             # Pump all of our JSON records into the DB
             if (jsonData):
-                Prospects.Prospect.AddBatch(jsonData)
+                Prospects.Prospect.AddBatch(jsonData,theYear)
 
             print("Prospects Updated for " + str(theYear))
 
