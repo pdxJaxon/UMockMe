@@ -501,7 +501,7 @@ def refreshColleges():
 
 @app.route("/DBRefreshOldProspects")
 def refreshProspects():
-    DataRefreshService.DataDude.RefreshOldProspects()
+    DataRefreshService.DataDude.RefreshOldStaticProspects()
 
 
     return ("Old Prospects Refreshed - <a href='/Admin'>Return to Admin Page</a>")
@@ -509,7 +509,7 @@ def refreshProspects():
 
 @app.route("/DBRefreshCurrentProspects")
 def refreshProspects():
-    DataRefreshService.DataDude.RefreshCurentProspects()
+    DataRefreshService.DataDude.RefreshCurrentStaticProspects()
 
 
     return ("Current Prospects Refreshed - <a href='/Admin'>Return to Admin Page</a>")
