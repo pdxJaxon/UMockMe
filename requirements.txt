@@ -12,3 +12,4 @@ psycopg2==2.7.3
 newrelic
 requests
 bs4
+pika==0.11.0
