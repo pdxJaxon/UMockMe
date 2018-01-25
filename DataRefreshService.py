@@ -35,6 +35,14 @@ class DataDude:
         return True
 
 
+    def RefreshOldStaticProspects():
+        self.RefreshStaticProspects("2017")
+
+
+
+    def RefreshCurrentStaticProspects():
+        self.RefreshStaticProspects("2018")
+
 
     def RefreshStaticProspects(theYear):
         if(theYear=="2017"):
