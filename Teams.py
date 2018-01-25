@@ -165,7 +165,7 @@ class Team:
 
                 print("Team Added",abbr)
 
-                #arNeed = needs.split(":")
+                arNeed = needs.split(":")
 
 
                 theScore=100
