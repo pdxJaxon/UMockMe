@@ -353,7 +353,7 @@ class DB:
 
     def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade,College,DraftId):
 
-        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}','{}')".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College,DraftId)
+        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}',{})".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College,DraftId)
         #print(sql)
         try:
             DB.ExecuteSQL(sql)
