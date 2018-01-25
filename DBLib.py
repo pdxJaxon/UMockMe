@@ -246,7 +246,6 @@ class DB:
 
     def ExecuteSQL(sql):
         con = DB.getConnection()
-        con.set_isolation_level(0)
 
         print("Got connection")
         with con:
@@ -254,8 +253,8 @@ class DB:
             print("Gots me mah cursor")
 
             #cur.execute(sql)
-            cur.execute("INSERT INTO Prospect VALUES(2560044,'BOBO','BRYCE','WR','6 2','205','4.9',0,0,0,'Colorado',2)")
-
+            #cur.execute("INSERT INTO Prospect VALUES(2560044,'BOBO','BRYCE','WR','6 2','205','4.9',0,0,0,'Colorado',2)")
+            cur.execute("select * from Prospect")
 
 
     def xescape(Value):
