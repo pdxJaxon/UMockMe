@@ -113,7 +113,7 @@ class Prospect:
     #pass in our JSON Data and pump em into the DB
     def AddBatch(jsonData,theYear):
 
-            print(jsonData)
+           #print(jsonData)
 
             # attributes:
             # {'pos', 'weight', 'height', 'schoolYear', 'lastName', 'handSize', 'expertGrade', 'pick', 'video',
