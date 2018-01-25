@@ -138,7 +138,13 @@ class Prospect:
                     grade=0
                 collegeId = jsonData[dude]["college"]
                 college = Colleges.College.getCollegeById(collegeId)
-                collegeName = college[0][1].replace("'","")
+
+                try:
+                    collegeName = college[0][1].replace("'","")
+                except:
+                    collegeName="TBD"
+                    print("College Name Failure - " + str(collegeId) + " " + college)
+
                 #todo: Add ProjectedDraftPick
 
 
