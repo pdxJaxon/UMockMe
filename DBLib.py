@@ -21,7 +21,7 @@ class DB:
         if ("HEROKU_POSTGRESQL_ONYX_URL" in os.environ):
             urlparse.uses_netloc.append("postgres")
             url = urlparse.urlparse(os.environ["HEROKU_POSTGRESQL_ONYX_URL"])
-            
+
             con = lite.connect(
                 database=url.path[1:],
                 user=url.username,
@@ -251,7 +251,7 @@ class DB:
             cur = con.cursor()
             print("Gots me mah cursor")
 
-            cur.execute(sql)
+            #cur.execute(sql)
 
 
 
