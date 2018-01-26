@@ -531,12 +531,17 @@ class DB:
 
 
     #Will return all prospects from DB sorted by Expert Grade in DESC Order (Best player at top)
-    def getAllProspects():
+    def getAllProspects(year):
         con = DB.getConnection()
+
+        if(year=="2017"):
+            DraftId=1
+        else:
+            DraftId=2
 
         with con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM Prospect Order By Expertgrade desc")
+            cur.execute("SELECT * FROM Prospect WHERE DraftId={} Order By Expertgrade desc".format(DraftId))
 
             prospects = cur.fetchall()
 

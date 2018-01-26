@@ -16,9 +16,9 @@ class Prospect:
 
 
     #Will return all prospects from DB sorted by Expert Grade in DESC Order (Best player at top)
-    def getAllProspects():
+    def getAllProspects(year):
 
-        prospects = DBLib.DB.getAllProspects()
+        prospects = DBLib.DB.getAllProspects(year)
 
         return prospects
 
