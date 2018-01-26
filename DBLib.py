@@ -246,11 +246,11 @@ class DB:
 
     def ExecuteSQL(sql):
         con = DB.getConnection()
+        con.set_isolation_level(0)
         with con:
             cur = con.cursor()
             print("In")
             cur.execute(sql)
-            .commit()
             print("out")
 
 
