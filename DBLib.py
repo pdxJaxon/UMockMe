@@ -249,9 +249,10 @@ class DB:
         con.set_isolation_level(0)
         with con:
             cur = con.cursor()
-            print("In")
-            cur.execute(sql)
-            print("out")
+            try:
+                cur.execute(sql)
+            except:
+                print("sql error " + sql)
 
 
 
