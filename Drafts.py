@@ -254,7 +254,7 @@ class Draft:
 
 
 
-    def cacheTeamNeeds(self,sessionId):
+    def cacheTeamNeeds(self,sessionId,draftId):
 
         #We need to account for position translations for OL, DL, etc.
        # self._allTeamNeeds=[]
@@ -283,7 +283,7 @@ class Draft:
                 DBLib.DB.AddTeamNeedForSessionDB(sessionId,n[0],n[1],n[2],n[3])
         '''
 
-        DBLib.DB.CacheTeamNeedsForSession(sessionId)
+        DBLib.DB.CacheTeamNeedsForSession(sessionId,draftId)
 
 
 
@@ -397,7 +397,7 @@ class Draft:
 
 
 
-    def MakePick(self,pck,sessionId):
+    def MakePick(self,pck,sessionId,draftId=2):
         startTime = time.time()
 
         print("The pck:",pck)
@@ -431,7 +431,7 @@ class Draft:
             #for r in rs:
                # DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
 
-            DBLib.DB.PopulateSessionProspects(sessionId)
+            DBLib.DB.PopulateSessionProspects(sessionId,draftId)
             print("OverWrite my Prospects")
 
             self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
@@ -587,26 +587,27 @@ class Draft:
 
 
 
-    def doDraft(self,sessionId,round=0):
+    def doDraft(self,sessionId,round=0,draftId=2):
 
 
 
-
-        self.cacheTeamNeeds(sessionId)
+        #todo: Wire DraftId
+        self.cacheTeamNeeds(sessionId,draftId)
 
 
         #1 - get all rounds
-        rounds = Draft.getAllRoundsByDraft(2017)
+        #Todo: Fix This DraftId - its curerntly year
+        rounds = Draft.getAllRoundsByDraft(draftId)
 
 
 
 
         if(int(round)<=1):
             # static data
-            DBLib.DB.PopulatePicks(sessionId)  # this is only gonna work for current  year......
+            DBLib.DB.PopulatePicks(sessionId,draftId)  # this is only gonna work for current  year......
 
 
-        picks = Picks.Pick.getAllPicksForRound(2017,round,sessionId)
+        picks = Picks.Pick.getAllPicksForRound(draftId,round,sessionId)
 
         for pck in picks:
             self.MakePick(pck,sessionId)

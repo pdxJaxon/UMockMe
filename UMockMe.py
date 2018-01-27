@@ -119,6 +119,8 @@ def getQuickDraftData():
         round = j.get('round')
         usr = j.get('usr')
         sessionid = j.get('sessionid')
+        draftId=2
+        #toda: remove hard coded draftId
     else:
         sessionid = request.args.get('sessionid')
         usr = request.args.get('usr')
@@ -128,6 +130,8 @@ def getQuickDraftData():
         colPos = round.find(":")
 
         round = round[colPos + 1:lengthOfString - 2]
+        draftId=2
+        #remove hard coded draftid
 
 
 
@@ -144,7 +148,7 @@ def getQuickDraftData():
     print("PreProcessing-",str(preProcessing))
 
 
-    myDraft.doDraft(sessionid,round)
+    myDraft.doDraft(sessionid,round,draftId)
 
 
     picks = DBLib.DB.getAllPicksForUser(sessionid)
@@ -440,8 +444,8 @@ def QuickDraft():
 
     DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
 
-
-    DBLib.DB.PopulateSessionProspects(sessionid)
+    #todo: remove hard coded 2 value for draftId
+    DBLib.DB.PopulateSessionProspects(sessionid,2)
 
     DBLib.DB.PopulatePicks(sessionid)
 

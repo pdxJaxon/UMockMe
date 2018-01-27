@@ -24,7 +24,7 @@ class Team:
 
 
 
-    def getNeedsByTeam(city,teamAbr,teamName):
+    def getNeedsByTeam(city,teamAbr,teamName,year):
 
         #todo: Cache this crap
 
@@ -35,7 +35,7 @@ class Team:
         #url = "http://www.nfl.com/widget/draft/2017/tracker/teams/{}/profile?year=2017&team={}&random={}".format(teamAbr,teamName,str(timeStamp))
 
         #http://www.nfl.com/widget/draft/2017/tracker/teams/pittsburghsteelers/profile?year=2017&team=PIT&random=1496251240000
-        url = "http://www.nfl.com/widget/draft/2017/tracker/teams/{}{}/profile?year=2017&team={}&random={}".format(city,teamName,teamAbr,str(timeStamp))
+        url = "http://www.nfl.com/widget/draft/{}/tracker/teams/{}{}/profile?year={}&team={}&random={}".format(year,city,teamName,year,teamAbr,str(timeStamp))
 
 
 
@@ -140,7 +140,7 @@ class Team:
 
 
     #pass in our JSON Data and pump em into the DB
-    def AddBatch(jsonData):
+    def AddBatch(jsonData,year):
 
 
             allPositions = ["OL","DL","QB","WR","TE","RB","LB","DL","CB","S"]
@@ -156,7 +156,7 @@ class Team:
                 nickname = jsonData[team]["nickname"]
                 conference = jsonData[team]["conference"]
                 division = jsonData[team]["division"]
-                needs = Team.getNeedsByTeam(city,abbr,nickname)
+                needs = Team.getNeedsByTeam(city,abbr,nickname,year)
 
 
                 print("FROM ADD BATCH: " ,abbr,url,city,nickname,conference,division,needs)
@@ -191,8 +191,8 @@ class Team:
 
 
 
-    def AddTeamNeed(abbr,need,score,count):
-        DBLib.DB.AddTeamNeedDB(abbr,need,score,count)
+    def AddTeamNeed(abbr,need,score,count,draftId=2):
+        DBLib.DB.AddTeamNeedDB(abbr,need,score,count,draftId)
 
 
 
@@ -204,8 +204,8 @@ class Team:
 
 
 
-    def getTeamNeeds(abbr):
-        needs = DBLib.DB.getAllNeedsForTeam(abbr)
+    def getTeamNeeds(abbr,draftId):
+        needs = DBLib.DB.getAllNeedsForTeam(abbr,draftId)
         return needs
 
 
