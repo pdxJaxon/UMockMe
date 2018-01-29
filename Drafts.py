@@ -487,7 +487,7 @@ class Draft:
                             # There were no higher ranked players....so this pick is basically a slam dunk
                             if (PickLikelihood >= 10):  # 90% chance that we pick this dude......
                                 Player = p[0]
-                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
+                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
                                 # print("Pick Normal - {}".format(pck))
                                 self.removeProspectFromCache(sessionId,Player)
                                 # needs.remove(n)
