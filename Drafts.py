@@ -525,7 +525,7 @@ class Draft:
                         # print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
         else:  # No Needs left for Team, so pick next best player available......GAJ
-            todo: add needs
+            #todo: add needs
             Team = abr
             Player = self._prospects[0][0]
             position = self._prospects[0][3]
