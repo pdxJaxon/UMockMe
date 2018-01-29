@@ -399,6 +399,14 @@ class Draft:
 
     def MakePick(self,pck,sessionId,draftId=2):
         startTime = time.time()
+        year=0
+
+        if(draftId==1):
+            year=2017
+        else:
+            year=2018
+
+
 
         print("The pck:",pck)
         # Get Needs For Team
@@ -416,6 +424,13 @@ class Draft:
 
         step2StartTime = time.time()
         needs = self.getTeamNeeds(abr)
+
+        if(not needs):
+            Team.AddNeedsForTeam(abr,city,teamName,year,draftId)
+            needs=self.getTeamNeeds(abr)
+
+
+
         step2StopTime = time.time()
 
         step3StartTime = time.time()
@@ -510,6 +525,7 @@ class Draft:
                         # print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
         else:  # No Needs left for Team, so pick next best player available......GAJ
+            todo: add needs
             Team = abr
             Player = self._prospects[0][0]
             position = self._prospects[0][3]

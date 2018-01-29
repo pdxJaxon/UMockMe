@@ -136,6 +136,36 @@ class Team:
 
 
 
+    def AddNeedsForTeam(abbr,city,nickname,year,draftId):
+
+        allPositions = ["OL", "DL", "QB", "WR", "TE", "RB", "LB", "DL", "CB", "S"]
+
+
+        needs = Team.getNeedsByTeam(city, abbr, nickname, year)
+        arNeed = needs.split(":")
+
+        theScore = 100
+        for n in arNeed:
+            if (n == "C" or n == "OT" or n == "OG"):
+                n = "OL"
+            if (n == "DT" or n == "NT"):
+                n = "DL"
+            if (n == "OLB" or n == "ILB" or n == "DE"):
+                n = "LB"
+            if (n == "SS" or n == "FS"):
+                n = "S"
+            Team.AddTeamNeed(abbr, n, theScore, 1)
+            # the needs usually come in priority order so we make the first one higher priority, etc.
+            theScore -= 5
+
+        for p in allPositions:
+            if (p not in needs):
+                Team.AddTeamNeed(abbr, p, 30, 1)
+
+
+
+
+
 
 
 
@@ -143,7 +173,7 @@ class Team:
     def AddBatch(jsonData,year):
 
 
-            allPositions = ["OL","DL","QB","WR","TE","RB","LB","DL","CB","S"]
+
 
             # attributes:
             # {'abbr', 'url', 'city', 'nickName', 'conference', 'division',
@@ -156,35 +186,22 @@ class Team:
                 nickname = jsonData[team]["nickname"]
                 conference = jsonData[team]["conference"]
                 division = jsonData[team]["division"]
-                needs = Team.getNeedsByTeam(city,abbr,nickname,year)
 
 
-                print("FROM ADD BATCH: " ,abbr,url,city,nickname,conference,division,needs)
 
                 Team.AddTeam(abbr,url,city,nickname,conference,division)
 
                 print("Team Added",abbr)
 
-                arNeed = needs.split(":")
+                if(year==2017):
+                    draftId=1
+                else:
+                    draftId=2
 
 
-                theScore=100
-                for n in arNeed:
-                    if (n == "C" or n == "OT" or n == "OG"):
-                        n = "OL"
-                    if (n == "DT" or n == "NT"):
-                        n = "DL"
-                    if (n == "OLB" or n == "ILB" or n == "DE"):
-                        n = "LB"
-                    if (n == "SS" or n == "FS"):
-                        n = "S"
-                    Team.AddTeamNeed(abbr,n,theScore,1)
-                    #the needs usually come in priority order so we make the first one higher priority, etc.
-                    theScore-=5
+                Team.AddNeedsForTeam(abbr,city,nickname,year,draftId)
 
-                for p in allPositions:
-                    if(p not in needs):
-                        Team.AddTeamNeed(abbr,p,30,1)
+
 
 
 
