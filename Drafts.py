@@ -426,7 +426,7 @@ class Draft:
         needs = self.getTeamNeeds(abr)
 
         if(not needs):
-            Team.AddNeedsForTeam(abr,city,teamName,year,draftId)
+            Teams.Team.AddNeedsForTeam(abr,city,teamName,year,draftId)
             needs=self.getTeamNeeds(abr)
 
 
