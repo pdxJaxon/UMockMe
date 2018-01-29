@@ -417,7 +417,7 @@ class Draft:
         city = t[0][2]
         abr = t[0][0]
         teamName = t[0][3]
-        Team = abr
+        abbr = abr
         step1StopTime = time.time()
 
         pickMade = False
@@ -506,7 +506,7 @@ class Draft:
                             for dp in self._prospects:
                                 if (dp[0] == AlternatePicks[0]):
                                     pickMade = True
-                                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
+                                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
                                     self.removeProspectFromCache(sessionId,dp[0])
 
                                     # find position in needs list that matches dp[pos]
@@ -526,18 +526,18 @@ class Draft:
 
         else:  # No Needs left for Team, so pick next best player available......GAJ
             #todo: add needs
-            Team = abr
+            abbr = abr
             Player = self._prospects[0][0]
             position = self._prospects[0][3]
 
             # print(self._prospects[0])
 
             # print("Pick no need {}".format(pck))
-            Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], Team, Player, sessionId)
+            Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
             pickMade = True
             # print("Blind Pick Team{} Prospect:{}".format(Team,Player))
             self.removeProspectFromCache(sessionId,Player)
-            self.MarkNeedAsSelected(Team, position,sessionId)
+            self.MarkNeedAsSelected(abbr, position,sessionId)
 
         step4StopTime = time.time()
 
