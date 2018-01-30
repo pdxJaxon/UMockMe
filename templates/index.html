@@ -21,10 +21,12 @@
             <li><a href="{{url_for('QuickDraft',usr=usr,sessionid=sessionid)}}">QuickDraft - no account needed</a></li>
                  <p/>
             <li><a href="/ComingSoon">Features Coming Soon</a></li>
+                 <p/>
             {%if usr%}
+                 <li><a href="{{url_for('CustomDraft',usr=usr,sessionid=sessionid)}}">Custom Draft</a></li>
+                 <p/>
                  <li><a href="/EditProspects">Edit Draft Prospect Data</a></li>
                 <li><a href="/EditTeams">Edit NFL Team Draft Needs and Preferences</a></li>
-                <li><a href="{{url_for('CustomDraft',usr=usr,sessionid=sessionid)}}">Custom Draft</a></li>
             {%endif%}
             <br/>
             <p>We get our data from these and other sources:</p>
