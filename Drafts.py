@@ -471,7 +471,7 @@ class Draft:
                         pPos = "OL"
                     if (pPos == "DT" or pPos == "NT"):
                         pPos = "DL"
-                    if (pPos == "OLB" or pPos == "ILB" or pPos == "DE"):
+                    if (pPos == "OLB" or pPos == "ILB" or pPos == "DE" or pPos =="EDGE"):
                         pPos = "LB"
                     if (pPos == "SS" or pPos == "FS"):
                         pPos = "S"
