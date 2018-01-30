@@ -254,7 +254,7 @@ class Draft:
 
 
 
-    def cacheTeamNeeds(self,sessionId,draftId):
+    def cacheTeamNeeds(self,sessionId,draftId=2):
 
         #We need to account for position translations for OL, DL, etc.
        # self._allTeamNeeds=[]
