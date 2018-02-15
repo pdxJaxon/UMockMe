@@ -12,52 +12,52 @@
 <div id="EditProspects" class="w3-container" ng-app="UMM" ng-controller="ummController">
     <h2>UMockMe.com - Edit Prospects...</h2>
     <form name="frm" id="frm">
-
-    <select size="1" id="selGetProspect" ng-model="prospects" ng-change="getProspect(prospects)">
+    Select Prospect To Edit:
+        <br/>
+    <select size="1" id="selGetProspect" ng-model="prospects" ng-change="getProspect()">
+        <option value="-1">--- Please Select Prospect ---</option>
         {%for p in prospects %}
         <option value="{{p[0]}}">{{p[2] + " " + p[1] + " " + p[3] + " " + p[10]}}</option>
         {% endfor %}
     </select>
 
-        <br/>
-        <select size="1" id="selProspects" ng-model="pselected" ng-change="getProspect(pselected)" ng-options="p[1] for p in {{prospects}}">
-            <option value="">--select prospect--</option>
-        </select>
-        <span ng-model="pselected">selected prospect: </span>
-
     <div id="prospectInfo" ng-show="showDetails">
         <table border="1">
             <tr>
                 <td>ID</td>
-                <td>{{prospects[0]}}</td>
+                <td><span id="id"></span></td>
             </tr>
             <tr>
-                <td>FName</td>
-                <td><input type="text" id="fname" /></td>
+                <td>First Name</td>
+                <td><input type="text" id="fname" value=""></td>
             </tr>
             <tr>
-                <td>LName</td>
-                <td><input type="text" id="lname" /></td>
+                <td>Last Name</td>
+                <td><input type="text" id="lname" value=""/></td>
             </tr>
             <tr>
-                <td>Pos</td>
-                <td><input type="text" id="pos" /></td>
+                <td>Position</td>
+                <td><input type="text" id="pos" value=""/></td>
             </tr>
             <tr>
                 <td>School</td>
-                <td><input type="text" id="school" /></td>
+                <td><input type="text" id="school" value=""/></td>
             </tr>
             <tr>
                 <td>Height</td>
-                <td><input type="text" id="height" /></td>
+                <td><input type="text" id="height" value=""/></td>
             </tr>
             <tr>
                 <td>Weight</td>
-                <td><input type="text" id="weight" /></td>
+                <td><input type="text" id="weight" value=""/></td>
             </tr>
             <tr>
                 <td>ExpertGrade</td>
-                <td><input type="text" id="grade" /></td>
+                <td><input type="text" id="grade" value=""/></td>
+            </tr>
+             <tr>
+                <td>sparqScore</td>
+                <td><input type="text" id="sparq" value=""/></td>
             </tr>
             <tr>
                 <td>Team Meetings</td>
@@ -96,13 +96,52 @@
 
 
     app.controller('ummController',function($scope,$http) {
-       $scope.showDetails=false;
-       $scope.prospects="{{prospects}}";
+        $scope.showDetails=false;
+        $scope.prospects="{{prospects}}";
+        $scope.prospectId=-1;
+        $scope.thisProspect="{{prospects[0]}}";
 
-       $scope.getProspect=function(p) {
-           console.warn("poop " + p);
-           $scope.showDetails=true;
-       };
+
+        $scope.getProspect=function() {
+            $scope.showDetails = true;
+
+            sel = document.getElementById("selGetProspect");
+            for (i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].selected) {
+                    $scope.prospectId = sel.options[i].value;
+                    alert($scope.prospectId);
+                }
+            }
+
+
+            $http({
+                method:'POST',
+                url: '/getProspectData',
+                data: {'prospectId' : $scope.prospectId, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
+                headers:{'Content-Type':'application/json'}
+            }).then(
+                    function(response){
+
+                 if(response.data){
+                    $scope.thisProspect = response.data;
+                    document.getElementById("id").text = thisProspect[0];
+                    }
+                else{
+                    $scope.prospects = ""
+                 }
+
+
+                }
+
+                );
+
+        };
+
+
+        $scope.saveShit=function(){
+            alert("Shit Saved");
+        };
+
 
     });
 

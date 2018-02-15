@@ -54,7 +54,9 @@ def initSite():
 
 @app.route("/EditProspects")
 def EditProspects():
-    ps = Prospects.Prospect.getAllProspects()
+    year = datetime.date.year
+
+    ps = Prospects.Prospect.getAllProspects(year)
 
     return render_template('EditProspect.html',prospects=ps)
 
@@ -164,6 +166,30 @@ def getQuickDraftData():
     return (jsonify(picks))
 
 
+
+
+
+
+
+
+
+@app.route("/getProspectData", methods=['GET','POST'])
+def getProspectData():
+
+
+    if request.method == "POST":
+        j = request.get_json()
+        usr = j.get('usr')
+        sessionid = j.get('sessionid')
+    else:
+        sessionid = request.args.get('sessionid')
+        usr = request.args.get('usr')
+
+
+    myDraft = Drafts.Draft(sessionid)
+    picks = myDraft.getNextPick(sessionid)
+
+    return (jsonify(picks))
 
 
 
