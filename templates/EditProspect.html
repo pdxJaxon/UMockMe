@@ -25,7 +25,7 @@
         <table border="1">
             <tr>
                 <td>ID</td>
-                <td><span id="id"></span></td>
+                <td><span id="prospectId"></span></td>
             </tr>
             <tr>
                 <td>First Name</td>
@@ -53,7 +53,7 @@
             </tr>
             <tr>
                 <td>ExpertGrade</td>
-                <td><input type="text" id="grade" value=""/></td>
+                <td><input type="text" id="expertGrade" value=""/></td>
             </tr>
              <tr>
                 <td>sparqScore</td>
@@ -124,10 +124,19 @@
 
                  if(response.data){
                     $scope.thisProspect = response.data;
-                    document.getElementById("id").text = thisProspect[0];
+                    document.getElementById("prospectId").innerHTML = $scope.thisProspect[0][0];
+                    document.getElementById("fname").value = $scope.thisProspect[0][2];
+                    document.getElementById("lname").value = $scope.thisProspect[0][1];
+                    document.getElementById("pos").value = $scope.thisProspect[0][3];
+                    document.getElementById("school").value = $scope.thisProspect[0][10];
+                    document.getElementById("height").value = $scope.thisProspect[0][4];
+                    document.getElementById("weight").value = $scope.thisProspect[0][5];
+                    document.getElementById("expertGrade").value = $scope.thisProspect[0][6];
+                    document.getElementById("sparq").value = $scope.thisProspect[0][12];
                     }
                 else{
                     $scope.prospects = ""
+                     alert("PISSBALLS");
                  }
 
 

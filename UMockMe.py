@@ -181,15 +181,17 @@ def getProspectData():
         j = request.get_json()
         usr = j.get('usr')
         sessionid = j.get('sessionid')
+        prospectId = j.get('prospectId')
     else:
         sessionid = request.args.get('sessionid')
         usr = request.args.get('usr')
+        prospectId = request.args.get('prospectId')
 
 
-    myDraft = Drafts.Draft(sessionid)
-    picks = myDraft.getNextPick(sessionid)
+    p = Prospects.Prospect.getProspectById(prospectId)
 
-    return (jsonify(picks))
+
+    return (jsonify(p))
 
 
 
