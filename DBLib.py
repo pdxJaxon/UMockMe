@@ -104,7 +104,7 @@ class DB:
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer, DraftId int, CONSTRAINT pkTeamNeed PRIMARY KEY(Abbr,Need))")
                     print("1a4")
                     cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50), CONSTRAINT pkUserEmail PRIMARY KEY(email))")
-                    cur.execute("CREATE TABLE if not exists UserProspect(email varchar(75),drafiId integer, ProspectId integer, expertGrade real, sparqScore real, CONSTRAINT pkUserProspect PRIMARY KEY(email,ProspectId))")
+                    cur.execute("CREATE TABLE if not exists UserProspect(email varchar(75),draftId integer, ProspectId integer, expertGrade real, sparqScore real, CONSTRAINT pkUserProspect PRIMARY KEY(email,ProspectId))")
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
                     cur.execute("CREATE TABLE if not exists College(CollegeId integer, Name varchar(50), Conference varchar(50), CONSTRAINT pkCollegeId PRIMARY KEY(CollegeId))")
                     print("1a5")
@@ -475,11 +475,26 @@ class DB:
 
     def PopulateUserProspects(UserId):
 
-        sql = "INSERT INTO UserProspect(email,ProspectId,ExpertGrade,sparqScore,draftId) SELECT '{}',ProspectId,ExpertGrade,coalesce(sparqScore,50),2 FROM Prospect WHERE ProspectId Not In(SELECT Email From UserProspect)".format(UserId)
+        sql = "INSERT INTO UserProspect(email,ProspectId,ExpertGrade,sparqScore,draftId) SELECT '{}',ProspectId,ExpertGrade,coalesce(sparqScore,50),2 FROM Prospect WHERE ProspectId Not In(SELECT ProspectId From UserProspect WHERE email='{}')".format(UserId,UserId)
 
         DB.ExecuteSQL(sql)
 
 
+
+    def UpdateUserProspect(prospect,UserId):
+
+
+        #P: [2560011, 'CALVIN', 'RIDLEY', 'WR', '6 1', '190', 'Alabama', 7.04, 50]UPDATE USER P: [2560011, 'CALVIN', 'RIDLEY', 'WR', '6 1', '190', 'Alabama', 7.04, 50]
+
+
+
+
+
+        sql = "UPDATE UserProspect SET expertgrade={},sparqScore={} WHERE ProspectId='{}' AND email='{}'".format(prospect[7],prospect[8],prospect[0],UserId)
+
+
+        print("UPDATED ",sql)
+        DB.ExecuteSQL(sql)
 
 
 

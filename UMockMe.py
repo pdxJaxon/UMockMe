@@ -52,7 +52,37 @@ def initSite():
 
 
 
-@app.route("/EditProspects")
+
+@app.route("/UpdateProspectDataForUser", methods= ['GET','POST'])
+def UpdateProspectDataForUser():
+
+    if request.method == "POST":
+        j = request.get_json()
+        usr = j.get('usr')
+        sessionid = j.get('sessionid')
+        p=j.get('prospect')
+    else:
+        sessionid = request.args.get('sessionid')
+        usr = request.args.get('usr')
+
+
+    Prospects.Prospect.UpdateUserProspect(p,usr)
+
+
+
+    year = datetime.date.year
+
+    ps = Prospects.Prospect.getAllProspects(year)
+
+    return render_template('EditProspect.html',prospects=ps,usr=usr)
+
+
+
+
+
+
+
+@app.route("/EditProspects", methods= ['GET','POST'])
 def EditProspects():
 
     if request.method == "POST":

@@ -121,6 +121,12 @@ class Prospect:
 
 
 
+
+    def UpdateUserProspect(p,u):
+        DBLib.DB.UpdateUserProspect(p,u)
+
+
+
     #pass in our JSON Data and pump em into the DB
     def AddBatch(jsonData,theYear):
 

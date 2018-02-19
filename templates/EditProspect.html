@@ -135,8 +135,7 @@
                     document.getElementById("sparq").value = $scope.thisProspect[0][8];
                     }
                 else{
-                    $scope.prospects = ""
-                     alert("PISSBALLS");
+                    $scope.thisProspect = ""
                  }
 
 
@@ -151,6 +150,26 @@
 
         $scope.saveShit=function(){
             alert("Shit Saved");
+
+            $scope.thisProspect[0][1]=document.getElementById("fname").value;
+            $scope.thisProspect[0][2]=document.getElementById("lname").value;
+            $scope.thisProspect[0][3]=document.getElementById("pos").value;
+            $scope.thisProspect[0][6]=document.getElementById("school").value;
+            $scope.thisProspect[0][4]=document.getElementById("height").value;
+            $scope.thisProspect[0][5]=document.getElementById("weight").value;
+            $scope.thisProspect[0][7]=document.getElementById("expertGrade").value;
+            $scope.thisProspect[0][8]=document.getElementById("sparq").value;
+
+
+
+
+            $http({
+                method:'POST',
+                url: '/UpdateProspectDataForUser',
+                data: {'prospect' : $scope.thisProspect[0], 'usr':$scope.usr, 'sessionid': $scope.sessionid },
+                headers:{'Content-Type':'application/json'}
+            })
+
         };
 
 
