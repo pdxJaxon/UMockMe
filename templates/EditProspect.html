@@ -116,7 +116,7 @@
 
             $http({
                 method:'POST',
-                url: '/getProspectData',
+                url: '/getProspectDataForUser',
                 data: {'prospectId' : $scope.prospectId, 'usr':$scope.usr, 'sessionid': $scope.sessionid },
                 headers:{'Content-Type':'application/json'}
             }).then(

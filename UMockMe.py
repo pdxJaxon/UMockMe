@@ -173,7 +173,7 @@ def getQuickDraftData():
 
 
 
-@app.route("/getProspectData", methods=['GET','POST'])
+@app.route("/getProspectDataForUser", methods=['GET','POST'])
 def getProspectData():
 
 
@@ -188,7 +188,7 @@ def getProspectData():
         prospectId = request.args.get('prospectId')
 
 
-    p = Prospects.Prospect.getProspectById(prospectId)
+    p = Prospects.Prospect.getUserProspectById(usr,prospectId)
 
 
     return (jsonify(p))

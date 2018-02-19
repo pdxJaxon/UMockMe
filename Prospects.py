@@ -109,6 +109,12 @@ class Prospect:
         return p
 
 
+    def getUserProspectById(UserId,ProspectId):
+        p = DBLib.DB.getProspectById(ProspectId)
+
+        return p
+
+
 
     #pass in our JSON Data and pump em into the DB
     def AddBatch(jsonData,theYear):
