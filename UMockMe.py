@@ -54,11 +54,22 @@ def initSite():
 
 @app.route("/EditProspects")
 def EditProspects():
+
+    if request.method == "POST":
+        j = request.get_json()
+        usr = j.get('usr')
+        sessionid = j.get('sessionid')
+    else:
+        sessionid = request.args.get('sessionid')
+        usr = request.args.get('usr')
+
+
+
     year = datetime.date.year
 
     ps = Prospects.Prospect.getAllProspects(year)
 
-    return render_template('EditProspect.html',prospects=ps)
+    return render_template('EditProspect.html',prospects=ps,usr=usr)
 
 
 

@@ -104,7 +104,7 @@ class DB:
                     cur.execute("CREATE TABLE if not exists TeamNeed(Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer, DraftId int, CONSTRAINT pkTeamNeed PRIMARY KEY(Abbr,Need))")
                     print("1a4")
                     cur.execute("CREATE TABLE if not exists UMMUser(email varchar(75), UserName varchar(50), Password varchar(25), FavoriteTeam varchar(50), fName varchar(50), lname varchar(50), CONSTRAINT pkUserEmail PRIMARY KEY(email))")
-                    cur.execute("CREATE TABLE if not exists UserProspect(email varchar(75), ProspectId integer, expertGrade real, sparqScore real, CONSTRAINT pkUserProspect PRIMARY KEY(email,ProspectId))")
+                    cur.execute("CREATE TABLE if not exists UserProspect(email varchar(75),drafiId integer, ProspectId integer, expertGrade real, sparqScore real, CONSTRAINT pkUserProspect PRIMARY KEY(email,ProspectId))")
                     cur.execute("CREATE TABLE if not exists UserTeamNeed(userEmail varchar(75), TeamAbbr varChar(50), pos varchar(50), needScore integer, needCount integer)")
                     cur.execute("CREATE TABLE if not exists College(CollegeId integer, Name varchar(50), Conference varchar(50), CONSTRAINT pkCollegeId PRIMARY KEY(CollegeId))")
                     print("1a5")
@@ -463,13 +463,10 @@ class DB:
 
         with con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM UserProspect Where ProspectId='{}' AND email='{}'".format(PlayerId,UserId))
+            cur.execute("SELECT up.prospectId,p.firstname,p.lastname,p.pos,p.height,p.weight,p.school,up.expertgrade,up.sparqscore FROM UserProspect up INNER JOIN Prospect p ON p.ProspectId=up.ProspectId Where up.ProspectId='{}' AND up.email='{}'".format(PlayerId,UserId))
 
             p = cur.fetchall()
 
-            if(cur.rowcount<=0):
-                DB.PopulateUserProspects(UserId)
-                p=DB.getUserProspectById(UserId,PlayerId)
 
             return p
 
@@ -478,7 +475,7 @@ class DB:
 
     def PopulateUserProspects(UserId):
 
-        sql = "INSERT INTO UserProspect SELECT '{}',ProspectId,ExpertGrade,sparqScore FROM Prospect".format(UserId)
+        sql = "INSERT INTO UserProspect(email,ProspectId,ExpertGrade,sparqScore,draftId) SELECT '{}',ProspectId,ExpertGrade,coalesce(sparqScore,50),2 FROM Prospect WHERE ProspectId Not In(SELECT Email From UserProspect)".format(UserId)
 
         DB.ExecuteSQL(sql)
 

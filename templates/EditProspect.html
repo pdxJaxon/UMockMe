@@ -100,6 +100,7 @@
         $scope.prospects="{{prospects}}";
         $scope.prospectId=-1;
         $scope.thisProspect="{{prospects[0]}}";
+        $scope.usr="{{usr}}"
 
 
         $scope.getProspect=function() {
@@ -109,10 +110,9 @@
             for (i = 0; i < sel.options.length; i++) {
                 if (sel.options[i].selected) {
                     $scope.prospectId = sel.options[i].value;
-                    alert($scope.prospectId);
-                }
+                    }
             }
-
+            alert("Prospect " + $scope.prospectId + " Usr " + $scope.usr);
 
             $http({
                 method:'POST',
@@ -125,14 +125,14 @@
                  if(response.data){
                     $scope.thisProspect = response.data;
                     document.getElementById("prospectId").innerHTML = $scope.thisProspect[0][0];
-                    document.getElementById("fname").value = $scope.thisProspect[0][2];
-                    document.getElementById("lname").value = $scope.thisProspect[0][1];
+                    document.getElementById("fname").value = $scope.thisProspect[0][1];
+                    document.getElementById("lname").value = $scope.thisProspect[0][2];
                     document.getElementById("pos").value = $scope.thisProspect[0][3];
-                    document.getElementById("school").value = $scope.thisProspect[0][10];
+                    document.getElementById("school").value = $scope.thisProspect[0][6];
                     document.getElementById("height").value = $scope.thisProspect[0][4];
                     document.getElementById("weight").value = $scope.thisProspect[0][5];
-                    document.getElementById("expertGrade").value = $scope.thisProspect[0][6];
-                    document.getElementById("sparq").value = $scope.thisProspect[0][12];
+                    document.getElementById("expertGrade").value = $scope.thisProspect[0][7];
+                    document.getElementById("sparq").value = $scope.thisProspect[0][8];
                     }
                 else{
                     $scope.prospects = ""
@@ -145,6 +145,8 @@
                 );
 
         };
+
+
 
 
         $scope.saveShit=function(){

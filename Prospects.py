@@ -110,7 +110,12 @@ class Prospect:
 
 
     def getUserProspectById(UserId,ProspectId):
-        p = DBLib.DB.getProspectById(ProspectId)
+
+
+        DBLib.DB.PopulateUserProspects(UserId)
+
+
+        p = DBLib.DB.getUserProspectById(UserId,ProspectId)
 
         return p
 
