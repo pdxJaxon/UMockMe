@@ -62,7 +62,7 @@
             <tr>
                 <td>Team Meetings</td>
                 <td>
-                    <Table border="1">
+                    <Table id="tblMeet" border="1">
                         <tr>
                             <th>Team</th>
                             <th>Meeting</th>
@@ -72,9 +72,9 @@
                 </td>
             </tr>
             <tr>
-                <td>Deragatories</td>
+                <td>Deragatory Incidents</td>
                 <td>
-                    <Table border="1">
+                    <Table id="tblDerag" border="1">
                         <tr>
                             <th>Incident</th>
                             <th>Severity</th>
@@ -103,6 +103,57 @@
         $scope.usr="{{usr}}"
 
 
+
+
+
+
+
+
+
+        $scope.AddMeeting=function(){
+
+            tbl = document.getElementById("tblMeet");
+
+            var teamList = document.createElement("select");
+
+            var meetingList = document.createElement("select")
+
+            var currentIndex=tbl.rows.length;
+            var currentRow=tbl.insertRow(-1);
+
+            var currentCell = currentRow.insertCell(-1);
+            currentCell.appendChild(teamList);
+
+            var currentCell = currentRow.insertCell(-1);
+            currentCell.appendChild(meetingList);
+
+        }
+
+
+
+
+
+
+        $scope.AddDerog=function(){
+            alert("Derag Added");
+            tbl = document.getElementById("tblDerag")
+
+            var derogList = document.createElement("select")
+
+            var severityList = document.createElement("select")
+
+            var currentIndex=tbl.rows.length;
+            var currentRow=tbl.insertRow(-1);
+
+            var currentCell = currentRow.insertCell(-1);
+            currentCell.appendChild(derogList);
+
+            var currentCell = currentRow.insertCell(-1);
+            currentCell.appendChild(severityList);
+
+
+        }
+
         $scope.getProspect=function() {
             $scope.showDetails = true;
 
@@ -112,7 +163,7 @@
                     $scope.prospectId = sel.options[i].value;
                     }
             }
-            alert("Prospect " + $scope.prospectId + " Usr " + $scope.usr);
+
 
             $http({
                 method:'POST',
@@ -149,7 +200,7 @@
 
 
         $scope.saveShit=function(){
-            alert("Shit Saved");
+
 
             $scope.thisProspect[0][1]=document.getElementById("fname").value;
             $scope.thisProspect[0][2]=document.getElementById("lname").value;
