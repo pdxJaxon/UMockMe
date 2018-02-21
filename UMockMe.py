@@ -11,9 +11,11 @@ import uuid
 import DataRefreshService
 import forms
 import Users
+import Meetings
 import time,datetime
 import os
 import re
+import urllib
 
 
 
@@ -99,7 +101,12 @@ def EditProspects():
 
     ps = Prospects.Prospect.getAllProspects(year)
 
-    return render_template('EditProspect.html',prospects=ps,usr=usr)
+    meetings = Meetings.Meeting.getAllMeetings()
+
+
+    teams = Teams.Team.getAllTeams()
+
+    return render_template('EditProspect.html',prospects=ps,usr=usr,teams=teams,meetings=meetings)
 
 
 

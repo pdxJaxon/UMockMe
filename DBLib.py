@@ -144,6 +144,21 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(2,13,6)")
                     cur.execute("INSERT INTO ROUND VALUES(2,14,7)")
 
+
+
+
+                    cur.execute("INSERT INTO Meeting Values(1,'Pre Draft Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(2,'Combine Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(3,'Private Combine Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(4,'Sr Bowl Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(5,'Private Sr Bowl Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(6,'Pro Day Visit Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(7,'Pro Day Private Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(8,'Other Group Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(9,'Other Private Meeting',2)")
+
+
+
                     print("4a")
 
                     cur.execute("CREATE TABLE if not exists Pick(RoundId integer, RoundPickNum integer, OverallPickNum integer, TeamAbbr varchar(50), ProspectId integer, SessionId varchar(50), CreateDate varchar(50), CONSTRAINT pkPickId PRIMARY KEY(RoundId, RoundPickNum,SessionId))")
@@ -205,6 +220,16 @@ class DB:
                     cur.execute("INSERT INTO ROUND VALUES(2,12,5)")
                     cur.execute("INSERT INTO ROUND VALUES(2,13,6)")
                     cur.execute("INSERT INTO ROUND VALUES(2,14,7)")
+
+                    cur.execute("INSERT INTO Meeting Values(1,'Pre Draft Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(2,'Combine Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(3,'Private Combine Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(4,'Sr Bowl Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(5,'Private Sr Bowl Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(6,'Pro Day Visit Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(7,'Pro Day Private Meeting',2)")
+                    cur.execute("INSERT INTO Meeting Values(8,'Other Group Meeting',1)")
+                    cur.execute("INSERT INTO Meeting Values(9,'Other Private Meeting',2)")
 
 
 
@@ -655,6 +680,27 @@ class DB:
             TheDraft = cur.fetchall()
 
             return TheDraft
+
+
+
+
+    def getAllMeetings():
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("SELECT cast(meetingid as text),meetingname,cast(pointvalue as text) FROM Meeting")
+
+            columns=('MeetingId','MeetingName','PointValue')
+
+            results = []
+
+            for m in  cur.fetchall():
+                results.append(dict(zip(columns,m)))
+
+
+            return results
 
 
 

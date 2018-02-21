@@ -15,7 +15,7 @@
     Select Prospect To Edit:
         <br/>
     <select size="1" id="selGetProspect" ng-model="prospects" ng-change="getProspect()">
-        <option value="-1">--- Please Select Prospect ---</option>
+        <option value="-1">- - - Select Prospect - - -</option>
         {%for p in prospects %}
         <option value="{{p[0]}}">{{p[2] + " " + p[1] + " " + p[3] + " " + p[10]}}</option>
         {% endfor %}
@@ -98,9 +98,11 @@
     app.controller('ummController',function($scope,$http) {
         $scope.showDetails=false;
         $scope.prospects="{{prospects}}";
+        $scope.teams="{{teams}}";
+        $scope.meetings='{{meetings|tojson|safe}}';
         $scope.prospectId=-1;
         $scope.thisProspect="{{prospects[0]}}";
-        $scope.usr="{{usr}}"
+        $scope.usr="{{usr}}";
 
 
 
@@ -116,7 +118,26 @@
 
             var teamList = document.createElement("select");
 
-            var meetingList = document.createElement("select")
+
+            var meetingList = document.createElement("select");
+            meetingList.setAttribute("size","1");
+            meetingList.setAttribute("ng-model","$scope.meetings");
+            meetingList.setAttribute("ng-repeat","m in meetings");
+
+            myObj = JSON.parse($scope.meetings);
+
+
+           for(i=0;i<myObj.length;i++) {
+
+               opt = document.createElement("option");
+               opt.value= myObj[i].MeetingId;
+               opt.text=myObj[i].MeetingName;
+
+               meetingList.options.add(opt);
+           }
+
+
+
 
             var currentIndex=tbl.rows.length;
             var currentRow=tbl.insertRow(-1);
