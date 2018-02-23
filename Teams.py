@@ -235,6 +235,16 @@ class Team:
         return teams
 
 
+    def getAllTeamsAsJSON():
+        teams = DBLib.DB.getAllTeamsAsJSON()
+
+        return teams
+
+
+
+
+
+
 
     def getTeamByAbr(abr):
         team = DBLib.DB.getTeamByAbr(abr)

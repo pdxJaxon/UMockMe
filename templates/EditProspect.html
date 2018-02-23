@@ -98,16 +98,11 @@
     app.controller('ummController',function($scope,$http) {
         $scope.showDetails=false;
         $scope.prospects="{{prospects}}";
-        $scope.teams="{{teams}}";
+        $scope.teams='{{teams|tojson|safe}}';
         $scope.meetings='{{meetings|tojson|safe}}';
         $scope.prospectId=-1;
         $scope.thisProspect="{{prospects[0]}}";
         $scope.usr="{{usr}}";
-
-
-
-
-
 
 
 
@@ -117,6 +112,23 @@
             tbl = document.getElementById("tblMeet");
 
             var teamList = document.createElement("select");
+            teamList.setAttribute("size","1");
+            teamList.setAttribute("ng-model","$scope.teams");
+            teamList.setAttribute("ng-repeat","t in teams");
+
+
+            myObj = JSON.parse($scope.teams);
+
+
+           for(i=0;i<myObj.length;i++) {
+
+               opt = document.createElement("option");
+               opt.value= myObj[i].Abbr;
+               opt.text=myObj[i].City + " " + myObj[i].Nickname;
+
+               teamList.options.add(opt);
+           }
+
 
 
             var meetingList = document.createElement("select");

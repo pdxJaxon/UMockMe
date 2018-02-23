@@ -104,7 +104,7 @@ def EditProspects():
     meetings = Meetings.Meeting.getAllMeetings()
 
 
-    teams = Teams.Team.getAllTeams()
+    teams = Teams.Team.getAllTeamsAsJSON()
 
     return render_template('EditProspect.html',prospects=ps,usr=usr,teams=teams,meetings=meetings)
 

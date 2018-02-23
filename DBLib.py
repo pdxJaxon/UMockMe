@@ -553,6 +553,28 @@ class DB:
 
 
 
+    def getAllTeamsAsJSON():
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+
+            cur.execute("SELECT Abbr,City,Nickname FROM Team Order By City")
+
+            columns = ('Abbr', 'City', 'Nickname')
+
+            results = []
+
+            for m in cur.fetchall():
+                results.append(dict(zip(columns, m)))
+
+
+        return results
+
+
+
+
 
 
 
