@@ -119,6 +119,11 @@
 
             myObj = JSON.parse($scope.teams);
 
+            opt = document.createElement("option");
+            opt.value= -1;
+            opt.text = "Select Team";
+            teamList.options.add(opt);
+
 
            for(i=0;i<myObj.length;i++) {
 
@@ -137,6 +142,11 @@
             meetingList.setAttribute("ng-repeat","m in meetings");
 
             myObj = JSON.parse($scope.meetings);
+
+            opt = document.createElement("option");
+            opt.value= -1;
+            opt.text = "Select Meeting";
+            meetingList.options.add(opt);
 
 
            for(i=0;i<myObj.length;i++) {
@@ -168,7 +178,7 @@
 
 
         $scope.AddDerog=function(){
-            alert("Derag Added");
+
             tbl = document.getElementById("tblDerag")
 
             var derogList = document.createElement("select")
@@ -230,7 +240,13 @@
         };
 
 
+        $scope.saveDerogs=function(){
+            alert("Derogs Saved");
+        }
 
+        $scope.saveMeetings=function(){
+            alert("Meetings Saved");
+        }
 
         $scope.saveShit=function(){
 
@@ -244,7 +260,8 @@
             $scope.thisProspect[0][7]=document.getElementById("expertGrade").value;
             $scope.thisProspect[0][8]=document.getElementById("sparq").value;
 
-
+            $scope.saveMeetings();
+            $scope.saveDerogs();
 
 
             $http({
