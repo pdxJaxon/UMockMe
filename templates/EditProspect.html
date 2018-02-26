@@ -246,6 +246,11 @@
 
         $scope.saveMeetings=function(){
             alert("Meetings Saved");
+
+            meets=[];
+
+
+
         }
 
         $scope.saveShit=function(){
@@ -260,7 +265,7 @@
             $scope.thisProspect[0][7]=document.getElementById("expertGrade").value;
             $scope.thisProspect[0][8]=document.getElementById("sparq").value;
 
-            $scope.saveMeetings();
+            meets=$scope.gatherMeetings();
             $scope.saveDerogs();
 
 
