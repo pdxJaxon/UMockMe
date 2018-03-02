@@ -584,7 +584,7 @@ class DB:
 
         with con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM TeamNeed WHERE Abbr='{}' and draftId={}".format(abbr,draftId))
+            cur.execute("SELECT * FROM TeamNeed WHERE Abbr='{}' and draftId={} ORDER BY NeedScore DESC".format(abbr,draftId))
 
             teamNeeds = cur.fetchall()
 
