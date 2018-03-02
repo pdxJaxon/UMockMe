@@ -118,8 +118,8 @@ class DataDude:
 
 
 
-
-
+    def RefreshTeamNeeds():
+        Teams.Team.RefreshTeamNeeds()
 
 
     def WireTeamMeetings():

@@ -1736,6 +1736,17 @@ class DB:
             return u
 
 
+    def DeleteAllTeamNeeds():
+        con = DB.getConnection()
+
+        with con:
+            cur = con.cursor()
+
+            cur.execute("DELETE FROM TeamNeed")
+
+
+
+
 
 
 

@@ -462,25 +462,28 @@ class Draft:
             step4StartTime=time.time()
             for p in self._prospects:
 
+                #make sure we have a valid prospect by checking their ID p[0]
                 if (p[0] != 0):
                     pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
                     print("pos",pPos)
 
-                    # Normalize the Positions
+                    # Normalize the Positions...when we screen scrape "Team Needs" off of NFL.com we only get OL, DL, LB, S
                     if (pPos == "C" or pPos == "OT" or pPos == "OG"):
                         pPos = "OL"
-                    if (pPos == "DT" or pPos == "NT"):
+                    if (pPos == "DT" or pPos == "NT" or pPos == "DE"):
                         pPos = "DL"
-                    if (pPos == "OLB" or pPos == "ILB" or pPos == "DE" or pPos =="EDGE"):
+                    if (pPos == "OLB" or pPos == "ILB" or pPos =="EDGE"):
                         pPos = "LB"
                     if (pPos == "SS" or pPos == "FS"):
                         pPos = "S"
 
+                    #if the current prospect is our highest need OR if we have already passed up 20 prospects, we need to make this pick.
                     if (self.isHighestNeed(pPos, needs) or len(passedUpPlayers)>20):
 
                         # Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
                         AlternatePicks = self.BetterPlayerPassedUp(needs, pPos, p, passedUpPlayers)
 
+                        #Account for SOME degree of Randomness in the pick. Teams do some weird shit sometimes.....
                         PickLikelihood = randint(1, 100)
 
                         if (not AlternatePicks):
@@ -495,12 +498,12 @@ class Draft:
                                 pickMade = True
                                 break
                             else:
-                                # OK, we did the weird thing and passed up our slam dunk player
+                                # OK, we did the weird thing and passed up our slam dunk player so add them to the "Passed Up List" we may come back around and reconsider them in a minute....
                                 passedUpPlayers.append([p[0], p[6], pPos])
                                 # print("A MISS ON PICK # {}".format(pck))
 
                         else:
-                            # BetterPlayerPassedUp(needs,n,p,passedUpPlayers)
+                            # BetterPlayerPassedUp(needs,n,p,passedUpPlayers) - we need to grab them now or be sorry later.
                             Player = AlternatePicks[0]
 
                             for dp in self._prospects:
