@@ -394,6 +394,30 @@ class Draft:
 
 
 
+    def NormalizePosition(pPos):
+        if(pPos=="C"):
+            pPos="OLC"
+        elif(pPos=="OT"):
+            pPos="OLT"
+        elif (pPos == "OG"):
+            pPos = "OLG"
+        elif (pPos == "G"):
+            pPos = "OLG"
+        elif (pPos == "DT"):
+            pPos = "DLT"
+        elif (pPos == "DE"):
+            pPos = "DLE"
+        elif (pPos == "NT"):
+            pPos = "DLN"
+        elif (pPos == "LB"):
+            pPos = "ILB"
+        elif (pPos == "FS"):
+            pPos = "S"
+        elif (pPos == "SS"):
+            pPos = "S"
+
+        return pPos
+
 
 
 
@@ -468,14 +492,12 @@ class Draft:
                     print("pos",pPos)
 
                     # Normalize the Positions...when we screen scrape "Team Needs" off of NFL.com we only get OL, DL, LB, S
-                    if (pPos == "C" or pPos == "OT" or pPos == "OG"):
-                        pPos = "OL"
-                    if (pPos == "DT" or pPos == "NT" or pPos == "DE"):
-                        pPos = "DL"
-                    if (pPos == "OLB" or pPos == "ILB" or pPos =="EDGE"):
-                        pPos = "LB"
-                    if (pPos == "SS" or pPos == "FS"):
-                        pPos = "S"
+
+                    pPos= Draft.NormalizePosition(pPos)
+
+
+
+
 
                     #if the current prospect is our highest need OR if we have already passed up 20 prospects, we need to make this pick.
                     if (self.isHighestNeed(pPos, needs) or len(passedUpPlayers)>20):
