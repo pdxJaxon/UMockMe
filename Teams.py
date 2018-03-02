@@ -28,6 +28,15 @@ class Team:
 
         #todo: Cache this crap
 
+        retVal = Team.getNeedsByTeam2(city,teamAbr,teamName,year)
+
+        return retVal
+
+
+
+
+
+
         needs = ""
 
         if(teamAbr=="PIT"):
@@ -65,7 +74,7 @@ class Team:
                     needs+=":" + li.text
                 iCount+=1
 
-        print("Needs--->",needs)
+
         return needs
 
     def DeleteAllTeamNeeds():
@@ -96,7 +105,7 @@ class Team:
 
             #for each need, Save to DB
             for n in needs:
-                print("N:",n)
+
                 Team.AddTeamNeed(n['Abbr'],n['Pos'],n['Score'],n['Count'])
 
 
@@ -188,6 +197,8 @@ class Team:
         for n in needs:
             results.append(dict(zip(columns, n)))
 
+        results.sort("Score")
+
 
         return results
 
@@ -268,19 +279,20 @@ class Team:
 
     def AddNeedsForTeam(abbr,city,nickname,year,draftId):
 
-        allPositions = ["OLG","OLT","OLC","DLN","DLE","DLT", "QB", "WR", "TE", "RB","FB", "LB","EDGE","OLB","ILB","CB", "S","P","K","FS","SS","LS"]
+        allPositions = ["OLG","OLT","OLC","DLN","DLE","DLT", "QB", "WR", "TE", "RB","FB", "EDGE","OLB","ILB","CB", "S","P","K","LS"]
 
 
         needs = Team.getNeedsByTeam2(city, abbr, nickname, year)
 
         for n in needs:
-            Team.AddTeamNeed(abbr, n, n, 1)
+            print("Adding this shit now....",n[1],n[2],n[3])
+            Team.AddTeamNeed(abbr,n[1],n[2],n[3])
 
 
-        #IF NEED NOT LISTED AT ALL, WE MARK IT AS A 50 (AVERAGE - TAKE IT OR LEAVE IT)
+        #IF NEED NOT LISTED AT ALL, WE MARK IT AS A 30 (Below AVERAGE need)
         for p in allPositions:
             if (p not in needs):
-                Team.AddTeamNeed(abbr, p, 50, 1)
+                Team.AddTeamNeed(abbr, p, 30, 1)
 
 
 
