@@ -157,21 +157,29 @@ class Prospect:
                 if(grade==None or grade==""):                                        #if expert grade not provided, just sort to bottom of list.....assume a Zero Grade.
                     grade=0
                 collegeId = jsonData[dude]["college"]
-                college = Colleges.College.getCollegeById(collegeId)
 
-                try:
-                    collegeName = college[0][1].replace("'","")
-                except:
-                    collegeName="TBD"
-                    print("College Name Failure - " + str(collegeId) + " " + str(college))
+                if(collegeId==None):
+                    collegeName = "Unlisted"
+
+                else:
+                    college = Colleges.College.getCollegeById(collegeId)
+
+                    try:
+                        collegeName = college[0][1].replace("'", "")
+                    except:
+                        collegeName = "TBD"
+                        print("College Name Failure - " + str(collegeId) + " " + str(college))
+
+
 
                 #todo: Add ProjectedDraftPick
 
 
                 print(Id,lname,fname,pos,height,weight,grade,collegeName,DraftId)
 
-                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,collegeName,DraftId)
-                print("I came back once " + str(Id))
+
+                Prospect.AddProspect(Id,lname,fname,pos,height,weight,grade,0,0,0,0,collegeName,DraftId)
+
 
     def CalculateUmockMeGrades():
         '''
@@ -190,12 +198,11 @@ class Prospect:
 
 
 
+    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,rnd,pck,uMockMeGrde,sparq,college,DraftId):
 
-
-
-    def AddProspect(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college,DraftId):
-        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,uMockMeGrde,college,DraftId)
-        print("prospect added" + Last)
+        #Prospect(ProspectId integer, lastName varchar(50), firstName varchar(50), pos varchar(50), height varchar(50), weight varchar(50), expertGrade real,DraftProjectedRound integer, DraftProjectedPick integer,uMockMeGrade real,sparqScore real,school varchar(50),DraftId integer,
+        DBLib.DB.AddProspectDB(Id,Last,First,Pos,Height,Weight,Grade,rnd,pck,uMockMeGrde,sparq,college,DraftId)
+        print("prospect added " + Last)
 
 
 
