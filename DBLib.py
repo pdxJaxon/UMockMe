@@ -386,9 +386,9 @@ class DB:
 
 
 
-    def AddProspectDB(id,lname,fname,pos,height,weight,grade,uMockMeGrade,College,DraftId):
+    def AddProspectDB(id,lname,fname,pos,height,weight,grade,rnd,pck,uMockMeGrade,sparqScore,College,DraftId):
 
-        sql = "INSERT INTO Prospect VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},'{}',{})".format(id, lname, fname, pos, height, weight,grade,0,0,uMockMeGrade,College,DraftId)
+        sql = "INSERT INTO Prospect(ProspectId,lastName,firstName,pos,height,weight,expertGrade,DraftProjectedRound,DraftProjectedPick,uMockMeGrade,sparqScore,school,draftId) VALUES({},'{}','{}','{}','{}','{}','{}',{},{},{},{},'{}',{})".format(id,lname,fname,pos,height,weight,grade,rnd,pck,uMockMeGrade,sparqScore,College,DraftId)
         print(sql)
 
         DB.ExecuteSQL(sql)
@@ -802,9 +802,10 @@ class DB:
 
 
     def GetCollegeById(id=-1):
+
         con = DB.getConnection()
         sql = "SELECT * FROM College WHERE Collegeid={}".format(id)
-
+        print(sql)
         with con:
             cur = con.cursor()
             cur.execute(sql)
