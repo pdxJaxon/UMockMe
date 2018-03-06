@@ -74,6 +74,46 @@ class DataDude:
 
 
 
+    def UpdateMockDraftTargets():
+        return 0
+
+
+    def UpdateMeetingScores():
+        return 0
+
+
+
+
+
+
+    def UpdateDerogs():
+        return 0
+
+
+
+
+    def UpdateSparqScores():
+        DBLib.DB.UpdateSparqScores()
+
+
+
+
+
+    def RefreshProspectMiscStats(year=2018):
+
+        #get all prospects
+
+        DataDude.UpdateSparqScores()
+
+        DataDude.UpdateMeetingScores()
+
+        DataDude.UpdateDerogs()
+
+        DataDude.UpdateMockDraftTargets()
+
+
+
+
 
 
 

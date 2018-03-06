@@ -596,7 +596,11 @@ def refreshCurrentProspects():
 
 
 
+@app.route("/UpdateProspectMiscStats")
+def UpdatePlayerMiscStats():
+    DataRefreshService.DataDude.RefreshProspectMiscStats(2018)
 
+    return ("Current Prospects Stats Refreshed - <a href='/Admin'>Return to Admin Page</a>")
 
 
 

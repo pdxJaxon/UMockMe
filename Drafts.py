@@ -357,7 +357,7 @@ class Draft:
         # 1 - get all rounds
         if(len(self._rounds)==0):
 
-            rounds = Draft.getAllRoundsByDraft(2017)
+            rounds = Draft.getAllRoundsByDraft(2018)
             self._rounds = rounds
 
 
@@ -491,12 +491,7 @@ class Draft:
                     pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
                     print("pos",pPos)
 
-                    # Normalize the Positions...when we screen scrape "Team Needs" off of NFL.com we only get OL, DL, LB, S
-
                     pPos= Draft.NormalizePosition(pPos)
-
-
-
 
 
                     #if the current prospect is our highest need OR if we have already passed up 20 prospects, we need to make this pick.
