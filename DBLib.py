@@ -646,7 +646,7 @@ class DB:
 
         with con:
             cur = con.cursor()
-            cur.execute("SELECT p.* FROM SessionProspect as s INNER JOIN Prospect as p on p.ProspectId = s.ProspectId WHERE s.SessionId='{}' Order By Expertgrade desc".format(sessionId))
+            cur.execute("SELECT p.* FROM SessionProspect as s INNER JOIN Prospect as p on p.ProspectId = s.ProspectId WHERE s.SessionId='{}' Order By UMockMeGrade desc".format(sessionId))
 
             prospects = cur.fetchall()
 

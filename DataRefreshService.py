@@ -87,6 +87,7 @@ class DataDude:
 
 
     def UpdateDerogs():
+
         return 0
 
 
@@ -105,11 +106,9 @@ class DataDude:
 
         DataDude.UpdateSparqScores()
 
-        DataDude.UpdateMeetingScores()
-
         DataDude.UpdateDerogs()
 
-        DataDude.UpdateMockDraftTargets()
+
 
 
 
