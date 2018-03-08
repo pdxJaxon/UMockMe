@@ -63,12 +63,14 @@ class Draft:
         highest=0
         picked=0
 
-        for n in needs:
-            if(n[1]==pos):
-                picked=n[2]
+        #print("DISECT:",needs,type(needs))
 
-            if(n[2]>highest):
-                highest=n[2]
+        for n in needs:
+            if(n['Need']==pos):
+                picked=n['needScore']
+
+            if(n['needScore']>highest):
+                highest=n['needScore']
 
 
         if(picked>=highest):
@@ -85,7 +87,7 @@ class Draft:
         HighNeed = False
         for n in needs:
             if(pos==needs[1]):
-                if(needs[2]>=75):
+                if(needs[2]>=80):
                     HighNeed=True
                 else:
                     HighNeed=False
@@ -99,9 +101,16 @@ class Draft:
         rounds = DBLib.DB.getAllRoundsByDraft(Year)
         return rounds
 
+    def getNeedValueForPosition(pos,needs):
+        retVal=50
+        return retVal
+
+
 
 
     def BetterPlayerPassedUp(self,needs,needPickedFor,prospectPicked,passedUpPlayers):
+
+        needPriority = Draft.getNeedValueForPosition(needPickedFor,needs)
 
         startTime = time.time()
 
@@ -109,97 +118,98 @@ class Draft:
         BetterProspect = None
 
 
-        #print("Pick:{}".format(prospectPicked))
-        rn=randint(1,100)
-
-        #try to find needPriority in NeedsList else just default to "Average" Priority value
-        needPriority=50
-        #print("Need:",needs)
-
-
-        for n in needs:
-            if(n[1]==needPickedFor):
-                needPriority=n[2]
-
-
 
         #lets look at the players we passed up in the ordered list of the "Best Available" and make sure we dont want one of them.
 
         for pup in passedUpPlayers:
+
+            #for this passed up player, lets see how big of a need he would fill....
+            thisProspectPosition = pup[2]
+
+            thisProspectNeedValue = Draft.getNeedValueForPosition(thisProspectPosition,needs)
+
+
+
             #this is the priority of the need we just selected a person for....should be a SLAM DUNK Pick unless we passed up someone REALLY GOOD
-            if(needPriority>=75):
-                #how much stronger is alternate on "NFL.COM Expert Grade:
-                #print("picked {} \nalt {}".format(prospectPicked,pup))
-                if(pup[1] >= prospectPicked[6] + 1.00):
+            if(needPriority>=90):
+                if ((pup[1] >= prospectPicked[9] + 1.50) and (thisProspectNeedValue >= needPriority - 10)):
+                    # Player too good to pass up.....80% chance they take him
+
+                    BetterProspect = pup
+                    break
+            elif(needPriority>=70):
+                #how much stronger is alternate on UMockMeGrade
+
+                if((pup[1] >= prospectPicked[9] + 1.00) or (thisProspectNeedValue >= needPriority-20)):
                     #Player too good to pass up.....80% chance they take him
-                    if(rn>=10):
+
                         BetterProspect = pup
                         break
-                elif (pup[1] >= prospectPicked[6] + .75):
+                elif ((pup[1] >= prospectPicked[9] + .75) or (thisProspectNeedValue >= needPriority-20)):
                     #if in needslist then 90% we take a look
-                    if (self.isHighNeed(pup[2],needs) and rn >= 10):
+                    if (self.isHighNeed(pup[2],needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 60):
+                    else:
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6] + .50):
-                    if (self.isHighNeed(pup[2],needs) and rn >= 20):
+                elif ((pup[1] >= prospectPicked[9] + .50) or(thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2],needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 60):
+                    else:
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6] + .25):
-                    if (self.isHighNeed(pup[2],needs) and rn >= 30):
+                elif ((pup[1] >= prospectPicked[9] + .25) or (thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2],needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 60):
+                    else:
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6] + .10):
-                    if (self.isHighNeed(pup[2],needs) and rn >= 70):
+                elif ((pup[1] >= prospectPicked[9] + .10) or (thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2],needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 75):
+                    else:
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6]):
-                    if (self.isHighNeed(pup[2],needs) and rn >= 90):
+                elif ((pup[1] >= prospectPicked[9]) or (thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2],needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 95):
+                    else:
                             BetterProspect = pup
                             break
             #The Selected Player fulfills a Need that is greater than Average.....Pretty good pick
             elif(needPriority>=50):
                 # how much stronger is alternate on "NFL.COM Expert Grade:
-                if (pup[1] >= prospectPicked[6] + .5):
-                    if (self.isHighNeed(pup[2], needs) and rn >= 25):
+                if ((pup[1] >= prospectPicked[9] + .5) or (thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2], needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 60):
+                    else:
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6] + .25):
-                    if (self.isHighNeed(pup[2], needs) and rn >= 50):
+                elif ((pup[1] >= prospectPicked[9] + .25) or (thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2], needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 75):
+                    else:
                             BetterProspect = pup
                             break
-                elif (pup[1] >= prospectPicked[6]):
-                    if (self.isHighNeed(pup[2], needs) and rn >= 80):
+                elif ((pup[1] >= prospectPicked[9]) or (thisProspectNeedValue >= needPriority-20)):
+                    if (self.isHighNeed(pup[2], needs)):
                         BetterProspect = pup
                         break
-                    elif (rn >= 95):
+                    else:
                             BetterProspect = pup
                             break
             else:
-                if (self.isHighNeed(pup[2],needs) and rn >= 90):
+                if (self.isHighNeed(pup[2],needs)):
                     BetterProspect = pup
                     break
-                elif (rn >= 95):
+                else:
                         BetterProspect = pup
                         break
 
@@ -229,17 +239,17 @@ class Draft:
             teamFound=False
 
             for t in self._allTeamNeeds:
-                if(t[0][0]==teamAbbr):
+                if(t['Abbr']==teamAbbr):
                     teamFound=True
-                    needs=t
-                    #print("NEEDS From Get() {}".format(needs))
+                    needs.append(t)
+                    print("NEEDS From Get() {}".format(needs))
 
             if(teamFound==False):
-                needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
+                needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
                 for n in needs:
                     self._allTeamNeeds.append(n)
         else:
-            needs = Teams.Team.getStoredNeedsByTeam(teamAbbr)
+            needs = json.loads(Teams.Team.getStoredNeedsByTeam(teamAbbr))
             self._allTeamNeeds=[]
             for n in needs:
                 self._allTeamNeeds.append(n)
@@ -256,38 +266,18 @@ class Draft:
 
     def cacheTeamNeeds(self,sessionId,draftId=2):
 
-        #We need to account for position translations for OL, DL, etc.
-       # self._allTeamNeeds=[]
-
-
-        '''
-        theTeams = Teams.Team.getAllTeams()
-        for t in theTeams:
-            city = t[2]
-            abr = t[0]
-            teamName = t[3]
-
-            #[('CHI', 'CB', 90, 1), ('CHI', 'OL', 85, 1), ('CHI', 'TE', 80, 1), ('CHI', 'LB', 75, 1),('CHI', 'S', 70, 1), ('CHI', 'QB', 65, 1)]
-            needs = Teams.Team.getTeamNeeds(abr)
-
-            for n in needs:
-                if (n[1] == "C" or n[1] == "OT" or n[1] == "OG"):
-                    n[1] = "OL"
-                if (n[1] == "DT" or n[1] == "NT"):
-                    n[1] = "DL"
-                if (n[1] == "OLB" or n[1] == "ILB" or n[1] == "DE"):
-                    n[1] = "LB"
-                if (n[1] == "SS" or n[1] == "FS"):
-                    n[1] = "S"
-
-                DBLib.DB.AddTeamNeedForSessionDB(sessionId,n[0],n[1],n[2],n[3])
-        '''
 
         DBLib.DB.CacheTeamNeedsForSession(sessionId,draftId)
 
 
+        theNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
-        #self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
+
+
+        print("Try This:",theNeeds)
+        print("Try 2:",type(theNeeds))
+
+        self._allTeamNeeds = theNeeds
 
 
 
@@ -299,37 +289,30 @@ class Draft:
 
     def MarkNeedAsSelected(self,TeamAbbr,NeedPosition,sessionId):
 
+
         posAdded=False
-        newPosition = []
+        newNeed=[]
+
+
 
         for i in self._allTeamNeeds:
-            if(i[0][0]==TeamAbbr):
+
+            if(i['Abbr']==TeamAbbr):
+
+                #print("FML",i)
+
+
+                if(i['Need']==NeedPosition):
+                    i["needScore"]=0
+
+                    posAdded=True
+
+                    DBLib.DB.UpdateTeamNeedForSessionDB(i["sessionId"],i["Abbr"],i["Need"],i["needScore"],0)
 
 
 
-                # [('CLE', 'QB', 90, 1), ('CLE', 'DL', 85, 1), ('CLE', 'LB', 80, 1), ('CLE', 'CB', 75, 1), ('CLE', 'S', 70, 1)]
-                #print("Is this json - {}".format(i[0]))
-                for n in i:
-                    if(n[1]==NeedPosition):
-                        team=n[0]
-                        pos=n[1]
-                        score=5
-                        count=1
-                        newNeed=(team,pos,score,count)
-
-                        posAdded=True
-                        i.remove(n)
-                        i.append(newNeed)
-                        DBLib.DB.UpdateTeamNeedForSessionDB(sessionId,team,pos,score,count)
-                        break
-
-                if(not posAdded):
-                    newNeed=(i[0][0],NeedPosition,5,1)
-                    i.append(newNeed)
-                    DBLib.DB.AddTeamNeedForSessionDB(sessionId,i[0][0],NeedPosition,5,1)
 
 
-                break
 
 
 
@@ -432,92 +415,86 @@ class Draft:
 
 
 
-        print("The pck:",pck)
-        # Get Needs For Team
-
-        step1StartTime = time.time()
         t = Teams.Team.getTeamByAbr(pck[3])
 
         city = t[0][2]
         abr = t[0][0]
         teamName = t[0][3]
         abbr = abr
-        step1StopTime = time.time()
+
 
         pickMade = False
 
-        step2StartTime = time.time()
+
         needs = self.getTeamNeeds(abr)
+
+        print("Test this shit",needs,type(needs))
 
         if(not needs):
             Teams.Team.AddNeedsForTeam(abr,city,teamName,year,draftId)
             needs=self.getTeamNeeds(abr)
 
 
-
-        step2StopTime = time.time()
-
-        step3StartTime = time.time()
-        step3StopTime = time.time()
-
         print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
 
         if(len(self._prospects)==0):
-            step3StartTime = time.time()
-            #rs = DBLib.DB.getAllProspects()
 
-            #for r in rs:
-               # DBLib.DB.AddProspectForSessionDB(sessionId,r[0])
 
             DBLib.DB.PopulateSessionProspects(sessionId,draftId)
-            print("OverWrite my Prospects")
+
 
             self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
-            step3StopTime = time.time()
 
-        step4StartTime=time.time()
-        step4StopTime = time.time()
+
 
         if (needs):
             passedUpPlayers = []
 
 
-            step4StartTime=time.time()
+
             for p in self._prospects:
 
                 #make sure we have a valid prospect by checking their ID p[0]
                 if (p[0] != 0):
                     pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
-                    print("pos",pPos)
 
                     pPos= Draft.NormalizePosition(pPos)
 
 
-                    #if the current prospect is our highest need OR if we have already passed up 20 prospects, we need to make this pick.
-                    if (self.isHighestNeed(pPos, needs) or len(passedUpPlayers)>20):
+                    #if the current prospect is our highest need OR if we have already passed up 25 prospects, we need to make this pick.
+                    if (self.isHighestNeed(pPos, needs) or len(passedUpPlayers)>25):
 
-                        # Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
-                        AlternatePicks = self.BetterPlayerPassedUp(needs, pPos, p, passedUpPlayers)
+                        if(self.isHighestNeed(pPos, needs)):
+                            Player = p[0]
+                            Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+                            # print("Pick Normal - {}".format(pck))
+                            self.removeProspectFromCache(sessionId, Player)
+                            # needs.remove(n)
+                            self.MarkNeedAsSelected(abr, pPos, sessionId)
+                            pickMade = True
+                            break
+                        elif(self.isHighestNeed(pPos, needs)==False):
+                            # Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
+                            AlternatePicks = self.BetterPlayerPassedUp(needs, pPos, p, passedUpPlayers)
 
-                        #Account for SOME degree of Randomness in the pick. Teams do some weird shit sometimes.....
-                        PickLikelihood = randint(1, 100)
+                            #Account for SOME degree of Randomness in the pick. Teams do some weird shit sometimes.....
+                            PickLikelihood = randint(1, 100)
 
-                        if (not AlternatePicks):
-                            # There were no higher ranked players....so this pick is basically a slam dunk
-                            if (PickLikelihood >= 10):  # 90% chance that we pick this dude......
-                                Player = p[0]
-                                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-                                # print("Pick Normal - {}".format(pck))
-                                self.removeProspectFromCache(sessionId,Player)
-                                # needs.remove(n)
-                                self.MarkNeedAsSelected(abr, pPos,sessionId)
-                                pickMade = True
-                                break
-                            else:
-                                # OK, we did the weird thing and passed up our slam dunk player so add them to the "Passed Up List" we may come back around and reconsider them in a minute....
-                                passedUpPlayers.append([p[0], p[6], pPos])
-                                # print("A MISS ON PICK # {}".format(pck))
+                            if (not AlternatePicks):
+                                # There were no higher ranked players....so this pick is basically a slam dunk
+                                if (PickLikelihood >= 10):  # 90% chance that we pick this dude......
+                                    Player = p[0]
+                                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+                                    # print("Pick Normal - {}".format(pck))
+                                    self.removeProspectFromCache(sessionId,Player)
+                                    # needs.remove(n)
+                                    self.MarkNeedAsSelected(abr, pPos,sessionId)
+                                    pickMade = True
+                                    break
+                                else:
+                                    # OK, we did the weird thing and passed up our slam dunk player so add them to the "Passed Up List" we may come back around and reconsider them in a minute....
+                                    passedUpPlayers.append([p[0], p[9], pPos])
 
                         else:
                             # BetterPlayerPassedUp(needs,n,p,passedUpPlayers) - we need to grab them now or be sorry later.
@@ -541,7 +518,7 @@ class Draft:
 
                     else:
                         # This player was not a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
-                        passedUpPlayers.append([p[0], p[6], pPos])
+                        passedUpPlayers.append([p[0], p[9], pPos])
                         # print("Team: {} Need:{} Pos:{}".format(abr,n,pPos))
 
         else:  # No Needs left for Team, so pick next best player available......GAJ
@@ -565,16 +542,7 @@ class Draft:
         endtime = time.time()
         elapsedTime = endtime-startTime
 
-        Step1ElapsedTime = step1StopTime - step1StartTime
-        Step2ElapsedTime = step2StopTime - step2StartTime
-        Step3ElapsedTime = step3StopTime - step3StartTime
-        Step4ElapsedTime = step4StopTime - step4StartTime
 
-        print("Step1 Time:",str(Step1ElapsedTime))
-        print("Step2 Time:", str(Step2ElapsedTime))
-        print("Step3 Time:", str(Step3ElapsedTime))
-        print("Step4 Time:", str(Step4ElapsedTime))
-        print("MakePick Time:",str(elapsedTime))
         return True
 
 

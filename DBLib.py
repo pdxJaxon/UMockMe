@@ -16,7 +16,7 @@ class DB:
 
     def getConnection():
 
-        conStart = time.time()
+
 
         if ("HEROKU_POSTGRESQL_ONYX_URL" in os.environ):
             urlparse.uses_netloc.append("postgres")
@@ -32,11 +32,7 @@ class DB:
         else:
             con = lite2.connect("UMockMe.db")
 
-        conStop = time.time()
 
-        timeDiff = conStop - conStart
-
-        print("Connect Time:",str(timeDiff))
 
         return con
 
@@ -278,7 +274,7 @@ class DB:
         try:
             con.set_isolation_level(0)
         except:
-            print("this is fine")
+            print("this is fine - local db doesnt support isolation level setting")
 
         with con:
             cur = con.cursor()
@@ -435,7 +431,7 @@ class DB:
 
 
     def UpdateTeamNeedForSessionDB(sessionId,team,pos,needScore,needCount):
-        sql = "UPDATE SessionTeamNeed SET needScore={}, needCount={} WHERE sessionId='{}' AND team='{}' AND pos='{}'".format(needScore,needCount,sessionId,team,pos)
+        sql = "UPDATE SessionTeamNeed SET needScore={}, needCount={} WHERE sessionId='{}' AND Abbr='{}' AND pos='{}'".format(needScore,needCount,sessionId,team,pos)
         # print(sql)
         DB.ExecuteSQL(sql)
 
@@ -458,13 +454,19 @@ class DB:
     def getNeedsForAllTeams(sessionId):
         con = DB.getConnection()
 
+        cols = ["sessionId", "Abbr", "Need", "needScore", "needCount"]
+
         with con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM SessionTeamNeed WHERE sessionId='{}'".format(sessionId))
+            cur.execute("SELECT sessionId,Abbr,Need,needScore,needCount FROM SessionTeamNeed WHERE sessionId='{}'".format(sessionId))
 
-            teamNeeds = cur.fetchall()
+            results = []
 
-            return teamNeeds
+            for m in cur.fetchall():
+                results.append(dict(zip(cols, m)))
+
+
+        return results
 
 
 
@@ -508,16 +510,11 @@ class DB:
     def UpdateUserProspect(prospect,UserId):
 
 
-        #P: [2560011, 'CALVIN', 'RIDLEY', 'WR', '6 1', '190', 'Alabama', 7.04, 50]UPDATE USER P: [2560011, 'CALVIN', 'RIDLEY', 'WR', '6 1', '190', 'Alabama', 7.04, 50]
-
-
-
-
 
         sql = "UPDATE UserProspect SET expertgrade={},sparqScore={} WHERE ProspectId='{}' AND email='{}'".format(prospect[7],prospect[8],prospect[0],UserId)
 
 
-        print("UPDATED ",sql)
+
         DB.ExecuteSQL(sql)
 
 
@@ -526,13 +523,20 @@ class DB:
     def getAllNeedsForSessionTeam(sessionId,abbr):
         con = DB.getConnection()
 
+        cols = ["sessionId", "Abbr", "Need", "needScore", "needCount"]
+
         with con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM SessionTeamNeed WHERE team='{}' AND sessionId='{}'".format(abbr,sessionId))
+            cur.execute("SELECT sessionId,Abbr,Need,needScore,needCount FROM SessionTeamNeed WHERE Abbr='{}' AND sessionId='{}'".format(abbr,sessionId))
 
-            teamNeeds = cur.fetchall()
+            results = []
 
-            return teamNeeds
+            for m in cur.fetchall():
+                results.append(dict(zip(cols, m)))
+
+
+
+        return results
 
 
 
@@ -1874,8 +1878,8 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(2,20,52,'BAL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(2,21,53,'BUF',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(2,22,54,'KC',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(2,23,55,'BUF',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(2,24,56,'CAR',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(2,23,55,'CAR',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(2,24,56,'BUF',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(2,25,57,'TEN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(2,26,58,'ATL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(2,27,59,'SF',null,'{}','{}')".format(sessionid, theTime))
@@ -1929,7 +1933,7 @@ class DB:
                 # 4
                 # 32
                 cur.execute("INSERT INTO PICK VALUES(4,1,101,'CLE',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(4,2,102,'NYG',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(4,2,102,'LA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,3,103,'HOU',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,4,104,'IND',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,5,105,'CHI',null,'{}','{}')".format(sessionid, theTime))
@@ -1938,7 +1942,7 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(4,8,108,'TB',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,9,109,'DEN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,10,110,'OAK',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(4,11,111,'MIA',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(4,11,111,'LA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,12,112,'CIN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,13,113,'WAS',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,14,114,'GB',null,'{}','{}')".format(sessionid, theTime))
@@ -1950,15 +1954,15 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(4,20,120,'SEA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,21,121,'BUF',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,22,122,'KC',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(4,23,123,'LA',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(4,24,124,'CLE',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(4,23,123,'CLE',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(4,24,124,'KC',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,25,125,'TEN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,26,126,'ATL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,27,127,'NO',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,28,128,'SF',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,29,129,'JAX',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(4,30,130,'PHI',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(4,31,131,'MIA',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(4,30,130,'MIA',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(4,31,131,'PHI',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,32,132,'PHI',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,33,133,'GB',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(4,34,134,'ARI',null,'{}','{}')".format(sessionid, theTime))
@@ -1987,7 +1991,7 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(5,16,153,'DET',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(5,17,154,'BAL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(5,18,155,'LAC',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(5,19,156,'PHI',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(5,19,156,'SEA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(5,20,157,'NYJ',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(5,21,158,'BUF',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(5,22,159,'CLE',null,'{}','{}')".format(sessionid, theTime))
@@ -2011,14 +2015,14 @@ class DB:
                 # 6
                 # 32
                 cur.execute("INSERT INTO PICK VALUES(6,1,175,'CLE',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(6,2,176,'NYG',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(6,2,176,'LA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,3,177,'HOU',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,4,178,'IND',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,5,179,'NYJ',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,6,180,'TB',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,7,181,'CHI',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,8,182,'DEN',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(6,9,183,'MIA',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(6,9,183,'LA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,10,184,'SF',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,11,185,'OAK',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,12,186,'GB',null,'{}','{}')".format(sessionid, theTime))
@@ -2031,9 +2035,9 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(6,19,193,'DAL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,20,194,'LA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,21,195,'LA',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(6,22,196,'KC',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(6,23,197,'LA',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(6,24,198,'CAR',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(6,22,196,'LA',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(6,23,197,'CAR',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(6,24,198,'MIA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,25,199,'TEN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,26,200,'ATL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(6,27,201,'NO',null,'{}','{}')".format(sessionid, theTime))
@@ -2061,11 +2065,11 @@ class DB:
                 # 7
                 # 32
                 cur.execute("INSERT INTO PICK VALUES(7,1,219,'CLE',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,2,220,'PIT',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,2,220,'NYG',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,3,221,'IND',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,4,222,'HOU',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,5,223,'MIA',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,6,224,'LAC',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,6,224,'CHI',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,7,225,'DEN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,8,226,'SEA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,9,227,'SF',null,'{}','{}')".format(sessionid, theTime))
@@ -2074,15 +2078,15 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(7,12,230,'JAX',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,13,231,'WAS',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,14,232,'GB',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,15,233,'ARI',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,15,233,'KC',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,16,234,'CAR',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,17,235,'NYJ',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,18,236,'GB',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,18,236,'DAL',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,19,237,'DET',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,20,238,'BAL',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,21,239,'BUF',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,20,238,'ARI',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,21,239,'GB',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,22,240,'SF',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,23,241,'WAS',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,23,241,'NYG',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,24,242,'CAR',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,25,243,'TEN',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,26,244,'ATL',null,'{}','{}')".format(sessionid, theTime))
@@ -2091,7 +2095,7 @@ class DB:
                 cur.execute("INSERT INTO PICK VALUES(7,29,247,'JAX',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,30,248,'SEA',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,31,249,'CIN',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,32,250,'SEA',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,32,250,'PHI',null,'{}','{}')".format(sessionid, theTime))
 
                 cur.execute("INSERT INTO PICK VALUES(7,33,251,'LAC',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,34,252,'CIN',null,'{}','{}')".format(sessionid, theTime))
