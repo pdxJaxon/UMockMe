@@ -431,7 +431,7 @@ class DB:
 
 
     def UpdateTeamNeedForSessionDB(sessionId,team,pos,needScore,needCount):
-        sql = "UPDATE SessionTeamNeed SET needScore={}, needCount={} WHERE sessionId='{}' AND Abbr='{}' AND pos='{}'".format(needScore,needCount,sessionId,team,pos)
+        sql = "UPDATE SessionTeamNeed SET needScore={}, needCount={} WHERE sessionId='{}' AND Abbr='{}' AND Need='{}'".format(needScore,needCount,sessionId,team,pos)
         # print(sql)
         DB.ExecuteSQL(sql)
 

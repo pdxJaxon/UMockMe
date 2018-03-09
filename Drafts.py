@@ -267,15 +267,8 @@ class Draft:
     def cacheTeamNeeds(self,sessionId,draftId=2):
 
 
-        DBLib.DB.CacheTeamNeedsForSession(sessionId,draftId)
-
-
         theNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
-
-
-        print("Try This:",theNeeds)
-        print("Try 2:",type(theNeeds))
 
         self._allTeamNeeds = theNeeds
 
@@ -331,10 +324,16 @@ class Draft:
 
 
 
+
+
+
+
+
     def getNextPick(self,sessionId):
 
 
         if(len(self._allTeamNeeds)==0):
+            print("CACHEING SHIT")
             self.cacheTeamNeeds(sessionId)
 
         # 1 - get all rounds
@@ -428,14 +427,11 @@ class Draft:
 
         needs = self.getTeamNeeds(abr)
 
-        print("Test this shit",needs,type(needs))
 
         if(not needs):
             Teams.Team.AddNeedsForTeam(abr,city,teamName,year,draftId)
             needs=self.getTeamNeeds(abr)
 
-
-        print("Pick {} Team {} Needs {}".format(pck[0],abr,needs))
 
 
         if(len(self._prospects)==0):
@@ -474,7 +470,7 @@ class Draft:
                             self.MarkNeedAsSelected(abr, pPos, sessionId)
                             pickMade = True
                             break
-                        elif(self.isHighestNeed(pPos, needs)==False):
+                        else:
                             # Were There  higher ranked players that were NOT in our need list....are we sure we want to pass em up?
                             AlternatePicks = self.BetterPlayerPassedUp(needs, pPos, p, passedUpPlayers)
 
@@ -496,25 +492,7 @@ class Draft:
                                     # OK, we did the weird thing and passed up our slam dunk player so add them to the "Passed Up List" we may come back around and reconsider them in a minute....
                                     passedUpPlayers.append([p[0], p[9], pPos])
 
-                        else:
-                            # BetterPlayerPassedUp(needs,n,p,passedUpPlayers) - we need to grab them now or be sorry later.
-                            Player = AlternatePicks[0]
 
-                            for dp in self._prospects:
-                                if (dp[0] == AlternatePicks[0]):
-                                    pickMade = True
-                                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-                                    self.removeProspectFromCache(sessionId,dp[0])
-
-                                    # find position in needs list that matches dp[pos]
-                                    # for i in needs:
-                                    #     if(i[0] ==dp[3]):
-                                    #         needs.remove(i)
-
-                                    self.MarkNeedAsSelected(abr, pPos,sessionId)
-                                    break
-
-                            break
 
                     else:
                         # This player was not a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later

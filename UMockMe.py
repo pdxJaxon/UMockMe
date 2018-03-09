@@ -253,10 +253,6 @@ def getProspectData():
 def getDraftData():
 
 
-
-
-
-
     if request.method == "POST":
         j = request.get_json()
         round = j.get('round')
@@ -275,8 +271,7 @@ def getDraftData():
 
 
 
-    print("getDraftData Roundish",round)
-    print("getDraftData session:",sessionid)
+
     myDraft = Drafts.Draft(sessionid)
 
 
@@ -400,7 +395,7 @@ def CustomDraft():
 
 
     DBLib.DB.PopulateSessionProspects(sessionid)
-
+    DBLib.DB.CacheTeamNeedsForSession(sessionid,2)
     DBLib.DB.PopulatePicks(sessionid)
 
 
