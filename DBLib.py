@@ -465,7 +465,6 @@ class DB:
             for m in cur.fetchall():
                 results.append(dict(zip(cols, m)))
 
-
         return results
 
 
@@ -1049,13 +1048,24 @@ class DB:
 
 
 
+    def getAllSelectedPicksForUser(sessionId):
+        con = DB.getConnection()
+        with con:
+            cur = con.cursor()
+            cur.execute(
+                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.ProspectId, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p LEFT OUTER JOIN Prospect AS t on t.ProspectId = p.ProspectId WHERE p.SessionId='{}' and p.ProspectId is not null ORDER BY p.OverallPickNum ASC".format(sessionId))
+
+            p = cur.fetchall()
+
+            return p
+
 
     def getAllPicksForUser(sessionId):
         con = DB.getConnection()
         with con:
             cur = con.cursor()
             cur.execute(
-                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.ProspectId, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p LEFT OUTER JOIN Prospect AS t on t.ProspectId = p.ProspectId WHERE p.SessionId='{}' and t.ProspectId is not null ORDER BY p.OverallPickNum ASC".format(sessionId))
+                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.ProspectId, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p LEFT OUTER JOIN Prospect AS t on t.ProspectId = p.ProspectId WHERE p.SessionId='{}' ORDER BY p.OverallPickNum ASC".format(sessionId))
 
             p = cur.fetchall()
 

@@ -185,31 +185,18 @@ def getQuickDraftData():
 
 
 
-    print("ROUND:{} for Session:{}".format(round,sessionid))
 
-    startPre = time.time()
+
     myDraft = Drafts.Draft(sessionid)
 
 
-
-    stopPre=time.time()
-
-    preProcessing = stopPre-startPre
-    print("PreProcessing-",str(preProcessing))
 
 
     myDraft.doDraft(sessionid,round,draftId)
 
 
-    picks = DBLib.DB.getAllPicksForUser(sessionid)
+    picks = DBLib.DB.getAllSelectedPicksForUser(sessionid)
 
-
-
-    endtime = time.time()
-
-    diff = endtime - start
-
-    print("Elapsed overall:", str(diff))
 
     return (jsonify(picks))
 

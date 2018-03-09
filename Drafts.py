@@ -22,11 +22,16 @@ class Draft:
 
 
 
-    def __init__(self,sessionId,userId=0):
+    def __init__(self,sessionId,userId=0,draftId=2):
 
         self._sessionId = sessionId
         self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
+
+        DBLib.DB.CacheTeamNeedsForSession(sessionId,draftId)
+
         self._allTeamNeeds=[]
+        self.cacheTeamNeeds(sessionId, draftId)
+
         self._rounds=[]
 
 
@@ -63,7 +68,7 @@ class Draft:
         highest=0
         picked=0
 
-        #print("DISECT:",needs,type(needs))
+        print("DISECT:",needs,type(needs))
 
         for n in needs:
             if(n['Need']==pos):
@@ -215,7 +220,7 @@ class Draft:
 
         endtime = time.time()
 
-        print("BetterProspect Time Elapsed:",str(endtime-startTime))
+
 
         return BetterProspect
 
@@ -242,14 +247,14 @@ class Draft:
                 if(t['Abbr']==teamAbbr):
                     teamFound=True
                     needs.append(t)
-                    print("NEEDS From Get() {}".format(needs))
+
 
             if(teamFound==False):
                 needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
                 for n in needs:
                     self._allTeamNeeds.append(n)
         else:
-            needs = json.loads(Teams.Team.getStoredNeedsByTeam(teamAbbr))
+            needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
             self._allTeamNeeds=[]
             for n in needs:
                 self._allTeamNeeds.append(n)
@@ -396,6 +401,8 @@ class Draft:
         elif (pPos == "FS"):
             pPos = "S"
         elif (pPos == "SS"):
+            pPos = "S"
+        elif(pPos == "DB"):
             pPos = "S"
 
         return pPos
@@ -557,7 +564,6 @@ class Draft:
 
 
     def removeProspectFromCache(self,sessionId,ProspectId):
-        print("Player to remove",ProspectId)
 
         DBLib.DB.DeleteProspectForSessionDB(sessionId,ProspectId)
 
@@ -572,9 +578,9 @@ class Draft:
     def doDraft(self,sessionId,round=0,draftId=2):
 
 
-
-        #todo: Wire DraftId
-        self.cacheTeamNeeds(sessionId,draftId)
+        if(len(self._allTeamNeeds)==0):
+            #todo: Wire DraftId
+            self.cacheTeamNeeds(sessionId,draftId)
 
 
         #1 - get all rounds
