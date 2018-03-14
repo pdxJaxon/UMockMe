@@ -68,7 +68,6 @@ class Draft:
         highest=0
         picked=0
 
-        print("DISECT:",needs,type(needs))
 
         for n in needs:
             if(n['Need']==pos):
@@ -117,7 +116,7 @@ class Draft:
 
         needPriority = Draft.getNeedValueForPosition(needPickedFor,needs)
 
-        startTime = time.time()
+
 
 
         BetterProspect = None
@@ -133,54 +132,54 @@ class Draft:
 
             thisProspectNeedValue = Draft.getNeedValueForPosition(thisProspectPosition,needs)
 
-
+            randomizer = randint(1,100)
 
             #this is the priority of the need we just selected a person for....should be a SLAM DUNK Pick unless we passed up someone REALLY GOOD
             if(needPriority>=90):
-                if ((pup[1] >= prospectPicked[9] + 1.50) and (thisProspectNeedValue >= needPriority - 10)):
+                if ((pup[1] >= prospectPicked[9] + 1.50) and (thisProspectNeedValue >= 80)):
                     # Player too good to pass up.....80% chance they take him
-
-                    BetterProspect = pup
-                    break
+                    if(randomizer>=20):
+                        BetterProspect = pup
+                        break
             elif(needPriority>=70):
                 #how much stronger is alternate on UMockMeGrade
 
-                if((pup[1] >= prospectPicked[9] + 1.00) or (thisProspectNeedValue >= needPriority-20)):
+                if((pup[1] >= prospectPicked[9] + 1.00) and (thisProspectNeedValue >= 70)):
                     #Player too good to pass up.....80% chance they take him
-
+                    if(randomizer>=25):
                         BetterProspect = pup
                         break
-                elif ((pup[1] >= prospectPicked[9] + .75) or (thisProspectNeedValue >= needPriority-20)):
+                elif ((pup[1] >= prospectPicked[9] + .75) and (thisProspectNeedValue >= 60)):
                     #if in needslist then 90% we take a look
-                    if (self.isHighNeed(pup[2],needs)):
+                    if (self.isHighNeed(pup[2],needs) and randomizer>=10):
                         BetterProspect = pup
                         break
                     else:
                             BetterProspect = pup
                             break
-                elif ((pup[1] >= prospectPicked[9] + .50) or(thisProspectNeedValue >= needPriority-20)):
-                    if (self.isHighNeed(pup[2],needs)):
+                elif ((pup[1] >= prospectPicked[9] + .50) or(thisProspectNeedValue >= 60)):
+                    if (self.isHighNeed(pup[2],needs) and randomizer>=30):
                         BetterProspect = pup
                         break
                     else:
                             BetterProspect = pup
                             break
-                elif ((pup[1] >= prospectPicked[9] + .25) or (thisProspectNeedValue >= needPriority-20)):
-                    if (self.isHighNeed(pup[2],needs)):
+                elif ((pup[1] >= prospectPicked[9] + .25) or (thisProspectNeedValue >= 60)):
+                    if (self.isHighNeed(pup[2],needs) and randomizer>=30):
                         BetterProspect = pup
                         break
                     else:
                             BetterProspect = pup
                             break
-                elif ((pup[1] >= prospectPicked[9] + .10) or (thisProspectNeedValue >= needPriority-20)):
-                    if (self.isHighNeed(pup[2],needs)):
+                elif ((pup[1] >= prospectPicked[9] + .10) or (thisProspectNeedValue >= 60)):
+                    if (self.isHighNeed(pup[2],needs) and randomizer>=40):
                         BetterProspect = pup
                         break
                     else:
                             BetterProspect = pup
                             break
-                elif ((pup[1] >= prospectPicked[9]) or (thisProspectNeedValue >= needPriority-20)):
-                    if (self.isHighNeed(pup[2],needs)):
+                elif ((pup[1] >= prospectPicked[9]) or (thisProspectNeedValue >= 60)):
+                    if (self.isHighNeed(pup[2],needs) and randomizer>=50):
                         BetterProspect = pup
                         break
                     else:
@@ -189,21 +188,21 @@ class Draft:
             #The Selected Player fulfills a Need that is greater than Average.....Pretty good pick
             elif(needPriority>=50):
                 # how much stronger is alternate on "NFL.COM Expert Grade:
-                if ((pup[1] >= prospectPicked[9] + .5) or (thisProspectNeedValue >= needPriority-20)):
+                if ((pup[1] >= prospectPicked[9] + .5) or (thisProspectNeedValue >= 50)):
                     if (self.isHighNeed(pup[2], needs)):
                         BetterProspect = pup
                         break
                     else:
                             BetterProspect = pup
                             break
-                elif ((pup[1] >= prospectPicked[9] + .25) or (thisProspectNeedValue >= needPriority-20)):
+                elif ((pup[1] >= prospectPicked[9] + .25) or (thisProspectNeedValue >= 50)):
                     if (self.isHighNeed(pup[2], needs)):
                         BetterProspect = pup
                         break
                     else:
                             BetterProspect = pup
                             break
-                elif ((pup[1] >= prospectPicked[9]) or (thisProspectNeedValue >= needPriority-20)):
+                elif ((pup[1] >= prospectPicked[9]) or (thisProspectNeedValue >= 50)):
                     if (self.isHighNeed(pup[2], needs)):
                         BetterProspect = pup
                         break
@@ -218,7 +217,7 @@ class Draft:
                         BetterProspect = pup
                         break
 
-        endtime = time.time()
+
 
 
 
@@ -234,7 +233,7 @@ class Draft:
 
 
 
-    def getTeamNeeds(self,teamAbbr):
+    def getTeamNeeds(self,teamAbbr,sessionId):
 
         needs=[]
 
@@ -249,12 +248,10 @@ class Draft:
                     needs.append(t)
 
 
-            if(teamFound==False):
-                needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
-                for n in needs:
-                    self._allTeamNeeds.append(n)
+
         else:
-            needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
+            #needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
+            needs = DBLib.DB.getNeedsForAllTeams(sessionId)
             self._allTeamNeeds=[]
             for n in needs:
                 self._allTeamNeeds.append(n)
@@ -288,6 +285,7 @@ class Draft:
     def MarkNeedAsSelected(self,TeamAbbr,NeedPosition,sessionId):
 
 
+
         posAdded=False
         newNeed=[]
 
@@ -297,18 +295,16 @@ class Draft:
 
             if(i['Abbr']==TeamAbbr):
 
-                #print("FML",i)
-
 
                 if(i['Need']==NeedPosition):
                     i["needScore"]=0
 
                     posAdded=True
 
-                    DBLib.DB.UpdateTeamNeedForSessionDB(i["sessionId"],i["Abbr"],i["Need"],i["needScore"],0)
+                    DBLib.DB.UpdateTeamNeedForSessionDB(sessionId,TeamAbbr,NeedPosition,0,0)
+                    self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
-
-
+                    break
 
 
 
@@ -338,7 +334,6 @@ class Draft:
 
 
         if(len(self._allTeamNeeds)==0):
-            print("CACHEING SHIT")
             self.cacheTeamNeeds(sessionId)
 
         # 1 - get all rounds
@@ -403,7 +398,7 @@ class Draft:
         elif (pPos == "SS"):
             pPos = "S"
         elif(pPos == "DB"):
-            pPos = "S"
+            pPos = "CB"
 
         return pPos
 
@@ -432,7 +427,7 @@ class Draft:
         pickMade = False
 
 
-        needs = self.getTeamNeeds(abr)
+        needs = self.getTeamNeeds(abr,sessionId)
 
 
         if(not needs):
@@ -454,7 +449,8 @@ class Draft:
         if (needs):
             passedUpPlayers = []
 
-
+            if(abr=="PIT"):
+                print("Needs:",needs)
 
             for p in self._prospects:
 
@@ -462,19 +458,25 @@ class Draft:
                 if (p[0] != 0):
                     pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
 
-                    pPos= Draft.NormalizePosition(pPos)
+                    #pPos= Draft.NormalizePosition(pPos)
 
 
                     #if the current prospect is our highest need OR if we have already passed up 25 prospects, we need to make this pick.
                     if (self.isHighestNeed(pPos, needs) or len(passedUpPlayers)>25):
 
+
+
                         if(self.isHighestNeed(pPos, needs)):
+                            if(abbr=="PIT"):
+                                print("IsHighestNeed:",pPos,needs)
                             Player = p[0]
                             Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
                             # print("Pick Normal - {}".format(pck))
                             self.removeProspectFromCache(sessionId, Player)
                             # needs.remove(n)
                             self.MarkNeedAsSelected(abr, pPos, sessionId)
+                            if(abbr=="PIT"):
+                                print("NEW NEEDS...",self._allTeamNeeds)
                             pickMade = True
                             break
                         else:

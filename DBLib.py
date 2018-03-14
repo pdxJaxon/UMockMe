@@ -363,11 +363,11 @@ class DB:
     def CacheTeamNeedsForSession(sessionId,draftId):
         #SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer
 
-        sql = "DELETE FROM SessionTeamNeed WHERE SessionId='{}'".format(sessionId)
-        DB.ExecuteSQL(sql)
+        needs=DB.getNeedsForAllTeams(sessionId)
 
-        sql = "INSERT INTO SessionTeamNeed(SessionId,Abbr,Need,NeedScore,NeedCount) SELECT DISTINCT '{}',Abbr,Need,NeedScore,NeedCount FROM TeamNeed WHERE draftId={}".format(sessionId,draftId)
-        DB.ExecuteSQL(sql)
+        if(len(needs)==0):
+            sql = "INSERT INTO SessionTeamNeed(SessionId,Abbr,Need,NeedScore,NeedCount) SELECT DISTINCT '{}',Abbr,Need,NeedScore,NeedCount FROM TeamNeed WHERE draftId={}".format(sessionId,draftId)
+            DB.ExecuteSQL(sql)
 
 
     def PopulateSessionProspects(sessionId,draftId=2):
@@ -1267,9 +1267,13 @@ class DB:
         sql = "UPDATE Prospect SET sparqScore=2.4, UMockMeGrade=expertGrade-.306 Where LOWER(Lastname) = 'stroman' AND LOWER(School) like 'virginia tech%' AND LOWER(POS) IN('cb','db') AND DraftId=2"
         DB.ExecuteSQL(sql)
 
+        sql = "UPDATE Prospect SET sparqScore=96.5, UMockMeGrade=expertGrade+.465 Where LOWER(Lastname) = 'fitzpatrick' AND LOWER(School) like 'Alabama%' AND LOWER(POS) IN('cb','db') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+
 
         #Quarterbacks
-        sql = "UPDATE Prospect SET sparqScore=82.1, UMockMeGrade=expertGrade+.321 Where LOWER(Lastname) = 'allen' AND LOWER(School) like 'wyoming%' AND LOWER(POS) IN('qb') AND DraftId=2"
+        sql = "UPDATE Prospect SET sparqScore=82.1, UMockMeGrade=expertGrade+.721 Where LOWER(Lastname) = 'allen' AND LOWER(School) like 'wyoming%' AND LOWER(POS) IN('qb') AND DraftId=2"
         DB.ExecuteSQL(sql)
 
         sql = "UPDATE Prospect SET sparqScore=66.4, UMockMeGrade=expertGrade+.164 Where LOWER(Lastname) = 'lauletta' AND LOWER(School) like 'richmond%' AND LOWER(POS) IN('qb') AND DraftId=2"
@@ -1306,6 +1310,9 @@ class DB:
         DB.ExecuteSQL(sql)
 
         sql = "UPDATE Prospect SET sparqScore=4.8, UMockMeGrade=expertGrade-.452 Where LOWER(Lastname) = 'white' AND LOWER(School) like 'western kentucky%' AND LOWER(POS) IN('qb') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=97.0, UMockMeGrade=expertGrade+.85 Where LOWER(Lastname) = 'rosen' AND LOWER(School) like 'ucla%' AND LOWER(POS) IN('qb') AND DraftId=2"
         DB.ExecuteSQL(sql)
 
 
@@ -1458,8 +1465,31 @@ class DB:
 
 
         #OLine
+        sql = "UPDATE Prospect SET sparqScore=97.0, UMockMeGrade=expertGrade+.47 Where LOWER(Lastname) = 'miller' AND LOWER(School) like 'ucla%' AND LOWER(POS) IN('ot','g','c','og','oc','olt','olg','olc') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=89.1, UMockMeGrade=expertGrade+.391 Where LOWER(firstname) = 'brian' AND LOWER(School) like 'pittsburgh%' AND LOWER(POS) IN('ot','g','c','og','oc','olt','olg','olc') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=84.6, UMockMeGrade=expertGrade+.346 Where LOWER(Lastname) = 'quessenberry' AND LOWER(School) like 'ucla%' AND LOWER(POS) IN('ot','g','c','og','oc','olt','olg','olc') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=82.7, UMockMeGrade=expertGrade+.327 Where LOWER(Lastname) = 'smith' AND LOWER(School) like 'auburn%' AND LOWER(POS) IN('ot','g','c','og','oc','olt','olg','olc') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=75.4, UMockMeGrade=expertGrade+.754 Where LOWER(firstname) = 'teller' AND LOWER(School) like 'virginia%' AND LOWER(POS) IN('ot','g','c','og','oc','olt','olg','olc') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
 
         #DLine
+        sql = "UPDATE Prospect SET sparqScore=97.0, UMockMeGrade=expertGrade+.47 Where LOWER(Lastname) = 'vea' AND LOWER(School) like 'washington%' AND LOWER(POS) IN('de','dt','dg','dn','dlt','dlg','dln','n') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=97.1, UMockMeGrade=expertGrade+.471 Where LOWER(lastname) = 'bryan' AND LOWER(School) like 'florida%' AND LOWER(POS) IN('de','dt','dg','dn','dlt','dlg','dln','n') AND DraftId=2"
+        DB.ExecuteSQL(sql)
+
+        sql = "UPDATE Prospect SET sparqScore=93.1, UMockMeGrade=expertGrade+.931 Where LOWER(Lastname) = 'looney' AND LOWER(School) like 'california%' AND LOWER(POS) IN('de','dt','dg','dn','dlt','dlg','dln','n') AND DraftId=2"
+        DB.ExecuteSQL(sql)
 
 
 
