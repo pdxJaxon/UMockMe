@@ -1053,7 +1053,7 @@ class DB:
         with con:
             cur = con.cursor()
             cur.execute(
-                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.ProspectId, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p LEFT OUTER JOIN Prospect AS t on t.ProspectId = p.ProspectId WHERE p.SessionId='{}' and p.ProspectId is not null ORDER BY p.OverallPickNum ASC".format(sessionId))
+                "SELECT p.RoundId, p.RoundPickNum, p.OverallPickNum, p.TeamAbbr,t.ProspectId, t.firstName,t.lastName,t.pos, t.school FROM PICK AS p LEFT OUTER JOIN Prospect AS t on t.ProspectId = p.ProspectId WHERE p.SessionId='{}' and p.ProspectId is  not null ORDER BY p.OverallPickNum ASC".format(sessionId))
 
             p = cur.fetchall()
 
@@ -2148,9 +2148,6 @@ class DB:
 
             theTimeEnd = time.time()
 
-            diffy = theTimeEnd - theTime
-
-            print("Pop Picks Time:",str(diffy))
 
 
 

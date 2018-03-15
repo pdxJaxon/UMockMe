@@ -491,9 +491,6 @@ def QuickDraft():
         usr = request.args.get('usr')
 
 
-    print("daddy session:",sessionid)
-
-
 
     myDraft = Drafts.Draft(sessionid)
 
