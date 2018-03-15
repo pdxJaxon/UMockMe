@@ -28,6 +28,7 @@
                     <th>Position</th>
                     <th>School</th>
                     <th>Expert Score</th>
+                    <th>UMM Score</th>
                 </tr>
                 {% raw %}
                 <tr ng-repeat="x in AvailableProspects">
@@ -36,8 +37,9 @@
                     </span>
                     <td>{{ x[2] + ' ' + x[1] }}</td>
                     <td>{{ x[3] }}</td>
-                    <td>{{ x[10] }}</td>
+                    <td>{{ x[11] }}</td>
                     <td>{{ x[6]}}</td>
+                    <td>{{ x[9]}}</td>
                 </tr>
                 {% endraw %}
             </table>

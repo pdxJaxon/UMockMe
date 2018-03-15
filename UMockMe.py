@@ -345,10 +345,6 @@ def getAvailableProspects():
 
 
 
-    print("getAvailableProspects TheRound=",round)
-    print("getAvailableProspects sessionid",sessionid)
-
-
     myDraft = Drafts.Draft(sessionid)
 
     myProspects = myDraft.getPlayersAvailable()
