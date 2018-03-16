@@ -528,9 +528,12 @@ class Draft:
 
 
         isFirstPlayer = True
-
+        iCount=0
+        likelihood = randint(1, 100)
 
         for p in self._prospects:
+
+            iCount=iCount+1
 
             if(isFirstPlayer):
                 potentialPicks.append(p)
@@ -538,23 +541,27 @@ class Draft:
 
 
             pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
+            if(pPos=="LB"):
+                pPos="ILB"
 
 
 
             #if the current prospect is our highest need OR if we have already passed up 25 prospects, we need to make this pick.
             if (self.isHighestNeed(pPos, needs)):
+                if(likelihood>=10):
+                    Player = p[0]
+                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
-                Player = p[0]
-                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+                    self.removeProspectFromCache(sessionId, Player)
+                    # needs.remove(n)
+                    self.MarkNeedAsSelected(abr, pPos, sessionId)
 
-                self.removeProspectFromCache(sessionId, Player)
-                # needs.remove(n)
-                self.MarkNeedAsSelected(abr, pPos, sessionId)
-
-                pickMade = True
-                break
+                    pickMade = True
+                    break
+                else:
+                    potentialPicks.append(p)
             elif(self.isSecondHighestNeed(pPos,needs)):
-                if(len(passedUpPlayers)>15):
+                if(len(passedUpPlayers)>20 and  likelihood>=30):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -563,8 +570,10 @@ class Draft:
                     self.MarkNeedAsSelected(abr, pPos, sessionId)
                     pickMade = True
                     break
+                else:
+                    potentialPicks.append(p)
             elif(self.isThirdHighestNeed(pPos,needs)):
-                if (len(passedUpPlayers) > 20):
+                if (len(passedUpPlayers) > 20 and likelihood>=30):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -573,8 +582,10 @@ class Draft:
                     self.MarkNeedAsSelected(abr, pPos, sessionId)
                     pickMade = True
                     break
+                else:
+                    potentialPicks.append(p)
             elif(self.isHighNeed(pPos,needs)):
-                if (len(passedUpPlayers) > 20):
+                if (len(passedUpPlayers) > 30 and likelihood>=20):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -583,10 +594,15 @@ class Draft:
                     self.MarkNeedAsSelected(abr, pPos, sessionId)
                     pickMade = True
                     break
-            elif(len(passedUpPlayers)>=25):
-                Player = passedUpPlayers[0][0]
+                else:
+                    potentialPicks.append(p)
+            elif(len(passedUpPlayers)>=40):
 
-                pPos = passedUpPlayers[0][2]
+                BestPlayer = self.ChooseBestPotential(potentialPicks,needs)
+
+                Player = BestPlayer[0]
+
+                pPos = BestPlayer[2]
 
                 Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -601,7 +617,15 @@ class Draft:
                 passedUpPlayers.append([p[0], p[9], pPos])
 
         if(pickMade==False):
-            Player = self._prospects[0][0]
+            if(len(potentialPicks)>0):
+                BestPlayer = self.ChooseBestPotential(potentialPicks,needs)
+                print("this was the best player available",BestPlayer)
+            else:
+                BestPlayer = self._prospects[0]
+
+            Player = BestPlayer[0]
+
+            pPos = BestPlayer[2]
             print("FUCK",abbr,pck[0])
             Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -621,6 +645,46 @@ class Draft:
 
 
 
+
+
+    def ChooseBestPotential(self,lstPlayers,needsList):
+        retval = []
+        highestVal = 0
+        playerPicked=False
+
+        for p in lstPlayers:
+            if(self.isHighestNeed(p,needsList)):
+                retval=p
+                playerPicked=True
+        if(not playerPicked):
+            for p in lstPlayers:
+
+                if(self.isHighestNeed(p,needsList)):
+                    retval = p
+                    playerPicked = True
+
+        if (not playerPicked):
+            for p in lstPlayers:
+
+                if(self.isHighestNeed(p,needsList)):
+                    retval = p
+                    playerPicked=True
+
+        if (not playerPicked):
+            for p in lstPlayers:
+
+                if(self.isHighestNeed(p,needsList)):
+                    retval = p
+                    playerPicked=True
+
+        if (not playerPicked):
+            retval = lstPlayers[0]
+            playerPicked = True
+
+
+
+
+        return retval
 
 
 
