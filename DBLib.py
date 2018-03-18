@@ -2108,7 +2108,7 @@ class DB:
                 # 7
                 # 32
                 cur.execute("INSERT INTO PICK VALUES(7,1,219,'CLE',null,'{}','{}')".format(sessionid, theTime))
-                cur.execute("INSERT INTO PICK VALUES(7,2,220,'NYG',null,'{}','{}')".format(sessionid, theTime))
+                cur.execute("INSERT INTO PICK VALUES(7,2,220,'PIT',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,3,221,'IND',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,4,222,'HOU',null,'{}','{}')".format(sessionid, theTime))
                 cur.execute("INSERT INTO PICK VALUES(7,5,223,'MIA',null,'{}','{}')".format(sessionid, theTime))

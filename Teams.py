@@ -171,7 +171,7 @@ class Team:
         elif (teamAbr == "PHI"):
             needs = [('PHI', 'RB', 80, 1),('PHI', 'WR', 80, 1),('PHI', 'OLT', 100, 1),('PHI', 'OLG', 70, 1),('PHI', 'OLC', 60, 1),('PHI', 'EDGE', 70, 1),('PHI', 'ILB', 90, 1),('PHI', 'CB', 70, 1)]
         elif (teamAbr == "PIT"):
-            needs=[('PIT', 'ILB', 100, 1), ('PIT', 'S', 90, 1),('PIT', 'CB', 60, 1), ('PIT', 'EDGE', 80, 1),('PIT', 'OLB', 80, 1), ('PIT', 'DLN', 70, 1),('PIT', 'RB', 80, 1), ('PIT', 'WR', 75, 1),('PIT','TE',60,1),('PIT', 'OLG', 70, 1),('PIT', 'OLC', 70, 1)]
+            needs=[('PIT', 'ILB', 100, 1), ('PIT', 'S', 90, 1),('PIT', 'CB', 60, 1), ('PIT', 'EDGE', 80, 1), ('PIT', 'DLN', 70, 1),('PIT', 'RB', 70, 1), ('PIT', 'WR', 75, 1),('PIT','TE',70,1),('PIT', 'OLG', 50, 1),('PIT', 'OLC', 50, 1)]
         elif (teamAbr == "LA"):
             needs = [('LA', 'QB', 80, 1),('LA', 'OLT', 90, 1),('LA', 'OLC', 70, 1),('LA', 'DLN', 90, 1),('LA', 'ILB', 80, 1),('LA', 'S', 80, 1),('LA', 'CB', 70, 1)]
         elif (teamAbr == "LAR"):
