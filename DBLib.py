@@ -652,7 +652,7 @@ class DB:
 
 
 
-            cur.execute("SELECT p.ProspectId,p.lastName,p.firstName,p.pos,p.height,p.weight,p.expertGrade,p.DraftProjectedRound,p.DraftProjectedPick,p.uMockMeGrade,p.sparqScore,p.school,p.draftId FROM SessionProspect as s INNER JOIN Prospect as p on p.ProspectId = s.ProspectId WHERE s.SessionId='{}' Order By UMockMeGrade desc".format(sessionId))
+            cur.execute("SELECT p.ProspectId,p.lastName,p.firstName,p.pos,p.height,p.weight,p.expertGrade,p.DraftProjectedRound,p.DraftProjectedPick,p.uMockMeGrade,p.sparqScore,p.school,p.draftId FROM SessionProspect as s INNER JOIN Prospect as p on p.ProspectId = s.ProspectId WHERE s.SessionId='{}' Order By expertGrade desc".format(sessionId))
 
             prospects = cur.fetchall()
 
