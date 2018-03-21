@@ -165,13 +165,13 @@ class Team:
         elif (teamAbr == "NYG"):
             needs = [('NYG', 'QB', 80, 1),('NYG', 'RB', 70, 2),('NYG', 'OLT', 80, 1),('NYG', 'OLG', 80, 1),('NYG', 'OLC', 60, 1),('NYG', 'DLN', 70, 1),('NYG', 'EDGE', 80, 1),('NYG', 'OLB', 70, 1),('NYG', 'ILB', 70, 1),('NYG', 'CB', 80, 1)]
         elif (teamAbr == "NYJ"):
-            needs = [('NYJ', 'QB', 80, 1),('NYJ', 'RB', 80, 1),('NYJ', 'OLT', 100, 1),('NYJ', 'OLG', 80, 1),('NYJ', 'TE', 80, 1),('NYJ', 'OLC', 90, 1),('NYJ', 'EDGE', 90, 1),('NYJ', 'ILB', 80, 1),('NYJ', 'CB', 90, 1)]
+            needs = [('NYJ', 'QB', 100, 1),('NYJ', 'RB', 80, 1),('NYJ', 'OLT', 90, 1),('NYJ', 'OLG', 80, 1),('NYJ', 'TE', 80, 1),('NYJ', 'OLC', 90, 1),('NYJ', 'EDGE', 90, 1),('NYJ', 'ILB', 80, 1),('NYJ', 'CB', 90, 1)]
         elif (teamAbr == "OAK"):
             needs = [('OAK', 'RB', 80, 1),('OAK', 'WR', 80, 1),('OAK', 'OLT', 80, 1),('OAK', 'DLT', 80, 1),('OAK', 'EDGE', 80, 1),('OAK', 'OLB', 90, 1),('OAK', 'ILB', 90, 1),('OAK', 'CB', 100, 1)]
         elif (teamAbr == "PHI"):
             needs = [('PHI', 'RB', 80, 1),('PHI', 'WR', 80, 1),('PHI', 'OLT', 100, 1),('PHI', 'OLG', 70, 1),('PHI', 'OLC', 60, 1),('PHI', 'EDGE', 70, 1),('PHI', 'ILB', 90, 1),('PHI', 'CB', 70, 1)]
         elif (teamAbr == "PIT"):
-            needs=[('PIT', 'ILB', 100, 1), ('PIT', 'S', 90, 1),('PIT', 'CB', 60, 1), ('PIT', 'EDGE', 80, 1), ('PIT', 'DLN', 70, 1),('PIT', 'RB', 70, 1), ('PIT', 'WR', 75, 1),('PIT','TE',70,1),('PIT', 'OLG', 50, 1),('PIT', 'OLC', 50, 1)]
+            needs=[('PIT', 'ILB', 100, 1), ('PIT', 'S', 90, 1),('PIT', 'CB', 70, 1), ('PIT', 'EDGE', 80, 1), ('PIT', 'DLN', 70, 1),('PIT', 'RB', 70, 1), ('PIT', 'WR', 80, 1),('PIT','TE',70,1),('PIT', 'OLG', 50, 1),('PIT', 'OLC', 40, 1)]
         elif (teamAbr == "LA"):
             needs = [('LA', 'QB', 80, 1),('LA', 'OLT', 90, 1),('LA', 'OLC', 70, 1),('LA', 'DLN', 90, 1),('LA', 'ILB', 80, 1),('LA', 'S', 80, 1),('LA', 'CB', 70, 1)]
         elif (teamAbr == "LAR"):

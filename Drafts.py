@@ -525,6 +525,8 @@ class Draft:
         iCount=0
         likelihood = randint(1, 100)
 
+
+
         for p in self._prospects:
 
             iCount=iCount+1
@@ -555,7 +557,7 @@ class Draft:
                 else:
                     potentialPicks.append(p)
             elif(self.isSecondHighestNeed(pPos,needs)):
-                if(round<4 and iCount>15 and likelihood>=20):
+                if(round<4 and iCount>25 and likelihood>=20):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -564,7 +566,7 @@ class Draft:
                     self.MarkNeedAsSelected(abr, pPos, sessionId)
                     pickMade = True
                     break
-                elif((iCount>20 and  likelihood>=60) or likelihood>80 or iCount>30):
+                elif((iCount>25 and  likelihood>=60) or likelihood>80 or iCount>35):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -576,7 +578,7 @@ class Draft:
                 else:
                     potentialPicks.append(p)
             elif(self.isThirdHighestNeed(pPos,needs)):
-                if(round<4 and iCount>=25 and likelihood>=30):
+                if(round<4 and iCount>=35 and likelihood>=30):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -585,7 +587,7 @@ class Draft:
                     self.MarkNeedAsSelected(abr, pPos, sessionId)
                     pickMade = True
                     break
-                elif ((iCount > 20 and likelihood>=70) or likelihood>80 or iCount>30):
+                elif ((iCount > 35 and likelihood>=70) or likelihood>80 or iCount>40):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -597,7 +599,7 @@ class Draft:
                 else:
                     potentialPicks.append(p)
             elif(self.isHighNeed(pPos,needs)):
-                if(round<4 and iCount>30 and likelihood>=40):
+                if(round<4 and iCount>40 and likelihood>=40):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -606,7 +608,7 @@ class Draft:
                     self.MarkNeedAsSelected(abr, pPos, sessionId)
                     pickMade = True
                     break
-                if ((iCount > 40 and likelihood>=70) or likelihood>80 or iCount>35):
+                if ((iCount > 40 and likelihood>=70) or likelihood>80 or iCount>45):
                     Player = p[0]
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -617,7 +619,7 @@ class Draft:
                     break
                 else:
                     potentialPicks.append(p)
-            elif((round<4 and iCount>=30) or iCount>50):
+            elif((round<4 and iCount>=40) or iCount>50):
 
                 BestPlayer = self.ChooseBestPotential(potentialPicks,needs)
 
