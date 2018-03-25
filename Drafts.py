@@ -27,10 +27,8 @@ class Draft:
         self._sessionId = sessionId
         self._prospects = DBLib.DB.getAllProspectsForSession(sessionId)
 
-        DBLib.DB.CacheTeamNeedsForSession(sessionId,draftId)
+        self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
-        self._allTeamNeeds=[]
-        self.cacheTeamNeeds(sessionId, draftId)
 
         self._rounds=[]
 
@@ -326,15 +324,14 @@ class Draft:
                 if(t['Abbr']==teamAbbr):
                     teamFound=True
                     needs.append(t)
-
-
-
         else:
-            #needs = json.dumps(Teams.Team.getStoredNeedsByTeam(teamAbbr))
-            needs = DBLib.DB.getNeedsForAllTeams(sessionId)
+
+            needs = Teams.Team.getNeedsByTeam2(teamAbbr)
             self._allTeamNeeds=[]
             for n in needs:
                 self._allTeamNeeds.append(n)
+
+
 
         return needs
 
@@ -344,15 +341,19 @@ class Draft:
 
 
 
+    def refreshCacheTeamNeeds(self,sessionId,draftId=2):
+        self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
+
 
 
     def cacheTeamNeeds(self,sessionId,draftId=2):
 
 
-        theNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
+        #theNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
 
 
-        self._allTeamNeeds = theNeeds
+
+        self._allTeamNeeds = Teams.Team.getNeedsForAllTeams2()
 
 
 
@@ -378,11 +379,8 @@ class Draft:
 
                 if(i['Need']==NeedPosition):
                     i["needScore"]=0
-
-                    posAdded=True
-
                     DBLib.DB.UpdateTeamNeedForSessionDB(sessionId,TeamAbbr,NeedPosition,0,0)
-                    self._allTeamNeeds = DBLib.DB.getNeedsForAllTeams(sessionId)
+                    posAdded=True
 
                     break
 
@@ -484,6 +482,20 @@ class Draft:
 
 
 
+    def getDesperateneed(self,needs):
+        retval=""
+        for n in needs:
+            if(int(n['needScore'])>int(90)):
+                retval=n['Need']
+                break
+
+        return retval
+
+
+
+
+
+
 
     def MakePick(self,pck,sessionId,draftId=2):
         startTime = time.time()
@@ -508,12 +520,8 @@ class Draft:
         pickMade = False
 
 
-        needs = self.getTeamNeeds(abr,sessionId)
+        needs = self.getTeamNeeds(abbr,sessionId)
 
-
-        if(not needs):
-            Teams.Team.AddNeedsForTeam(abr,city,teamName,year,draftId)
-            needs=self.getTeamNeeds(abr,sessionId)
 
 
 
@@ -524,28 +532,141 @@ class Draft:
         isFirstPlayer = True
         iCount=0
         likelihood = randint(1, 100)
+        pPos=""
+
+        desperateNeed=self.getDesperateneed(needs)
 
 
 
-        for p in self._prospects:
+        if(abbr=="NYJ"):
+            print("JETS NEEDS:",needs)
+            print("JETS desp:",desperateNeed)
 
-            iCount=iCount+1
+        if(len(desperateNeed)>0):
+            for p in self._prospects:
+                if(p[3]==desperateNeed):
 
-            if(isFirstPlayer):
-                potentialPicks.append(p)
-                isFirstPlayer=False
-
-
-            pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
-            if(pPos=="LB"):
-                pPos="ILB"
-
-
-
-            #if the current prospect is our highest need OR if we have already passed up 25 prospects, we need to make this pick.
-            if (self.isHighestNeed(pPos, needs)):
-                if(round<4 or likelihood>=20 or isFirstPlayer):
                     Player = p[0]
+
+                    pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
+                    if (pPos == "LB"):
+                        pPos = "ILB"
+
+                    if(pPos == "DB"):
+                        pPos = "S"
+
+
+                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                    self.removeProspectFromCache(sessionId, Player)
+                    # needs.remove(n)
+                    self.MarkNeedAsSelected(abr, pPos, sessionId)
+
+                    pickMade = True
+                    break
+
+        if(pickMade==False):
+            for p in self._prospects:
+
+                iCount=iCount+1
+
+                if(isFirstPlayer):
+                    potentialPicks.append(p)
+                    isFirstPlayer=False
+
+
+                pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
+                if(pPos=="LB"):
+                    pPos="ILB"
+
+                if (pPos == "DB"):
+                    pPos = "S"
+
+                #if the current prospect is our highest need OR if we have already passed up 25 prospects, we need to make this pick.
+                if (self.isHighestNeed(pPos, needs)):
+                    if(round<4 or likelihood>=20 or isFirstPlayer):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+
+                        pickMade = True
+                        break
+                    else:
+                        potentialPicks.append(p)
+                elif(self.isSecondHighestNeed(pPos,needs)):
+                    if(round<4 and iCount>25 and likelihood>=20):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        pickMade = True
+                        break
+                    elif((iCount>25 and  likelihood>=60) or likelihood>80 or iCount>35):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        pickMade = True
+                        break
+                    else:
+                        potentialPicks.append(p)
+                elif(self.isThirdHighestNeed(pPos,needs)):
+                    if(round<4 and iCount>=35 and likelihood>=30):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        pickMade = True
+                        break
+                    elif ((iCount > 35 and likelihood>=70) or likelihood>80 or iCount>40):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        pickMade = True
+                        break
+                    else:
+                        potentialPicks.append(p)
+                elif(self.isHighNeed(pPos,needs)):
+                    if(round<4 and iCount>40 and likelihood>=40):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        pickMade = True
+                        break
+                    if ((iCount > 40 and likelihood>=70) or likelihood>80 or iCount>45):
+                        Player = p[0]
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        pickMade = True
+                        break
+                    else:
+                        potentialPicks.append(p)
+                elif((round<4 and iCount>=40) or iCount>50):
+
+                    BestPlayer = self.ChooseBestPotential(potentialPicks,needs)
+
+                    Player = BestPlayer[0]
+
+                    pPos = BestPlayer[2]
+
                     Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
                     self.removeProspectFromCache(sessionId, Player)
@@ -555,89 +676,8 @@ class Draft:
                     pickMade = True
                     break
                 else:
-                    potentialPicks.append(p)
-            elif(self.isSecondHighestNeed(pPos,needs)):
-                if(round<4 and iCount>25 and likelihood>=20):
-                    Player = p[0]
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
-                    pickMade = True
-                    break
-                elif((iCount>25 and  likelihood>=60) or likelihood>80 or iCount>35):
-                    Player = p[0]
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
-                    pickMade = True
-                    break
-                else:
-                    potentialPicks.append(p)
-            elif(self.isThirdHighestNeed(pPos,needs)):
-                if(round<4 and iCount>=35 and likelihood>=30):
-                    Player = p[0]
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
-                    pickMade = True
-                    break
-                elif ((iCount > 35 and likelihood>=70) or likelihood>80 or iCount>40):
-                    Player = p[0]
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
-                    pickMade = True
-                    break
-                else:
-                    potentialPicks.append(p)
-            elif(self.isHighNeed(pPos,needs)):
-                if(round<4 and iCount>40 and likelihood>=40):
-                    Player = p[0]
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
-                    pickMade = True
-                    break
-                if ((iCount > 40 and likelihood>=70) or likelihood>80 or iCount>45):
-                    Player = p[0]
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
-                    pickMade = True
-                    break
-                else:
-                    potentialPicks.append(p)
-            elif((round<4 and iCount>=40) or iCount>50):
-
-                BestPlayer = self.ChooseBestPotential(potentialPicks,needs)
-
-                Player = BestPlayer[0]
-
-                pPos = BestPlayer[2]
-
-                Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
-
-                self.removeProspectFromCache(sessionId, Player)
-                # needs.remove(n)
-                self.MarkNeedAsSelected(abr, pPos, sessionId)
-
-                pickMade = True
-                break
-            else:
-                # This player was not a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
-                passedUpPlayers.append([p[0], p[9], pPos])
+                    # This player was not a Match for the current Position we are looking for.....so we are passing them up for now....we will take another look later
+                    passedUpPlayers.append([p[0], p[9], pPos])
 
         if(pickMade==False):
             if(len(potentialPicks)>0):

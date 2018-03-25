@@ -488,19 +488,22 @@ def QuickDraft():
 
 
 
-    myDraft = Drafts.Draft(sessionid)
 
-    #When user first navigates to this page, they should have no picks yet
-    myDraft.ClearAllPicksForUser(sessionid)
 
     DBLib.DB.DeleteTeamNeedsForSessionDB(sessionid)
 
     #todo: remove hard coded 2 value for draftId
     DBLib.DB.PopulateSessionProspects(sessionid,2)
+    DBLib.DB.CacheTeamNeedsForSession(sessionid,2)
+
+
 
     DBLib.DB.PopulatePicks(sessionid)
 
+    myDraft = Drafts.Draft(sessionid)
 
+    # When user first navigates to this page, they should have no picks yet
+    myDraft.ClearAllPicksForUser(sessionid)
 
 
     return render_template('QuickDraft.html',usr=usr,sessionid=sessionid)

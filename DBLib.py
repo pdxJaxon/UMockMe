@@ -1,7 +1,7 @@
 import sqlite3 as lite2
 import psycopg2 as lite
 import urllib.parse as urlparse
-
+import Teams
 import os
 import sys
 from random import *
@@ -363,11 +363,16 @@ class DB:
     def CacheTeamNeedsForSession(sessionId,draftId):
         #SessionTeamNeed(SessionId varchar,Abbr varchar(50), Need varchar(50), NeedScore integer, NeedCount integer
 
-        needs=DB.getNeedsForAllTeams(sessionId)
+        needs=Teams.Team.getNeedsForAllTeams2()
 
-        if(len(needs)==0):
-            sql = "INSERT INTO SessionTeamNeed(SessionId,Abbr,Need,NeedScore,NeedCount) SELECT DISTINCT '{}',Abbr,Need,NeedScore,NeedCount FROM TeamNeed WHERE draftId={}".format(sessionId,draftId)
-            DB.ExecuteSQL(sql)
+        for n in needs:
+            DB.AddTeamNeedForSessionDB(sessionId,n['Abbr'],n['Need'],n['needScore'],1)
+
+
+
+
+
+
 
 
     def PopulateSessionProspects(sessionId,draftId=2):
@@ -456,14 +461,25 @@ class DB:
 
         cols = ["sessionId", "Abbr", "Need", "needScore", "needCount"]
 
+        results = []
+
         with con:
             cur = con.cursor()
             cur.execute("SELECT sessionId,Abbr,Need,needScore,needCount FROM SessionTeamNeed WHERE sessionId='{}'".format(sessionId))
 
-            results = []
+
+            cur.execute
+
+
 
             for m in cur.fetchall():
                 results.append(dict(zip(cols, m)))
+
+
+        if(len(results)==0):
+            DB.CacheTeamNeedsForSession(sessionId,2)
+            results = DB.getNeedsForAllTeams(sessionId)
+
 
         return results
 
