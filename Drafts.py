@@ -538,32 +538,31 @@ class Draft:
 
 
 
-        if(abbr=="NYJ"):
-            print("JETS NEEDS:",needs)
-            print("JETS desp:",desperateNeed)
-
         if(len(desperateNeed)>0):
             for p in self._prospects:
                 if(p[3]==desperateNeed):
+                    if(likelihood>=10):
+                        Player = p[0]
 
-                    Player = p[0]
+                        pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
+                        if (pPos == "LB"):
+                            pPos = "ILB"
 
-                    pPos = p[3]  # Grab this Prospects position....(linebacker, wide receiver, quarterback, etc.)
-                    if (pPos == "LB"):
-                        pPos = "ILB"
-
-                    if(pPos == "DB"):
-                        pPos = "S"
+                        if(pPos == "DB"):
+                            pPos = "S"
 
 
-                    Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
+                        Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
-                    self.removeProspectFromCache(sessionId, Player)
-                    # needs.remove(n)
-                    self.MarkNeedAsSelected(abr, pPos, sessionId)
+                        self.removeProspectFromCache(sessionId, Player)
+                        # needs.remove(n)
+                        self.MarkNeedAsSelected(abr, pPos, sessionId)
 
-                    pickMade = True
-                    break
+                        pickMade = True
+                        break
+                    else:
+                        pickMade = False
+                        break
 
         if(pickMade==False):
             for p in self._prospects:
@@ -584,7 +583,7 @@ class Draft:
 
                 #if the current prospect is our highest need OR if we have already passed up 25 prospects, we need to make this pick.
                 if (self.isHighestNeed(pPos, needs)):
-                    if(round<4 or likelihood>=20 or isFirstPlayer):
+                    if((round<2 and likelihood>=15) or (round<4 and likelihood>=20) or (likelihood>=30) or isFirstPlayer):
                         Player = p[0]
                         Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -597,7 +596,7 @@ class Draft:
                     else:
                         potentialPicks.append(p)
                 elif(self.isSecondHighestNeed(pPos,needs)):
-                    if(round<4 and iCount>25 and likelihood>=20):
+                    if((round<2 and likelihood>=40) or (round<4 and likelihood>=50) or (likelihood>=60)):
                         Player = p[0]
                         Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -618,7 +617,7 @@ class Draft:
                     else:
                         potentialPicks.append(p)
                 elif(self.isThirdHighestNeed(pPos,needs)):
-                    if(round<4 and iCount>=35 and likelihood>=30):
+                    if((round<2 and likelihood>=80) or (round<4 and likelihood>=70) or (likelihood>=60)):
                         Player = p[0]
                         Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -627,7 +626,7 @@ class Draft:
                         self.MarkNeedAsSelected(abr, pPos, sessionId)
                         pickMade = True
                         break
-                    elif ((iCount > 35 and likelihood>=70) or likelihood>80 or iCount>40):
+                    elif ((iCount > 35 and likelihood>=70) or likelihood>85 or iCount>40):
                         Player = p[0]
                         Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
@@ -639,7 +638,7 @@ class Draft:
                     else:
                         potentialPicks.append(p)
                 elif(self.isHighNeed(pPos,needs)):
-                    if(round<4 and iCount>40 and likelihood>=40):
+                    if((round<2 and likelihood>=90) or (round<4 and likelihood>=80) or (likelihood>=70)):
                         Player = p[0]
                         Picks.Pick.UpdatePick(pck[0], pck[1], pck[2], abbr, Player, sessionId)
 
