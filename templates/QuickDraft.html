@@ -16,7 +16,7 @@
 
         <div id="divPicks" class="w3-container">
             <br/>
-            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Pick for Round {{round}}</button>
+            <button id="btnGetData" ng-click="getData()" ng-show="showBtn">Pick for Round <span id="roundMarker">{{round}}</span></button>
             <br/>
             <span id="msgWait" class="w3-container" ng-show="showMsg">Data Loading....Please Wait</span>
             <table id="tblpicks" class="w3-table w3-bordered w3-striped">
@@ -50,7 +50,7 @@
         $scope.draftData = "";
         $scope.showMsg=false;
         $scope.showBtn=true;
-        $scope.round=0;
+        $scope.round={{round}};
         token=new URLSearchParams(window.location.search);
 
         $scope.sessionid = token.get('sessionid');
@@ -59,7 +59,7 @@
         $scope.getData=function(){
             $scope.draftData = "";
             $scope.showMsg=true;
-            $scope.round+=1;
+
 
             if($scope.round>=7){
                 $scope.showBtn=false;
@@ -78,6 +78,10 @@
                 else{
                     $scope.showBtn=false;
                 }
+                $scope.round+=1;
+                document.getElementById("roundMarker").innerText = $scope.round;
+
+
 
             $scope.showMsg=false;
             }, function(err,response){

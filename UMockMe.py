@@ -197,6 +197,7 @@ def getQuickDraftData():
 
     picks = DBLib.DB.getAllSelectedPicksForUser(sessionid)
 
+    print(picks)
 
     return (jsonify(picks))
 
@@ -506,7 +507,7 @@ def QuickDraft():
     myDraft.ClearAllPicksForUser(sessionid)
 
 
-    return render_template('QuickDraft.html',usr=usr,sessionid=sessionid)
+    return render_template('QuickDraft.html',round=1,usr=usr,sessionid=sessionid)
 
 
 

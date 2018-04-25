@@ -811,6 +811,6 @@ class Draft:
 
 
         picks = Picks.Pick.getAllPicksForRound(draftId,round,sessionId)
-
+        print("picks",picks)
         for pck in picks:
             self.MakePick(pck,sessionId)
