@@ -9,3 +9,11 @@ How To Test:
 
 
 FAQ:
+
+COMING SOON:
+I will be setting up more information with regards to how to build and test this project.   In order to do this, I first have to make changes to how we get our data becuase the NFL.com Site that I used to screen scrape from is no longer really available...
+
+Contact:
+You can contact me directly if you wish. We can do a Zoom to get you up to speed, discuss vision, etc.
+
+GregoryAJackson@Hotmail.com
